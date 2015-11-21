@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Business Card Contact</string>
     <string name="contact_list_title">Contact List</string>
+    <!-- Strings for the Contact Detail Labels -->
     <string name="ContactPictureDesc">Contact Photo</string>
     <string name="ContactNameLbl">Name</string>
     <string name="ContactTitleLbl">Title</string>
@@ -13,4 +14,16 @@
     <string name="ContactCompanyWebsiteLbl">Company Website</string>
     <string name="ContactNotesLbl">Additional Information</string>
     <string name="ContactBusinessCardLbl">Business Card</string>
+
+    <!-- Strings for the Action Item Menu Options -->
+    <string name="menu_new_contact">Add New Contact</string>
+    <string name="menu_new_business_card">Add New Business Card</string>
+    <string name="menu_edit_contact">Edit Contact</string>
+    <string name="menu_delete_contact">Delete Contact</string>
+    <string name="menu_save_changes">Save</string>
+    <string name="menu_cancel_changes">Cancel</string>
+
+    <!-- Edit field orientation -->
+    <string name="edit_field_orientation">vertical</string>
+    <string name="edit_field_orientation2">horizontal</string>
 </resources>

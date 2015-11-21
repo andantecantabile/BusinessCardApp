@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- When the contact detail fragment is visible,
+         the edit contact and delete contact options
+         should be displayed in the menu. -->
+    <item
+        android:id="@+id/menu_item_save_changes"
+        android:title="@string/menu_save_changes"
+        app:showAsAction="ifRoom|withText"/>
+    <item
+        android:id="@+id/menu_item_cancel_changes"
+        android:title="@string/menu_cancel_changes"
+        app:showAsAction="ifRoom|withText"/>
+</menu>

@@ -123,8 +123,8 @@
             style="?android:listSeparatorTextViewStyle"/>
         <ImageView
             android:id="@+id/ContactBusinessCardImg"
-            android:layout_width="@dimen/picture_layout_width"
-            android:layout_height="@dimen/picture_layout_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:paddingBottom="@dimen/picture_padding"
             android:paddingLeft="@dimen/picture_padding"
