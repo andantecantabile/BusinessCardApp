@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Business Card Contact</string>
+    <string name="contact_list_title">Contact List</string>
+    <string name="ContactPictureDesc">Contact Photo</string>
+    <string name="ContactNameLbl">Name</string>
+    <string name="ContactTitleLbl">Title</string>
+    <string name="ContactCompanyLbl">Company</string>
+    <string name="ContactDepartmentLbl">Department</string>
+    <string name="ContactPhoneNumLbl">Phone Number</string>
+    <string name="ContactExtensionLbl">Ext.</string>
+    <string name="ContactFaxNumLbl">Fax Number</string>
+    <string name="ContactEmailLbl">Email</string>
+    <string name="ContactCompanyWebsiteLbl">Company Website</string>
+    <string name="ContactNotesLbl">Additional Information</string>
+    <string name="ContactBusinessCardLbl">Business Card</string>
 </resources>
