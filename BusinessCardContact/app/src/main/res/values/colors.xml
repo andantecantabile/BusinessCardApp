@@ -3,6 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="lighterGray">#D3D3D3</color>
 
     <!-- provide default android color list here: -->
     <item name="blue" type="color">#FF33B5E5</item>
