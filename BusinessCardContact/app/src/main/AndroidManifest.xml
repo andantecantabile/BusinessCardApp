@@ -25,6 +25,9 @@
         <activity android:name=".CreateModifyActivity"
                   android:label="@string/app_name" >
         </activity>
+        <activity android:name=".ContactEditDetailActivity"
+            android:label="Business Card Contact" >
+        </activity>
 
     </application>
 

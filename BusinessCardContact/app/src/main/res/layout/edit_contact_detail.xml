@@ -25,7 +25,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:ems="@dimen/default_text_ems"
                 android:layout_marginLeft="@dimen/edit_field_margin_left"
                 android:hint="@string/ParamDepartmentHintText"
                 android:inputType="text"/>
@@ -49,7 +48,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:ems="@dimen/default_text_ems"
                 android:layout_marginLeft="@dimen/edit_field_margin_left"
                 android:inputType="phone"/>
             <TextView

@@ -53,11 +53,11 @@ public class ContactEditDetailFragment extends Fragment{
         void onContactEntryCancelChanges(ContactEntry ce);
     }
 
-    public static ContactDetailFragment newInstance(UUID contactEntryId) {
+    public static ContactEditDetailFragment newInstance(UUID contactEntryId) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_CONTACT_ENTRY_ID, contactEntryId);
 
-        ContactDetailFragment fragment = new ContactDetailFragment();
+        ContactEditDetailFragment fragment = new ContactEditDetailFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,12 +74,18 @@ public class ContactEditDetailFragment extends Fragment{
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         setHasOptionsMenu(true);
-        mContactEntryId = (UUID) getArguments().getSerializable(ARG_CONTACT_ENTRY_ID);
-        if (mContactEntryId == null)
-            mContactEntry = null;
+        if (getArguments() != null) {
+            mContactEntryId = (UUID) getArguments().getSerializable(ARG_CONTACT_ENTRY_ID);
+            if (mContactEntryId == null)
+                mContactEntry = null;
+            else {
+                // otherwise, the contact entry id was provided, so this is a modify operation;
+                mContactEntry = ContactStore.get(getActivity()).getContactEntry(mContactEntryId);
+            }
+        }
         else {
-            // otherwise, the contact entry id was provided, so this is a modify operation;
-            mContactEntry = ContactStore.get(getActivity()).getContactEntry(mContactEntryId);
+            mContactEntryId = null;
+            mContactEntry = null;
         }
     }
 
@@ -111,7 +117,7 @@ public class ContactEditDetailFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
-        View v = inflater.inflate(R.layout.contact_detail, container, false);
+        View v = inflater.inflate(R.layout.edit_contact_detail, container, false);
 
         // contact photo image
         mContactPhotoView = (ImageView) v.findViewById(R.id.ContactPicture);

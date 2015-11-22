@@ -34,8 +34,7 @@ public class ContactEditDetailActivity extends AppCompatActivity
         Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_fragment);
 
-        UUID contactId = (UUID) getIntent()
-                .getSerializableExtra(EXTRA_CONTACT_ENTRY_ID);
+        UUID contactId = (UUID) getIntent().getSerializableExtra(EXTRA_CONTACT_ENTRY_ID);
 
         mContactEntry = ContactStore.get(this).getContactEntry(contactId);
         FragmentManager fm = getSupportFragmentManager();
