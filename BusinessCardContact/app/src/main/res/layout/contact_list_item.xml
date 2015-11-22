@@ -5,18 +5,18 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/contact_list_item_title"
+        android:id="@+id/contact_list_item_company_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        tools:text="Crime Title"
+        tools:text="Company Name"
         android:padding="4dp"/>
 
     <TextView
-        android:id="@+id/list_item_crime_date_text_view"
+        android:id="@+id/contact_list_item_contact_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/contact_list_item_title"
+        android:layout_below="@id/contact_list_item_company_name"
         tools:text="Crime Date"
         android:padding="4dp"/>
 

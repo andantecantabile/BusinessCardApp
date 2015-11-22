@@ -7,9 +7,9 @@
     <item
         android:id="@+id/menu_item_save_changes"
         android:title="@string/menu_save_changes"
-        app:showAsAction="ifRoom|withText"/>
+        app:showAsAction="always|withText"/>
     <item
         android:id="@+id/menu_item_cancel_changes"
         android:title="@string/menu_cancel_changes"
-        app:showAsAction="ifRoom|withText"/>
+        app:showAsAction="always|withText"/>
 </menu>

@@ -8,10 +8,10 @@
         android:id="@+id/menu_item_new_contact_bc"
         android:icon="@android:drawable/ic_menu_upload"
         android:title="@string/menu_new_business_card"
-        app:showAsAction="ifRoom|withText"/>
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/menu_item_new_blank_contact"
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/menu_new_contact"
-        app:showAsAction="ifRoom|withText"/>
+        app:showAsAction="ifRoom"/>
 </menu>
