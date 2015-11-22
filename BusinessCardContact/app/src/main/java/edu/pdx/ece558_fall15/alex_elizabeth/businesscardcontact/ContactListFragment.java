@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 public class ContactListFragment extends Fragment {
+    private static final String TAG = "ContactListFragment";
 
     private RecyclerView mContactEntryRecyclerView;
     private ContactEntryAdapter mAdapter;
@@ -27,18 +29,21 @@ public class ContactListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.d(TAG, "onAttach");
         mCallbacks = (Callbacks) context;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.contact_list, container, false);
 
         mContactEntryRecyclerView = (RecyclerView) view.findViewById(R.id.myList);
@@ -52,28 +57,33 @@ public class ContactListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume");
         updateUI();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.d(TAG, "onDetach");
         mCallbacks = null;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        Log.d(TAG, "onCreateOptionsMenu");
         inflater.inflate(R.menu.menu_contact_list, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected");
         switch (item.getItemId()) {
             default:
                 return super.onOptionsItemSelected(item);
@@ -81,6 +91,7 @@ public class ContactListFragment extends Fragment {
     }
 
     public void updateUI() {
+        Log.d(TAG, "updateUI");
         List<ContactEntry> contactEntries = ContactStore
                 .get(getActivity()).getContactEntries();
         if(mAdapter == null) {

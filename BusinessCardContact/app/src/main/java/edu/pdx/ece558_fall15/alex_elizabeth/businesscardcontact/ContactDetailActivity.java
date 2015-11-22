@@ -8,12 +8,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import java.util.List;
 import java.util.UUID;
 
 public class ContactDetailActivity extends AppCompatActivity
     implements ContactDetailFragment.Callbacks {
+    private static final String TAG = "ContactDetailActivity";
 
     private static final String EXTRA_CONTACT_ENTRY_ID =
             "edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact.contactEntryId";
@@ -30,6 +32,7 @@ public class ContactDetailActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate");
         setContentView(R.layout.activity_view_pager);
 
         UUID crimeId = (UUID) getIntent()
@@ -63,6 +66,6 @@ public class ContactDetailActivity extends AppCompatActivity
 
     @Override
     public void onContactEntryUpdated(ContactEntry ce) {
-
+        Log.d(TAG,"onContactEntryUpdated");
     }
 }

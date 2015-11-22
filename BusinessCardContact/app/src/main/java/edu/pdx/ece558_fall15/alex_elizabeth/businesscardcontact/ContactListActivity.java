@@ -64,6 +64,7 @@ public class ContactListActivity extends AppCompatActivity
 
     @Override
     public void onContactSelected(ContactEntry ce) {
+        Log.d(TAG,"onContactSelected");
         //Check if the id for placing the ContactDetailFragment in exists
         if(findViewById(R.id.detail_fragment_container) == null) {
             Intent intent = ContactDetailActivity.newIntent(this, ce.getId());
@@ -79,6 +80,6 @@ public class ContactListActivity extends AppCompatActivity
 
     @Override
     public void onContactEntryUpdated(ContactEntry ce) {
-
+        Log.d(TAG, "onContactEntryUpdated");
     }
 }

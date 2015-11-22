@@ -86,11 +86,13 @@ public class ContactDetailFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        Log.d(TAG,"onCreateOptionsMenu");
         inflater.inflate(R.menu.menu_contact_detail, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG,"onOptionsItemSelected");
         switch (item.getItemId()) {
             default:
                 return super.onOptionsItemSelected(item);
