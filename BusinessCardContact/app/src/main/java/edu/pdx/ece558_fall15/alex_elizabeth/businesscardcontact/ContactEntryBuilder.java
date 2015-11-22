@@ -3,11 +3,9 @@ package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 public class ContactEntryBuilder {
     private ContactEntry mContactEntry;
 
-    public ContactEntryBuilder() {
-        mContactEntry = new ContactEntry();
+    public ContactEntryBuilder(ContactEntry contactEntry) {
+        mContactEntry = contactEntry == null ? new ContactEntry() : contactEntry;
     }
-
-    public ContactEntryBuilder(ContactEntry contactEntry) { mContactEntry = contactEntry; }
 
     public ContactEntryBuilder name(String name) {
         mContactEntry.setName(name);
