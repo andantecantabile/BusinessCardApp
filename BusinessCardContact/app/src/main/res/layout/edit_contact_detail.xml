@@ -19,11 +19,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/ContactDepartmentLbl"
                 style="?android:listSeparatorTextViewStyle"/>
-            <TextView
+            <EditText
                 android:id="@+id/ContactDepartmentVal"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/default_text_field_width"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/contact_field_margin_left"/>
+                android:ems="@dimen/default_text_ems"
+                android:layout_marginLeft="@dimen/contact_field_margin_left"
+                android:inputType="text"/>
         </LinearLayout>
 
         <LinearLayout
