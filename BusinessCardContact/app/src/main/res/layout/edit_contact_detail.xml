@@ -53,14 +53,14 @@
                 android:layout_marginLeft="@dimen/edit_field_margin_left"
                 android:inputType="phone"/>
             <TextView
-                android:id="@+id/ContactExtensionLabel"
+                android:id="@+id/ContactPhoneExtLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:text="@string/ContactExtensionLbl"
+                android:text="@string/ContactPhoneExtLbl"
                 style="?android:listSeparatorTextViewStyle"/>
             <EditText
-                android:id="@+id/ContactExtensionVal"
+                android:id="@+id/ContactPhoneExtVal"
                 android:layout_width="@dimen/extension_field_width"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"

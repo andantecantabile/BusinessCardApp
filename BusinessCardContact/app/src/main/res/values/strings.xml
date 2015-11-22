@@ -8,7 +8,7 @@
     <string name="ContactCompanyLbl">Company</string>
     <string name="ContactDepartmentLbl">Department</string>
     <string name="ContactPhoneNumLbl">Phone Number</string>
-    <string name="ContactExtensionLbl">Ext.</string>
+    <string name="ContactPhoneExtLbl">Ext.</string>
     <string name="ContactFaxNumLbl">Fax Number</string>
     <string name="ContactEmailLbl">Email</string>
     <string name="ContactCompanyWebsiteLbl">Company Website</string>
@@ -27,7 +27,13 @@
     <string name="menu_save_changes">Save</string>
     <string name="menu_cancel_changes">Cancel</string>
 
+    <!-- image chooser title -->
+    <string name="img_chooser_title">Find an Image</string>
+
     <!-- Edit field orientation -->
     <string name="edit_field_orientation">vertical</string>
     <string name="edit_field_orientation2">horizontal</string>
+
+    <!-- Default photo image (icon) name -->
+    <string name="default_photo_img">R.drawable.ic_add_a_photo_holo_light</string>
 </resources>
