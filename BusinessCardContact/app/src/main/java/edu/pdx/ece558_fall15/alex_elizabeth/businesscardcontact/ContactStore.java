@@ -39,7 +39,8 @@ public class ContactStore {
                 .build();
 
         this.addContactEntry(ce);
-        //mContactEntryProvider.add();
+        mContactEntryProvider.add();
+        mContactEntryProvider.get();
 
         ContactEntry ce1 = new ContactEntryBuilder()
                 .name("Elizabeth")
