@@ -61,11 +61,12 @@ public class ContactContentResolverHelper {
     }
 
     public List<ContactEntry> getAllContacts() {
+        Log.d(TAG, "getAllContacts");
         List<ContactEntry> contactEntries = new ArrayList<>();
         ContactEntryCursorWrapper cursor = new ContactEntryCursorWrapper(
                 mContext.getContentResolver().query(
-                        Data.CONTENT_URI,
-                        new String[] {RawContacts._ID, RawContacts.ACCOUNT_NAME},
+                        RawContacts.CONTENT_URI,
+                        new String[] { RawContacts._ID, RawContacts.ACCOUNT_NAME },
                         RawContacts.ACCOUNT_TYPE + "='" + ACT_TYPE + "'",
                         null,
                         null
@@ -76,21 +77,59 @@ public class ContactContentResolverHelper {
         cursor.moveToFirst();
         while(!cursor.isAfterLast()) {
             Log.d(TAG, "NEXT ITEM");
-            for(int i = 0; i < cursor.getColumnCount(); i++) {
+            /*for(int i = 0; i < cursor.getColumnCount(); i++) {
                 if(cursor.getString(i) != null) {
                     Log.d(TAG, cursor.getString(i));
                 } else {
                     Log.d(TAG, "null");
                 }
-            }
+            }*/
+            long rawContactId = Long.valueOf(cursor.getString(0));
+            UUID uuid = UUID.fromString(cursor.getString(1));
+            contactEntries.add(getContact(rawContactId, uuid));
+            Log.d(TAG, "Name: " + contactEntries.get(contactEntries.size() - 1).getName());
             cursor.moveToNext();
         }
 
         return contactEntries;
     }
 
-    public ContactEntry getContact() {
-        ContactEntry contactEntry = new ContactEntry();
+    public ContactEntry getContact(long rawContactId, UUID uuid) {
+        Log.d(TAG, "getContact");
+
+        ContactEntry contactEntry = new ContactEntry(uuid);
+        Uri rawContactUri = ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId);
+        Uri entityUri = Uri.withAppendedPath(rawContactUri, RawContacts.Entity.CONTENT_DIRECTORY);
+        ContactEntryCursorWrapper cursor = new ContactEntryCursorWrapper(
+                mContext.getContentResolver().query(
+                        entityUri,
+                        new String[]{RawContacts.SOURCE_ID, RawContacts.Entity.DATA_ID,
+                                RawContacts.Entity.MIMETYPE, RawContacts.Entity.DATA1,
+                                RawContacts.Entity.DATA2, RawContacts.Entity.DATA3 },
+                        null,
+                        null,
+                        null
+                )
+        );
+
+        try {
+            while (cursor.moveToNext()) {
+                String sourceId = cursor.getString(0);
+                if (!cursor.isNull(1)) {
+                    String mimeType = cursor.getString(2);
+                    String data1 = cursor.getString(3);
+                    String data2 = cursor.getString(4);
+                    String data3 = cursor.getString(5);
+                    if(mimeType.equals(StructuredName.CONTENT_ITEM_TYPE)) {
+                        if(data1 != null) {
+                            contactEntry.setName(data1);
+                        }
+                    }
+                }
+            }
+        } finally {
+            cursor.close();
+        }
 
         return contactEntry;
     }

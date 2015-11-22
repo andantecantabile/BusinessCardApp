@@ -14,7 +14,7 @@ public class ContactStore {
     private Context mContext;
     private ContactContentResolverHelper mResolverHelper;
 
-    //TODO: Replace with sqlLite database and ContentProvider
+    //TODO: Replace with ContentProvider
     private List<ContactEntry> mContactEntries = new ArrayList<ContactEntry>();
 
     public static ContactStore get(Context context) {
@@ -29,7 +29,7 @@ public class ContactStore {
         mResolverHelper = new ContactContentResolverHelper(mContext);
         //TODO: Remove once we can add contacts
         //for testing
-        /*ContactEntry ce = new ContactEntryBuilder()
+        /*ContactEntry ce = new ContactEntryBuilder(null)
                 .name("Alex")
                 .company("Mentor Graphics")
                 .email("Alex_Pearson@mentor.com")
@@ -37,15 +37,15 @@ public class ContactStore {
                 .build();
 
         this.addContactEntry(ce);
-        mResolverHelper.addNewContact(ce);
+        //mResolverHelper.addNewContact(ce);
 
-        ContactEntry ce1 = new ContactEntryBuilder()
+        ContactEntry ce1 = new ContactEntryBuilder(null)
                 .name("Elizabeth")
                 .company("Intel")
                 .build();
 
         this.addContactEntry(ce1);
-        mResolverHelper.addNewContact(ce1);
+        //mResolverHelper.addNewContact(ce1);
 
         mResolverHelper.getAllContacts();*/
         //end for testing
