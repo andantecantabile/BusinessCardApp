@@ -15,6 +15,10 @@
     <string name="ContactNotesLbl">Additional Information</string>
     <string name="ContactBusinessCardLbl">Business Card</string>
 
+    <!-- Hint Strings -->
+    <string name="ParamDepartmentHintText">Division or Group</string>
+    <string name="ParamNotesHintText">Additional Information</string>
+
     <!-- Strings for the Action Item Menu Options -->
     <string name="menu_new_contact">Add New Contact</string>
     <string name="menu_new_business_card">Add New Business Card</string>
