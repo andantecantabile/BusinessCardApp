@@ -1,6 +1,6 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -35,10 +35,10 @@ public class ContactDetailFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
         Log.d(TAG, "onAttach");
-        mCallbacks = (Callbacks) context;
+        mCallbacks = (Callbacks) activity;
     }
 
     @Override

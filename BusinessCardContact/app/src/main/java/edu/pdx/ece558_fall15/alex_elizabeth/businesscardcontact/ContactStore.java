@@ -8,10 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact.contactprovider.ContactEntryProvider;
+
 public class ContactStore {
     private static ContactStore sContactStore;
 
     private Context mContext;
+    private ContactEntryProvider mContactEntryProvider;
 
     //TODO: Replace with sqlLite database and ContentProvider
     private List<ContactEntry> mContactEntries = new ArrayList<ContactEntry>();
@@ -25,6 +28,7 @@ public class ContactStore {
 
     private ContactStore(Context context) {
         mContext = context;
+        mContactEntryProvider = new ContactEntryProvider(mContext);
         //TODO: Remove once we can add contacts
         //for testing
         ContactEntry ce = new ContactEntryBuilder()
@@ -35,6 +39,7 @@ public class ContactStore {
                 .build();
 
         this.addContactEntry(ce);
+        //mContactEntryProvider.add();
 
         ContactEntry ce1 = new ContactEntryBuilder()
                 .name("Elizabeth")
