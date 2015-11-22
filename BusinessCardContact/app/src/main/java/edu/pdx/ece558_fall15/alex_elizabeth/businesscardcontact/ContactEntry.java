@@ -21,7 +21,7 @@ public class ContactEntry {
         this(UUID.randomUUID());
     }
 
-    private ContactEntry(UUID id) {
+    public ContactEntry(UUID id) {
         mId = id;
     }
 

@@ -7,6 +7,8 @@ public class ContactEntryBuilder {
         mContactEntry = new ContactEntry();
     }
 
+    public ContactEntryBuilder(ContactEntry contactEntry) { mContactEntry = contactEntry; }
+
     public ContactEntryBuilder name(String name) {
         mContactEntry.setName(name);
         return this;
