@@ -17,7 +17,8 @@
     <dimen name="name_block_margin_right">4dp</dimen>
     <dimen name="name_block_margin_left">4dp</dimen>
     <!-- contact field margin left separation for value textviews (between label and value field -->
-    <dimen name="contact_field_margin_left">16dp</dimen>
+    <dimen name="contact_field_margin_left">8dp</dimen>
+    <dimen name="edit_field_margin_left">8dp</dimen>
 
     <dimen name="default_text_field_width">150dp</dimen>
     <dimen name="extension_field_width">60dp</dimen>
