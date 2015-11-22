@@ -40,10 +40,21 @@ public class ContactEntry {
     }
 
     public String getName() {
+        if(mFirstName == null) {
+            return null;
+        }
         if(mLastName == null) {
             return mFirstName;
         }
         return String.format("%s %s",mFirstName,mLastName);
+    }
+
+    public String getFirstName() {
+        return mFirstName;
+    }
+
+    public String getLastName() {
+        return mLastName;
     }
 
     public void setName(String name) {
