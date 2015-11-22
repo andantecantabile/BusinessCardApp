@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
     android:layout_marginTop="16dp"
     >
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/ContactPicture"
             android:layout_width="@dimen/picture_layout_width"
             android:layout_height="@dimen/picture_layout_height"
             android:layout_gravity="center"
+            android:layout_weight="0"
             android:paddingBottom="@dimen/picture_padding"
             android:paddingLeft="@dimen/picture_padding"
             android:paddingRight="@dimen/picture_padding"
@@ -44,6 +45,7 @@
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginRight="@dimen/name_block_margin_right"
             android:layout_marginLeft="@dimen/name_block_margin_left">
             <LinearLayout
@@ -54,13 +56,16 @@
                     android:id="@+id/ContactNameLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0"
                     android:text="@string/ContactNameLbl"
                     style="?android:listSeparatorTextViewStyle"/>
-                <TextView
+                <EditText
                     android:id="@+id/ContactNameVal"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/contact_field_margin_left"/>
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/edit_field_margin_left"
+                    android:layout_marginRight="@dimen/edit_field_margin_right"/>
             </LinearLayout>
             <LinearLayout
                 android:orientation="@string/edit_field_orientation"
@@ -70,13 +75,17 @@
                     android:id="@+id/ContactTitleLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0"
                     android:text="@string/ContactTitleLbl"
                     style="?android:listSeparatorTextViewStyle"/>
-                <TextView
+                <EditText
                     android:id="@+id/ContactTitleVal"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/contact_field_margin_left"/>
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/edit_field_margin_left"
+                    android:layout_marginRight="@dimen/edit_field_margin_right"
+                    android:inputType="text"/>
             </LinearLayout>
             <LinearLayout
                 android:orientation="@string/edit_field_orientation"
@@ -86,13 +95,17 @@
                     android:id="@+id/ContactCompanyLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0"
                     android:text="@string/ContactCompanyLbl"
                     style="?android:listSeparatorTextViewStyle"/>
-                <TextView
+                <EditText
                     android:id="@+id/ContactCompanyVal"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/contact_field_margin_left"/>
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/edit_field_margin_left"
+                    android:layout_marginRight="@dimen/edit_field_margin_right"
+                    android:inputType="text"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

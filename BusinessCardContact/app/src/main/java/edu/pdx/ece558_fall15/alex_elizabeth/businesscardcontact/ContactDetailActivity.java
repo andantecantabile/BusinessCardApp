@@ -35,7 +35,7 @@ public class ContactDetailActivity extends AppCompatActivity
         Log.d(TAG,"onCreate");
         setContentView(R.layout.activity_view_pager);
 
-        UUID crimeId = (UUID) getIntent()
+        UUID contactId = (UUID) getIntent()
                 .getSerializableExtra(EXTRA_CONTACT_ENTRY_ID);
 
         mViewPager = (ViewPager) findViewById(R.id.activity_view_pager);
@@ -46,8 +46,8 @@ public class ContactDetailActivity extends AppCompatActivity
 
             @Override
             public Fragment getItem(int position) {
-                ContactEntry crime = mContactEntries.get(position);
-                return ContactDetailFragment.newInstance(crime.getId());
+                ContactEntry currContact = mContactEntries.get(position);
+                return ContactDetailFragment.newInstance(currContact.getId());
             }
 
             @Override
@@ -57,7 +57,7 @@ public class ContactDetailActivity extends AppCompatActivity
         });
 
         for (int i = 0; i < mContactEntries.size(); i++) {
-            if (mContactEntries.get(i).getId().equals(crimeId)) {
+            if (mContactEntries.get(i).getId().equals(contactId)) {
                 mViewPager.setCurrentItem(i);
                 break;
             }
@@ -65,7 +65,24 @@ public class ContactDetailActivity extends AppCompatActivity
     }
 
     @Override
-    public void onContactEntryUpdated(ContactEntry ce) {
-        Log.d(TAG,"onContactEntryUpdated");
+    public void onContactEntryEdit(ContactEntry ce) {
+        Log.d(TAG, "onContactEntryEdit");
+
+        // start the edit detail activity
+        Intent intent = ContactEditDetailActivity.newIntent(this, ce.getId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onContactEntryDelete(ContactEntry ce) {
+        Log.d(TAG,"onContactEntryDelete");
+
+        // delete the currently selected contact entry
+        ContactStore.get(this).deleteContactEntry(ce);
+
+        // after deletion, need to return to the list view...
+        // which should be the previous activity in the backstack, so need to close this activity
+        finish();
+        // NOTE: Alternatively, if this doesn't work, would need to start the list activity here.
     }
 }

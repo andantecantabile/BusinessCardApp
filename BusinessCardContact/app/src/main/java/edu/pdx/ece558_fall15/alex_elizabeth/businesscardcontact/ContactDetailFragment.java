@@ -27,6 +27,8 @@ public class ContactDetailFragment extends Fragment {
     private ContactEntry mContactEntry;
     private Callbacks mCallbacks;
 
+    private UUID mContactEntryId;
+
     // images
     private File mContactPhotoFile;
     private File mContactBCFile;
@@ -46,7 +48,8 @@ public class ContactDetailFragment extends Fragment {
     private ImageView mContactBCView;
 
     public interface Callbacks {
-        void onContactEntryUpdated(ContactEntry ce);
+        void onContactEntryEdit(ContactEntry ce);
+        void onContactEntryDelete(ContactEntry ce);
     }
 
     public static ContactDetailFragment newInstance(UUID contactEntryId) {
@@ -70,8 +73,8 @@ public class ContactDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         setHasOptionsMenu(true);
-        UUID contactEntryId = (UUID) getArguments().getSerializable(ARG_CONTACT_ENTRY_ID);
-        mContactEntry = ContactStore.get(getActivity()).getContactEntry(contactEntryId);
+        mContactEntryId = (UUID) getArguments().getSerializable(ARG_CONTACT_ENTRY_ID);
+        mContactEntry = ContactStore.get(getActivity()).getContactEntry(mContactEntryId);
     }
 
     @Override
@@ -109,18 +112,6 @@ public class ContactDetailFragment extends Fragment {
         // obtain the photo here and then update the image view
         mContactPhotoFile = ContactStore.get(getActivity()).getPhotoFile(mContactEntry);
         updatePhotoView(mContactPhotoView, mContactPhotoFile);
-        mContactPhotoView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // need to launch the chooser here
-                pickImage();
-
-                // and then need to create a separate method to
-                // process the returned file from the activity
-                // and refresh the photo view - move later
-                //updatePhotoView(mContactPhotoView, mContactPhotoFile);
-            }
-        });
 
         // business card image
         mContactBCView = (ImageView) v.findViewById(R.id.ContactBusinessCardImg);
@@ -129,13 +120,40 @@ public class ContactDetailFragment extends Fragment {
 
         // obtain textviews and populate all views
         mContactNameView = (TextView) v.findViewById(R.id.ContactNameVal);
-
+        if (mContactNameView != null) {
+            String nameVal = mContactEntry.getName();
+            if (nameVal != null)    // make sure that return value is not null
+                mContactNameView.setText(nameVal);
+            else
+                mContactNameView.setText("");
+        }
 
         mContactTitleView = (TextView) v.findViewById(R.id.ContactTitleVal);
+        if (mContactTitleView != null) {
+            String titleVal = mContactEntry.getTitle();
+            if (titleVal != null)
+                mContactTitleView.setText(titleVal);
+            else
+                mContactTitleView.setText("");
+        }
 
         mContactCompanyView = (TextView) v.findViewById(R.id.ContactCompanyVal);
+        if (mContactCompanyView != null) {
+            String companyVal = mContactEntry.getCompany();
+            if (companyVal != null)
+                mContactCompanyView.setText(companyVal);
+            else
+                mContactCompanyView.setText("");
+        }
 
         mContactDepartmentView = (TextView) v.findViewById(R.id.ContactDepartmentVal);
+        if (mContactDepartmentView != null) {
+            String departmentVal = mContactEntry.getDivision();
+            if (departmentVal != null)
+                mContactDepartmentView.setText(departmentVal);
+            else
+                mContactDepartmentView.setText("");
+        }
 
         mContactPhoneNumView = (TextView) v.findViewById(R.id.ContactPhoneNumVal);
 
@@ -163,7 +181,19 @@ public class ContactDetailFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected");
         switch (item.getItemId()) {
+            case R.id.menu_item_edit_contact:
+                // User chose the "Edit Contact" item, perform callback...
+                mCallbacks.onContactEntryEdit(mContactEntry);
+                return true;
+
+            case R.id.menu_item_delete_contact:
+                // User chose the "Delete Contact" action
+                mCallbacks.onContactEntryDelete(mContactEntry);
+                return true;
+
             default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
     }

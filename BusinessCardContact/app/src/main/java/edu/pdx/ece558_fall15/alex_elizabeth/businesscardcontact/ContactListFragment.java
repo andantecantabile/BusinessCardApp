@@ -24,6 +24,8 @@ public class ContactListFragment extends Fragment {
 
     public interface Callbacks {
         void onContactSelected(ContactEntry ce);
+        void onAddBlankContact();
+        void onAddNewContactCard();
     }
 
     @Override
@@ -85,7 +87,19 @@ public class ContactListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected");
         switch (item.getItemId()) {
+            case R.id.menu_item_new_blank_contact:
+                // User chose the "Add Blank Contact" item, perform callback...
+                mCallbacks.onAddBlankContact();
+                return true;
+
+            case R.id.menu_item_new_contact_bc:
+                // User chose the "Add New Contact Business Card" action
+                mCallbacks.onAddNewContactCard();
+                return true;
+
             default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
     }
