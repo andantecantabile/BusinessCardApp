@@ -22,6 +22,11 @@ public class ContactEntryBuilder {
         return this;
     }
 
+    public ContactEntryBuilder division(String division) {
+        mContactEntry.setDivision(division);
+        return this;
+    }
+
     public ContactEntryBuilder phoneNumber(String phoneNumber, String extension) {
         mContactEntry.setPhoneNumber(phoneNumber);
         mContactEntry.setExtension(extension);

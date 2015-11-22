@@ -9,6 +9,7 @@ public class ContactEntry {
     private String mLastName;
     private String mTitle;
     private String mCompany;
+    private String mDivision;
     private String mPhoneNumber;
     private String mExtension;
     private String mFaxNumber;
@@ -70,6 +71,14 @@ public class ContactEntry {
 
     public void setCompany(String company) {
         mCompany = company;
+    }
+
+    public String getDivision() {
+        return mDivision;
+    }
+
+    public void setDivision(String division) {
+        mDivision = division;
     }
 
     public String getPhoneNumber() {

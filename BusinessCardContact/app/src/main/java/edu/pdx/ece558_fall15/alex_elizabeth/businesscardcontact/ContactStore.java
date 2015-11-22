@@ -35,6 +35,13 @@ public class ContactStore {
                 .build();
 
         this.addContactEntry(ce);
+
+        ContactEntry ce1 = new ContactEntryBuilder()
+                .name("Elizabeth")
+                .company("Intel")
+                .build();
+
+        this.addContactEntry(ce1);
         //end for testing
     }
 
