@@ -7,10 +7,12 @@ import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 public class ContactListActivity extends AppCompatActivity
         implements ContactListFragment.Callbacks,
         ContactDetailFragment.Callbacks {
+    private static final String TAG = "ContactListActivity";
 
     @LayoutRes
     private int getLayoutResId() {
@@ -24,6 +26,7 @@ public class ContactListActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
 
         setContentView(getLayoutResId());
 
@@ -37,6 +40,26 @@ public class ContactListActivity extends AppCompatActivity
                     .add(R.id.fragment_container, fragment)
                     .commit();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.d(TAG, "onSaveInstanceState");
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.detail_fragment_container);
+        if(fragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .remove(fragment)
+                    .commit();
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+
     }
 
     @Override

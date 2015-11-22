@@ -3,6 +3,7 @@ package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import java.util.UUID;
 
 public class ContactDetailFragment extends Fragment {
+    private static final String TAG = "ContactDetailFragment";
 
     private static final String ARG_CONTACT_ENTRY_ID = "contact_entry_id";
 
@@ -35,12 +37,14 @@ public class ContactDetailFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.d(TAG, "onAttach");
         mCallbacks = (Callbacks) context;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         setHasOptionsMenu(true);
         UUID contactEntryId = (UUID) getArguments().getSerializable(ARG_CONTACT_ENTRY_ID);
         mContactEntry = ContactStore.get(getActivity()).getContactEntry(contactEntryId);
@@ -49,6 +53,13 @@ public class ContactDetailFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
     }
 
     @Override
@@ -59,12 +70,14 @@ public class ContactDetailFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.d(TAG, "onDetach");
         mCallbacks = null;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
         View v = inflater.inflate(R.layout.contact_detail, container, false);
 
         return v;
