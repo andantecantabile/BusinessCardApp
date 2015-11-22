@@ -1,5 +1,6 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -8,7 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 public class ContactListActivity extends AppCompatActivity
-        implements ContactListFragment.Callbacks {
+        implements ContactListFragment.Callbacks,
+        ContactDetailFragment.Callbacks {
 
     @LayoutRes
     private int getLayoutResId() {
@@ -22,6 +24,7 @@ public class ContactListActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(getLayoutResId());
 
         FragmentManager fm = getSupportFragmentManager();
@@ -39,8 +42,8 @@ public class ContactListActivity extends AppCompatActivity
     @Override
     public void onContactSelected(ContactEntry ce) {
         //Check if the id for placing the ContactDetailFragment in exists
-        /*if(findViewById(R.id.detail_fragment_container) == null) {
-            Intent intent = ContactDetailActivity.newInstance(ce.getId());
+        if(findViewById(R.id.detail_fragment_container) == null) {
+            Intent intent = ContactDetailActivity.newIntent(this, ce.getId());
             startActivity(intent);
         } else {
             Fragment newDetail = ContactDetailFragment.newInstance(ce.getId());
@@ -48,6 +51,11 @@ public class ContactListActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_fragment_container, newDetail)
                     .commit();
-        }*/
+        }
+    }
+
+    @Override
+    public void onContactEntryUpdated(ContactEntry ce) {
+
     }
 }

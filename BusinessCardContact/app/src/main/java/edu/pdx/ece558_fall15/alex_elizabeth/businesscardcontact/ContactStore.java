@@ -25,6 +25,17 @@ public class ContactStore {
 
     private ContactStore(Context context) {
         mContext = context;
+        //TODO: Remove once we can add contacts
+        //for testing
+        ContactEntry ce = new ContactEntryBuilder()
+                .name("Alex")
+                .company("Mentor Graphics")
+                .email("Alex_Pearson@mentor.com")
+                .website("www.mentor.com")
+                .build();
+
+        this.addContactEntry(ce);
+        //end for testing
     }
 
     public void addContactEntry(ContactEntry ce) {

@@ -39,13 +39,21 @@ public class ContactEntry {
     }
 
     public String getName() {
+        if(mLastName == null) {
+            return mFirstName;
+        }
         return String.format("%s %s",mFirstName,mLastName);
     }
 
     public void setName(String name) {
         int split = name.indexOf(' ');
-        mFirstName = name.substring(0,split);
-        mLastName = name.substring(split+1, name.length());
+        if(split < 0) {
+            mFirstName = name;
+            mLastName = null;
+        } else {
+            mFirstName = name.substring(0, split);
+            mLastName = name.substring(split + 1, name.length());
+        }
     }
 
     public String getTitle() {
