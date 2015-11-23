@@ -4,9 +4,11 @@
     android:layout_height="wrap_content" >
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
 
-        <include layout="@layout/edit_photo_and_name" /> -->
+        <include layout="@layout/edit_photo_and_name" />
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
