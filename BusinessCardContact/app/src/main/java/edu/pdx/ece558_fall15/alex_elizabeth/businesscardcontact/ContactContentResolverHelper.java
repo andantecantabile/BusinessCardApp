@@ -77,19 +77,13 @@ public class ContactContentResolverHelper {
         cursor.moveToFirst();
         while(!cursor.isAfterLast()) {
             Log.d(TAG, "NEXT ITEM");
-            /*for(int i = 0; i < cursor.getColumnCount(); i++) {
-                if(cursor.getString(i) != null) {
-                    Log.d(TAG, cursor.getString(i));
-                } else {
-                    Log.d(TAG, "null");
-                }
-            }*/
             long rawContactId = Long.valueOf(cursor.getString(0));
             UUID uuid = UUID.fromString(cursor.getString(1));
             contactEntries.add(getContact(rawContactId, uuid));
             Log.d(TAG, "Name: " + contactEntries.get(contactEntries.size() - 1).getName());
             cursor.moveToNext();
         }
+        cursor.close();
 
         return contactEntries;
     }
@@ -132,6 +126,14 @@ public class ContactContentResolverHelper {
         }
 
         return contactEntry;
+    }
+
+    public void deleteContact(ContactEntry contactEntry) {
+        Log.d(TAG, "deleteContact");
+        mContext.getContentResolver()
+                .delete(RawContacts.CONTENT_URI,
+                        RawContacts.ACCOUNT_NAME + "='" + contactEntry.getId().toString() + "'",
+                        null);
     }
 
     private class ContactEntryCursorWrapper extends CursorWrapper {
