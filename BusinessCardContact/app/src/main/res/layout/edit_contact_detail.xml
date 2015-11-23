@@ -6,9 +6,9 @@
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/edit_photo_and_name" />
+        <include layout="@layout/edit_photo_and_name" /> -->
         <LinearLayout
-            android:orientation="@string/edit_field_orientation2"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/detail_field_table_margin_right"
@@ -31,7 +31,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="@string/edit_field_orientation2"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/detail_field_table_margin_right"
@@ -103,7 +103,7 @@
                 android:id="@+id/ContactEmailVal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="01"
+                android:layout_weight="1"
                 android:layout_marginLeft="@dimen/contact_field_margin_left"
                 android:inputType="textEmailAddress"/>
         </LinearLayout>
@@ -176,6 +176,5 @@
                 android:cropToPadding="true"
                 android:src="@drawable/ic_add_a_photo_holo_light" />
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>

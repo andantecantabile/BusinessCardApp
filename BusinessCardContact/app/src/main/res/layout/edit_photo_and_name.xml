@@ -24,23 +24,6 @@
             android:background="@color/lighterGray"
             android:cropToPadding="true"
             android:src="@drawable/ic_add_a_photo_holo_light" />
-        <!--
-        <ImageButton
-            android:id="@+id/ContactPicture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/picture_vertical_margin"
-            android:layout_marginBottom="@dimen/picture_vertical_margin"
-            android:layout_marginLeft="@dimen/picture_horizontal_margin"
-            android:layout_marginRight="@dimen/picture_horizontal_margin"
-            android:contentDescription="@string/ContactPictureDesc"
-            android:cropToPadding="false"
-            android:paddingBottom="@dimen/picture_padding"
-            android:paddingLeft="@dimen/picture_padding"
-            android:paddingRight="@dimen/picture_padding"
-            android:paddingTop="@dimen/picture_padding"/>
-        -->
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
@@ -49,7 +32,7 @@
             android:layout_marginRight="@dimen/name_block_margin_right"
             android:layout_marginLeft="@dimen/name_block_margin_left">
             <LinearLayout
-                android:orientation="@string/edit_field_orientation"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
@@ -68,7 +51,7 @@
                     android:layout_marginRight="@dimen/edit_field_margin_right"/>
             </LinearLayout>
             <LinearLayout
-                android:orientation="@string/edit_field_orientation"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
@@ -88,7 +71,7 @@
                     android:inputType="text"/>
             </LinearLayout>
             <LinearLayout
-                android:orientation="@string/edit_field_orientation"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView

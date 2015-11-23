@@ -121,18 +121,20 @@ public class ContactEditDetailFragment extends Fragment{
 
         // contact photo image
         mContactPhotoView = (ImageView) v.findViewById(R.id.ContactPicture);
-        mContactPhotoView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // need to launch the chooser here
-                pickImage();
+        if (mContactPhotoView != null) {
+            mContactPhotoView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // need to launch the chooser here
+                    pickImage();
 
-                // and then need to create a separate method to
-                // process the returned file from the activity
-                // and refresh the photo view - move later
-                //updatePhotoView(mContactPhotoView, mContactPhotoFile);
-            }
-        });
+                    // and then need to create a separate method to
+                    // process the returned file from the activity
+                    // and refresh the photo view - move later
+                    //updatePhotoView(mContactPhotoView, mContactPhotoFile);
+                }
+            });
+        }
         // business card image
         mContactBCView = (ImageView) v.findViewById(R.id.ContactBusinessCardImg);
 
