@@ -29,25 +29,41 @@ public class ContactStore {
         mResolverHelper = new ContactContentResolverHelper(mContext);
         //TODO: Remove once we can add contacts
         //for testing
-        /*ContactEntry ce = new ContactEntryBuilder(null)
+        ContactEntry ce1 = new ContactEntryBuilder(null)
                 .name("Alex")
                 .company("Mentor Graphics")
                 .email("Alex_Pearson@mentor.com")
                 .website("www.mentor.com")
                 .build();
 
-        this.addContactEntry(ce);
-        //mResolverHelper.addNewContact(ce);
+        this.addContactEntry(ce1);
+        mResolverHelper.addNewContact(ce1);
 
-        ContactEntry ce1 = new ContactEntryBuilder(null)
+        ContactEntry ce2 = new ContactEntryBuilder(null)
                 .name("Elizabeth")
                 .company("Intel")
                 .build();
 
-        this.addContactEntry(ce1);
-        //mResolverHelper.addNewContact(ce1);
+        this.addContactEntry(ce2);
+        mResolverHelper.addNewContact(ce2);
 
-        mResolverHelper.getAllContacts();*/
+        ContactEntry ce3 = new ContactEntryBuilder(ce1)
+                .name("Alex Pearson")
+                .company("Mentor Graphics")
+                .email("Alex_Pearson@mentor.com")
+                .website("www.mentor.com")
+                .build();
+
+        this.updateContactEntry(ce3);
+        mResolverHelper.updateContact(ce3);
+
+        mResolverHelper.getAllContacts();
+
+        List<ContactEntry> contactEntries = mResolverHelper.getAllContacts();
+        for (ContactEntry ce : contactEntries) {
+            mResolverHelper.deleteContact(ce);
+        }
+
         //end for testing
     }
 
