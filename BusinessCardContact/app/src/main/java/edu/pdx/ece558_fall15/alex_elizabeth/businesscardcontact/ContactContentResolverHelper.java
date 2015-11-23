@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -32,32 +33,10 @@ public class ContactContentResolverHelper {
         addNameData(rawContactId, contactEntry);
     }
 
-    private long addRawContact(UUID uuid) {
-        Log.d(TAG, "addRawContact");
-        ContentValues person = new ContentValues();
-        person.put(RawContacts.ACCOUNT_TYPE, ACT_TYPE);
-        person.put(RawContacts.ACCOUNT_NAME, uuid.toString());
-        Uri rawContactUri = mContext.getContentResolver()
-                .insert(RawContacts.CONTENT_URI, person);
-        return ContentUris.parseId(rawContactUri);
-    }
-
-    private void addNameData(long rawContactId, ContactEntry contactEntry) {
-        Log.d(TAG, "addNameData");
-        ContentValues values = new ContentValues();
-        values.put(Data.RAW_CONTACT_ID, rawContactId);
-        values.put(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE);
-        if(contactEntry.getName() != null) {
-            values.put(StructuredName.DISPLAY_NAME, contactEntry.getName());
-        }
-        if(contactEntry.getFirstName() != null) {
-            values.put(StructuredName.GIVEN_NAME, contactEntry.getFirstName());
-        }
-        if(contactEntry.getLastName() != null) {
-            values.put(StructuredName.FAMILY_NAME, contactEntry.getLastName());
-        }
-        Uri dataUri = mContext.getContentResolver()
-                .insert(Data.CONTENT_URI, values);
+    public void updateContact(ContactEntry contactEntry) {
+        Log.d(TAG, "updateContact");
+        long rawContactId = getRawContact(contactEntry.getId());
+        updateNameData(rawContactId, contactEntry);
     }
 
     public List<ContactEntry> getAllContacts() {
@@ -88,7 +67,85 @@ public class ContactContentResolverHelper {
         return contactEntries;
     }
 
-    public ContactEntry getContact(long rawContactId, UUID uuid) {
+    public void deleteContact(ContactEntry contactEntry) {
+        Log.d(TAG, "deleteContact");
+        Uri contentSyncAdapter = RawContacts.CONTENT_URI.buildUpon()
+                .appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true")
+                .build();
+        mContext.getContentResolver()
+                .delete(contentSyncAdapter,
+                        RawContacts.ACCOUNT_NAME + "='" + contactEntry.getId().toString() + "'",
+                        null);
+    }
+
+    private long addRawContact(UUID uuid) {
+        Log.d(TAG, "addRawContact");
+        ContentValues person = new ContentValues();
+        person.put(RawContacts.ACCOUNT_TYPE, ACT_TYPE);
+        person.put(RawContacts.ACCOUNT_NAME, uuid.toString());
+        Uri rawContactUri = mContext.getContentResolver()
+                .insert(RawContacts.CONTENT_URI, person);
+        return ContentUris.parseId(rawContactUri);
+    }
+
+    private void addNameData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "addNameData");
+        ContentValues values = new ContentValues();
+        values.put(Data.RAW_CONTACT_ID, rawContactId);
+        values.put(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE);
+        addNameValues(contactEntry, values);
+        Uri dataUri = mContext.getContentResolver()
+                .insert(Data.CONTENT_URI, values);
+    }
+
+    private long getRawContact(UUID uuid) {
+        Log.d(TAG, "getRawContact");
+        ContactEntryCursorWrapper cursor = new ContactEntryCursorWrapper(
+                mContext.getContentResolver().query(
+                        RawContacts.CONTENT_URI,
+                        new String[] { RawContacts._ID },
+                        RawContacts.ACCOUNT_NAME + "='" + uuid.toString() + "'",
+                        null,
+                        null
+                )
+        );
+
+        cursor.moveToFirst();
+        long rawContactId = 0;
+        if (!cursor.isAfterLast()) {
+            rawContactId = Long.valueOf(cursor.getString(0));
+        }
+        cursor.close();
+
+        return rawContactId;
+    }
+
+    private void updateNameData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "updateNameData");
+        ContentValues values = new ContentValues();
+        addNameValues(contactEntry, values);
+        int numRowsModified = mContext.getContentResolver()
+                .update(Data.CONTENT_URI,
+                        values,
+                        Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
+                        Data.MIMETYPE + "='" + StructuredName.CONTENT_ITEM_TYPE + "'",
+                        null);
+        Log.d(TAG, "Num Rows Updated: " + numRowsModified);
+    }
+
+    private void addNameValues(ContactEntry contactEntry, ContentValues values) {
+        if(contactEntry.getName() != null) {
+            values.put(StructuredName.DISPLAY_NAME, contactEntry.getName());
+        }
+        if(contactEntry.getFirstName() != null) {
+            values.put(StructuredName.GIVEN_NAME, contactEntry.getFirstName());
+        }
+        if(contactEntry.getLastName() != null) {
+            values.put(StructuredName.FAMILY_NAME, contactEntry.getLastName());
+        }
+    }
+
+    private ContactEntry getContact(long rawContactId, UUID uuid) {
         Log.d(TAG, "getContact");
 
         ContactEntry contactEntry = new ContactEntry(uuid);
@@ -126,14 +183,6 @@ public class ContactContentResolverHelper {
         }
 
         return contactEntry;
-    }
-
-    public void deleteContact(ContactEntry contactEntry) {
-        Log.d(TAG, "deleteContact");
-        mContext.getContentResolver()
-                .delete(RawContacts.CONTENT_URI,
-                        RawContacts.ACCOUNT_NAME + "='" + contactEntry.getId().toString() + "'",
-                        null);
     }
 
     private class ContactEntryCursorWrapper extends CursorWrapper {
