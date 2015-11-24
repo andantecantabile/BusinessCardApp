@@ -5,15 +5,23 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static android.provider.ContactsContract.CommonDataKinds.Email;
+import static android.provider.ContactsContract.CommonDataKinds.Note;
+import static android.provider.ContactsContract.CommonDataKinds.Organization;
+import static android.provider.ContactsContract.CommonDataKinds.Phone;
+import static android.provider.ContactsContract.CommonDataKinds.Photo;
 import static android.provider.ContactsContract.CommonDataKinds.StructuredName;
+import static android.provider.ContactsContract.CommonDataKinds.Website;
 import static android.provider.ContactsContract.Data;
 import static android.provider.ContactsContract.RawContacts;
 
@@ -31,6 +39,13 @@ public class ContactContentResolverHelper {
         Log.d(TAG, "addNewContact");
         long rawContactId = addRawContact(contactEntry.getId());
         addNameData(rawContactId, contactEntry);
+        addEmailData(rawContactId, contactEntry);
+        addPhoneData(rawContactId, contactEntry);
+        addFaxData(rawContactId, contactEntry);
+        addCompanyData(rawContactId, contactEntry);
+        addWebsiteData(rawContactId, contactEntry);
+        addNoteData(rawContactId, contactEntry);
+        addPhotoData(rawContactId, contactEntry);
     }
 
     public void updateContact(ContactEntry contactEntry) {
@@ -98,6 +113,76 @@ public class ContactContentResolverHelper {
                 .insert(Data.CONTENT_URI, values);
     }
 
+    private void addEmailData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "addEmailData");
+        ContentValues values = new ContentValues();
+        values.put(Data.RAW_CONTACT_ID, rawContactId);
+        values.put(Data.MIMETYPE, Email.CONTENT_ITEM_TYPE);
+        addEmailValues(contactEntry, values);
+        Uri dataUri = mContext.getContentResolver()
+                .insert(Data.CONTENT_URI, values);
+    }
+
+    private void addPhoneData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "addPhoneData");
+        ContentValues values = new ContentValues();
+        values.put(Data.RAW_CONTACT_ID, rawContactId);
+        values.put(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE);
+        addPhoneValues(contactEntry, values);
+        Uri dataUri = mContext.getContentResolver()
+                .insert(Data.CONTENT_URI, values);
+    }
+
+    private void addFaxData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "addFaxData");
+        ContentValues values = new ContentValues();
+        values.put(Data.RAW_CONTACT_ID, rawContactId);
+        values.put(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE);
+        addFaxValues(contactEntry, values);
+        Uri dataUri = mContext.getContentResolver()
+                .insert(Data.CONTENT_URI, values);
+    }
+
+    private void addCompanyData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "addCompanyData");
+        ContentValues values = new ContentValues();
+        values.put(Data.RAW_CONTACT_ID, rawContactId);
+        values.put(Data.MIMETYPE, Organization.CONTENT_ITEM_TYPE);
+        addCompanyValues(contactEntry, values);
+        Uri dataUri = mContext.getContentResolver()
+                .insert(Data.CONTENT_URI, values);
+    }
+
+    private void addWebsiteData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "addWebsiteData");
+        ContentValues values = new ContentValues();
+        values.put(Data.RAW_CONTACT_ID, rawContactId);
+        values.put(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE);
+        addWebsiteValues(contactEntry, values);
+        Uri dataUri = mContext.getContentResolver()
+                .insert(Data.CONTENT_URI, values);
+    }
+
+    private void addNoteData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "addNoteData");
+        ContentValues values = new ContentValues();
+        values.put(Data.RAW_CONTACT_ID, rawContactId);
+        values.put(Data.MIMETYPE, Note.CONTENT_ITEM_TYPE);
+        addNoteValues(contactEntry, values);
+        Uri dataUri = mContext.getContentResolver()
+                .insert(Data.CONTENT_URI, values);
+    }
+
+    private void addPhotoData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "addPhotoData");
+        ContentValues values = new ContentValues();
+        values.put(Data.RAW_CONTACT_ID, rawContactId);
+        values.put(Data.MIMETYPE, Photo.CONTENT_ITEM_TYPE);
+        addPhotoValues(contactEntry, values);
+        Uri dataUri = mContext.getContentResolver()
+                .insert(Data.CONTENT_URI, values);
+    }
+
     private long getRawContact(UUID uuid) {
         Log.d(TAG, "getRawContact");
         ContactEntryCursorWrapper cursor = new ContactEntryCursorWrapper(
@@ -142,6 +227,62 @@ public class ContactContentResolverHelper {
         }
         if(contactEntry.getLastName() != null) {
             values.put(StructuredName.FAMILY_NAME, contactEntry.getLastName());
+        }
+    }
+
+    private void addEmailValues(ContactEntry contactEntry, ContentValues values) {
+        if(contactEntry.getEmail() != null) {
+            values.put(Email.ADDRESS, contactEntry.getEmail());
+            values.put(Email.TYPE, Email.TYPE_WORK);
+        }
+    }
+
+    private void addPhoneValues(ContactEntry contentEntry, ContentValues values) {
+        if(contentEntry.getPhoneNumber() != null) {
+            values.put(Phone.NUMBER, contentEntry.getPhoneNumber() +
+                    " " + contentEntry.getExtension());
+            values.put(Phone.TYPE, Phone.TYPE_WORK);
+        }
+    }
+
+    private void addFaxValues(ContactEntry contactEntry, ContentValues values) {
+        if(contactEntry.getFaxNumber() != null) {
+            values.put(Phone.NUMBER, contactEntry.getPhoneNumber());
+            values.put(Phone.TYPE, Phone.TYPE_FAX_WORK);
+        }
+    }
+
+    private void addCompanyValues(ContactEntry contactEntry, ContentValues values) {
+        if(contactEntry.getCompany() != null) {
+            values.put(Organization.COMPANY, contactEntry.getCompany());
+            values.put(Organization.DEPARTMENT, contactEntry.getDivision());
+            values.put(Organization.TYPE, Organization.TYPE_WORK);
+            values.put(Organization.TITLE, contactEntry.getTitle());
+        }
+    }
+
+    private void addWebsiteValues(ContactEntry contactEntry, ContentValues values) {
+        if(contactEntry.getWebsite() != null) {
+            values.put(Website.TYPE, Website.TYPE_WORK);
+            values.put(Website.URL, contactEntry.getWebsite());
+        }
+    }
+
+    private void addNoteValues(ContactEntry contactEntry, ContentValues values) {
+        if(contactEntry.getNotes() != null) {
+            values.put(Note.NOTE, contactEntry.getNotes());
+        }
+    }
+
+    private void addPhotoValues(ContactEntry contactEntry, ContentValues values) {
+        if(contactEntry.getPhotoFilename() != null) {
+            values.put(Photo.PHOTO_FILE_ID, contactEntry.getPhotoFilename());
+            Bitmap b = PictureUtils.getScaledBitmap(
+                    contactEntry.getPhotoFilename(), 160, 160);
+            int bytes = b.getByteCount();
+            ByteBuffer buffer = ByteBuffer.allocate(bytes);
+            b.copyPixelsToBuffer(buffer);
+            values.put(Photo.PHOTO, buffer.array());
         }
     }
 
