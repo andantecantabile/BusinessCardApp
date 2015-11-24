@@ -31,6 +31,11 @@ public class ContactStore {
         //for testing
         ContactEntry ce1 = new ContactEntryBuilder(null)
                 .name("Alex")
+                .title("Technical Marketing Engineer")
+                .division("Design to Silicon")
+                .faxNumber("503-685-1234")
+                .phoneNumber("503-685-0642", null)
+                .notes("Awesome")
                 .company("Mentor Graphics")
                 .email("Alex_Pearson@mentor.com")
                 .website("www.mentor.com")
