@@ -45,13 +45,20 @@ public class ContactContentResolverHelper {
         addCompanyData(rawContactId, contactEntry);
         addWebsiteData(rawContactId, contactEntry);
         addNoteData(rawContactId, contactEntry);
-        addPhotoData(rawContactId, contactEntry);
+        //addPhotoData(rawContactId, contactEntry);
     }
 
     public void updateContact(ContactEntry contactEntry) {
         Log.d(TAG, "updateContact");
         long rawContactId = getRawContact(contactEntry.getId());
         updateNameData(rawContactId, contactEntry);
+        updateEmailData(rawContactId, contactEntry);
+        updatePhoneData(rawContactId, contactEntry);
+        updateFaxData(rawContactId, contactEntry);
+        updateCompanyData(rawContactId, contactEntry);
+        updateWebsiteData(rawContactId, contactEntry);
+        updateNoteData(rawContactId, contactEntry);
+        //updatePhotoData(rawContactId, contactEntry);
     }
 
     public List<ContactEntry> getAllContacts() {
@@ -215,7 +222,101 @@ public class ContactContentResolverHelper {
                         Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
                         Data.MIMETYPE + "='" + StructuredName.CONTENT_ITEM_TYPE + "'",
                         null);
-        Log.d(TAG, "Num Rows Updated: " + numRowsModified);
+        if(numRowsModified > 1) {
+            Log.e(TAG, "Multiple Contacts Updated in Error");
+        }
+    }
+
+    private void updateEmailData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "updateEmailData");
+        ContentValues values = new ContentValues();
+        addEmailValues(contactEntry, values);
+        int numRowsModified = mContext.getContentResolver()
+                .update(Data.CONTENT_URI,
+                        values,
+                        Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
+                        Data.MIMETYPE + "='" + Email.CONTENT_ITEM_TYPE + "'",
+                        null);
+        if(numRowsModified > 1) {
+            Log.e(TAG, "Multiple Contacts Updated in Error");
+        }
+    }
+
+    private void updatePhoneData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "updatePhoneData");
+        ContentValues values = new ContentValues();
+        addPhoneValues(contactEntry, values);
+        int numRowsModified = mContext.getContentResolver()
+                .update(Data.CONTENT_URI,
+                        values,
+                        Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
+                                Data.MIMETYPE + "='" + Phone.CONTENT_ITEM_TYPE + "' AND" +
+                                Phone.TYPE + "='" + Phone.TYPE_WORK,
+                        null);
+        if(numRowsModified > 1) {
+            Log.e(TAG, "Multiple Contacts Updated in Error");
+        }
+    }
+
+    private void updateFaxData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "updateFaxData");
+        ContentValues values = new ContentValues();
+        addPhoneValues(contactEntry, values);
+        int numRowsModified = mContext.getContentResolver()
+                .update(Data.CONTENT_URI,
+                        values,
+                        Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
+                                Data.MIMETYPE + "='" + Phone.CONTENT_ITEM_TYPE + "' AND" +
+                                Phone.TYPE + "='" + Phone.TYPE_FAX_WORK,
+                        null);
+        if(numRowsModified > 1) {
+            Log.e(TAG, "Multiple Contacts Updated in Error");
+        }
+    }
+
+    private void updateCompanyData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "updateCompanyData");
+        ContentValues values = new ContentValues();
+        addCompanyValues(contactEntry, values);
+        int numRowsModified = mContext.getContentResolver()
+                .update(Data.CONTENT_URI,
+                        values,
+                        Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
+                                Data.MIMETYPE + "='" + Organization.CONTENT_ITEM_TYPE + "'",
+                        null);
+        if(numRowsModified > 1) {
+            Log.e(TAG, "Multiple Contacts Updated in Error");
+        }
+    }
+
+    private void updateWebsiteData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "updateWebsiteData");
+        ContentValues values = new ContentValues();
+        addCompanyValues(contactEntry, values);
+        int numRowsModified = mContext.getContentResolver()
+                .update(Data.CONTENT_URI,
+                        values,
+                        Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
+                                Data.MIMETYPE + "='" + Website.CONTENT_ITEM_TYPE + "'",
+                        null);
+        if(numRowsModified > 1) {
+            Log.e(TAG, "Multiple Contacts Updated in Error");
+        }
+    }
+
+    private void updateNoteData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "updateNoteData");
+        ContentValues values = new ContentValues();
+        addCompanyValues(contactEntry, values);
+        int numRowsModified = mContext.getContentResolver()
+                .update(Data.CONTENT_URI,
+                        values,
+                        Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
+                                Data.MIMETYPE + "='" + Note.CONTENT_ITEM_TYPE + "'",
+                        null);
+        if(numRowsModified > 1) {
+            Log.e(TAG, "Multiple Contacts Updated in Error");
+        }
     }
 
     private void addNameValues(ContactEntry contactEntry, ContentValues values) {
@@ -239,15 +340,19 @@ public class ContactContentResolverHelper {
 
     private void addPhoneValues(ContactEntry contentEntry, ContentValues values) {
         if(contentEntry.getPhoneNumber() != null) {
-            values.put(Phone.NUMBER, contentEntry.getPhoneNumber() +
-                    " " + contentEntry.getExtension());
+            if(contentEntry.getExtension() != null) {
+                values.put(Phone.NUMBER, contentEntry.getPhoneNumber() +
+                        " " + contentEntry.getExtension());
+            } else {
+                values.put(Phone.NUMBER, contentEntry.getPhoneNumber());
+            }
             values.put(Phone.TYPE, Phone.TYPE_WORK);
         }
     }
 
     private void addFaxValues(ContactEntry contactEntry, ContentValues values) {
         if(contactEntry.getFaxNumber() != null) {
-            values.put(Phone.NUMBER, contactEntry.getPhoneNumber());
+            values.put(Phone.NUMBER, contactEntry.getFaxNumber());
             values.put(Phone.TYPE, Phone.TYPE_FAX_WORK);
         }
     }
