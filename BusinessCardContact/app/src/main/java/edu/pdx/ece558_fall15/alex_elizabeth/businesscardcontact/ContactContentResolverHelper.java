@@ -250,8 +250,8 @@ public class ContactContentResolverHelper {
                 .update(Data.CONTENT_URI,
                         values,
                         Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
-                                Data.MIMETYPE + "='" + Phone.CONTENT_ITEM_TYPE + "' AND" +
-                                Phone.TYPE + "='" + Phone.TYPE_WORK,
+                        Data.MIMETYPE + "='" + Phone.CONTENT_ITEM_TYPE + "' AND " +
+                        Phone.TYPE + "='" + Phone.TYPE_WORK + "'",
                         null);
         if(numRowsModified > 1) {
             Log.e(TAG, "Multiple Contacts Updated in Error");
@@ -266,8 +266,8 @@ public class ContactContentResolverHelper {
                 .update(Data.CONTENT_URI,
                         values,
                         Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
-                                Data.MIMETYPE + "='" + Phone.CONTENT_ITEM_TYPE + "' AND" +
-                                Phone.TYPE + "='" + Phone.TYPE_FAX_WORK,
+                                Data.MIMETYPE + "='" + Phone.CONTENT_ITEM_TYPE + "' AND " +
+                                Phone.TYPE + "='" + Phone.TYPE_FAX_WORK + "'",
                         null);
         if(numRowsModified > 1) {
             Log.e(TAG, "Multiple Contacts Updated in Error");
@@ -340,13 +340,12 @@ public class ContactContentResolverHelper {
 
     private void addPhoneValues(ContactEntry contentEntry, ContentValues values) {
         if(contentEntry.getPhoneNumber() != null) {
-            if(contentEntry.getExtension() != null) {
-                values.put(Phone.NUMBER, contentEntry.getPhoneNumber() +
-                        " " + contentEntry.getExtension());
-            } else {
-                values.put(Phone.NUMBER, contentEntry.getPhoneNumber());
-            }
+            values.put(Phone.NUMBER, contentEntry.getPhoneNumber());
             values.put(Phone.TYPE, Phone.TYPE_WORK);
+        }
+        //If there is an extension store it in a custom column
+        if(contentEntry.getExtension() != null) {
+            values.put(Phone.DATA4, contentEntry.getExtension());
         }
     }
 
@@ -402,7 +401,8 @@ public class ContactContentResolverHelper {
                         entityUri,
                         new String[]{RawContacts.SOURCE_ID, RawContacts.Entity.DATA_ID,
                                 RawContacts.Entity.MIMETYPE, RawContacts.Entity.DATA1,
-                                RawContacts.Entity.DATA2, RawContacts.Entity.DATA3 },
+                                RawContacts.Entity.DATA2, RawContacts.Entity.DATA3,
+                                RawContacts.Entity.DATA4, RawContacts.Entity.DATA5 },
                         null,
                         null,
                         null
@@ -417,10 +417,58 @@ public class ContactContentResolverHelper {
                     String data1 = cursor.getString(3);
                     String data2 = cursor.getString(4);
                     String data3 = cursor.getString(5);
-                    if(mimeType.equals(StructuredName.CONTENT_ITEM_TYPE)) {
-                        if(data1 != null) {
-                            contactEntry.setName(data1);
-                        }
+                    String data4 = cursor.getString(6);
+                    String data5 = cursor.getString(7);
+                    switch (mimeType) {
+                        case StructuredName.CONTENT_ITEM_TYPE:
+                            if (data1 != null) {
+                                contactEntry.setName(data1);
+                            }
+                            break;
+                        case Email.CONTENT_ITEM_TYPE:
+                            if (data1 != null) {
+                                contactEntry.setEmail(data1);
+                            }
+                            break;
+                        case Phone.CONTENT_ITEM_TYPE:
+                            if (data2 != null) {
+                                if (Integer.parseInt(data2) == Phone.TYPE_WORK) {
+                                    if (data1 != null) {
+                                        contactEntry.setPhoneNumber(data1);
+                                    }
+                                    if (data4 != null) {
+                                        contactEntry.setExtension(data4);
+                                    }
+                                } else if (Integer.parseInt(data2) == Phone.TYPE_FAX_WORK) {
+                                    if (data1 != null) {
+                                        contactEntry.setFaxNumber(data1);
+                                    }
+                                }
+                            }
+                            break;
+                        case Organization.CONTENT_ITEM_TYPE:
+                            if (data1 != null) {
+                                contactEntry.setCompany(data1);
+                            }
+                            if (data4 != null) {
+                                contactEntry.setTitle(data4);
+                            }
+                            if (data5 != null) {
+                                contactEntry.setDivision(data5);
+                            }
+                            break;
+                        case Website.CONTENT_ITEM_TYPE:
+                            if (data1 != null) {
+                                contactEntry.setWebsite(data1);
+                            }
+                            break;
+                        case Note.CONTENT_ITEM_TYPE:
+                            if (data1 != null) {
+                                contactEntry.setNotes(data1);
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
