@@ -137,6 +137,16 @@ public class ContactEditDetailFragment extends Fragment{
         }
         // business card image
         mContactBCView = (ImageView) v.findViewById(R.id.ContactBusinessCardImg);
+        if (mContactBCView != null) {
+            mContactBCView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // need to launch the chooser here for the business card image;
+                    // My_TODO: add a parameter to pickImage() to distinguish between contact photo and business card
+                    //pickImage();
+                }
+            });
+        }
 
         // obtain textviews and populate all views
         mContactNameEdit = (EditText) v.findViewById(R.id.ContactNameVal);
@@ -190,6 +200,54 @@ public class ContactEditDetailFragment extends Fragment{
                     mContactDepartmentEdit.setText(departmentVal, TextView.BufferType.EDITABLE);
                 else
                     mContactDepartmentEdit.setText("", TextView.BufferType.EDITABLE);
+            }
+
+            if (mContactPhoneNumEdit != null) {
+                String phoneNumVal = mContactEntry.getPhoneNumber();
+                if (phoneNumVal != null)
+                    mContactPhoneNumEdit.setText(phoneNumVal, TextView.BufferType.EDITABLE);
+                else
+                    mContactPhoneNumEdit.setText("", TextView.BufferType.EDITABLE);
+            }
+
+            if (mContactPhoneExtEdit != null) {
+                String phoneExtVal = mContactEntry.getExtension();
+                if (phoneExtVal != null)
+                    mContactPhoneExtEdit.setText(phoneExtVal, TextView.BufferType.EDITABLE);
+                else
+                    mContactPhoneExtEdit.setText("", TextView.BufferType.EDITABLE);
+            }
+
+            if (mContactFaxNumEdit != null) {
+                String faxNumVal = mContactEntry.getFaxNumber();
+                if (faxNumVal != null)
+                    mContactFaxNumEdit.setText(faxNumVal, TextView.BufferType.EDITABLE);
+                else
+                    mContactFaxNumEdit.setText("", TextView.BufferType.EDITABLE);
+            }
+
+            if (mContactEmailEdit != null) {
+                String emailVal = mContactEntry.getEmail();
+                if (emailVal != null)
+                    mContactEmailEdit.setText(emailVal, TextView.BufferType.EDITABLE);
+                else
+                    mContactEmailEdit.setText("", TextView.BufferType.EDITABLE);
+            }
+
+            if (mContactCompanyWebsiteEdit != null) {
+                String companyWebsiteVal = mContactEntry.getWebsite();
+                if (companyWebsiteVal != null)
+                    mContactCompanyWebsiteEdit.setText(companyWebsiteVal, TextView.BufferType.EDITABLE);
+                else
+                    mContactCompanyWebsiteEdit.setText("", TextView.BufferType.EDITABLE);
+            }
+
+            if (mContactNotesEdit != null) {
+                String notesVal = mContactEntry.getNotes();
+                if (notesVal != null)
+                    mContactNotesEdit.setText(notesVal, TextView.BufferType.EDITABLE);
+                else
+                    mContactNotesEdit.setText("", TextView.BufferType.EDITABLE);
             }
         }
 

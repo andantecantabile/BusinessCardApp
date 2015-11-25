@@ -156,16 +156,58 @@ public class ContactDetailFragment extends Fragment {
         }
 
         mContactPhoneNumView = (TextView) v.findViewById(R.id.ContactPhoneNumVal);
+        if (mContactPhoneNumView != null) {
+            String phoneNumVal = mContactEntry.getPhoneNumber();
+            if (phoneNumVal != null)
+                mContactPhoneNumView.setText(phoneNumVal, TextView.BufferType.EDITABLE);
+            else
+                mContactPhoneNumView.setText("", TextView.BufferType.EDITABLE);
+        }
 
         mContactPhoneExtView = (TextView) v.findViewById(R.id.ContactPhoneExtVal);
+        if (mContactPhoneExtView != null) {
+            String phoneExtVal = mContactEntry.getExtension();
+            if (phoneExtVal != null)
+                mContactPhoneExtView.setText(phoneExtVal, TextView.BufferType.EDITABLE);
+            else
+                mContactPhoneExtView.setText("", TextView.BufferType.EDITABLE);
+        }
 
         mContactFaxNumView = (TextView) v.findViewById(R.id.ContactFaxNumVal);
+        if (mContactFaxNumView != null) {
+            String faxNumVal = mContactEntry.getFaxNumber();
+            if (faxNumVal != null)
+                mContactFaxNumView.setText(faxNumVal, TextView.BufferType.EDITABLE);
+            else
+                mContactFaxNumView.setText("", TextView.BufferType.EDITABLE);
+        }
 
         mContactEmailView = (TextView) v.findViewById(R.id.ContactEmailVal);
+        if (mContactEmailView != null) {
+            String emailVal = mContactEntry.getEmail();
+            if (emailVal != null)
+                mContactEmailView.setText(emailVal, TextView.BufferType.EDITABLE);
+            else
+                mContactEmailView.setText("", TextView.BufferType.EDITABLE);
+        }
 
         mContactCompanyWebsiteView = (TextView) v.findViewById(R.id.ContactCompanyWebsiteVal);
+        if (mContactCompanyWebsiteView != null) {
+            String companyWebsiteVal = mContactEntry.getWebsite();
+            if (companyWebsiteVal != null)
+                mContactCompanyWebsiteView.setText(companyWebsiteVal, TextView.BufferType.EDITABLE);
+            else
+                mContactCompanyWebsiteView.setText("", TextView.BufferType.EDITABLE);
+        }
 
         mContactNotesView = (TextView) v.findViewById(R.id.ContactNotesVal);
+        if (mContactNotesView != null) {
+            String notesVal = mContactEntry.getNotes();
+            if (notesVal != null)
+                mContactNotesView.setText(notesVal, TextView.BufferType.EDITABLE);
+            else
+                mContactNotesView.setText("", TextView.BufferType.EDITABLE);
+        }
 
         return v;
     }
