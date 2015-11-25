@@ -2,6 +2,7 @@ package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -33,6 +34,11 @@ public class ContactDetailActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG,"onCreate");
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            this.finish();
+        }
+
         setContentView(R.layout.activity_view_pager);
 
         UUID contactId = (UUID) getIntent()
