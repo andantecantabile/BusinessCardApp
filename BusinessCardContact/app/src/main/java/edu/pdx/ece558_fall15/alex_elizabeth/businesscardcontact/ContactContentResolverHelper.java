@@ -94,10 +94,14 @@ public class ContactContentResolverHelper {
         Uri contentSyncAdapter = RawContacts.CONTENT_URI.buildUpon()
                 .appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true")
                 .build();
-        mContext.getContentResolver()
+        //TODO: Add to where clause check against ACT_TYPE
+        int numRowsDeleted = mContext.getContentResolver()
                 .delete(contentSyncAdapter,
                         RawContacts.ACCOUNT_NAME + "='" + contactEntry.getId().toString() + "'",
                         null);
+        if(numRowsDeleted > 1) {
+            Log.e(TAG, "Multiple Contacts Updated in Error");
+        }
     }
 
     private long addRawContact(UUID uuid) {
