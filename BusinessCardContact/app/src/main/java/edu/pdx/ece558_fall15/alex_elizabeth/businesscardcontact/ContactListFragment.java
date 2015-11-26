@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -117,14 +118,30 @@ public class ContactListFragment extends Fragment {
 
     private class ContactEntryHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ContactEntry mContactEntry;
+        private TextView mContactNameView;
+        private TextView mContactCompanyView;
 
         public ContactEntryHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
+            mContactNameView = (TextView) itemView.findViewById(R.id.contact_list_item_contact_name);
+            mContactCompanyView = (TextView) itemView.findViewById(R.id.contact_list_item_company_name);
         }
 
         public void bindContactEntry(ContactEntry ce) {
             mContactEntry = ce;
+
+            if (mContactNameView != null) {
+                String contactName = ce.getName();
+                if (contactName != null)
+                    mContactNameView.setText(contactName);
+            }
+
+            if (mContactCompanyView != null) {
+                String contactCompany = ce.getCompany();
+                if (contactCompany != null)
+                    mContactCompanyView.setText(contactCompany);
+            }
         }
 
         @Override
@@ -139,8 +156,9 @@ public class ContactListFragment extends Fragment {
         public ContactEntryAdapter(List<ContactEntry> contactEntries) { mContactEntries = contactEntries; }
 
         @Override
-        public ContactEntryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ContactEntryHolder onCreateViewHolder(ViewGroup parent, int position) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            //LayoutInflater layoutInflater = LayoutInflater.from(getContext());
             View view = layoutInflater
                     .inflate(R.layout.contact_list_item, parent, false);
             return new ContactEntryHolder(view);

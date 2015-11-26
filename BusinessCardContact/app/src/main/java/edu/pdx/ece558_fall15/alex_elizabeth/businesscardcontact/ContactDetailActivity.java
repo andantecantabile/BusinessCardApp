@@ -76,6 +76,7 @@ public class ContactDetailActivity extends AppCompatActivity
 
         // start the edit detail activity
         Intent intent = ContactEditDetailActivity.newIntent(this, ce.getId());
+        //intent.putExtra(EXTRA_CONTACT_ENTRY_ID, ce.getId());
         startActivity(intent);
     }
 

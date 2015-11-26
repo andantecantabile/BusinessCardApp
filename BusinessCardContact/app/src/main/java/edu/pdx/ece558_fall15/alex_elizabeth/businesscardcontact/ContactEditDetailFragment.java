@@ -57,6 +57,8 @@ public class ContactEditDetailFragment extends Fragment{
         Bundle args = new Bundle();
         args.putSerializable(ARG_CONTACT_ENTRY_ID, contactEntryId);
 
+        Log.d(TAG, "ContactEditDetailFragment: ce_id="+contactEntryId);
+
         ContactEditDetailFragment fragment = new ContactEditDetailFragment();
         fragment.setArguments(args);
         return fragment;

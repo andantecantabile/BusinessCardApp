@@ -42,7 +42,7 @@ public class ContactEditDetailActivity extends AppCompatActivity
         //Check if the id for placing the ContactListFragment in exists
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
         if(fragment == null) {
-            fragment = new ContactEditDetailFragment();
+            fragment = ContactEditDetailFragment.newInstance(contactId);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();
