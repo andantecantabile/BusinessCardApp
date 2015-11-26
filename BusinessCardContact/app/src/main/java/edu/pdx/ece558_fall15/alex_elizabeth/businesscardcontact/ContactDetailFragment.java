@@ -1,7 +1,6 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,7 +19,9 @@ import java.util.UUID;
 
 public class ContactDetailFragment extends Fragment {
     private static final String TAG = "ContactDetailFragment";
-    private static final String PACKAGE_NAME = "edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact";
+
+    private static final String PACKAGE_NAME =
+            "edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact";
 
     private static final String ARG_CONTACT_ENTRY_ID = "contact_entry_id";
 
