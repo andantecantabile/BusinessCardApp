@@ -111,15 +111,15 @@ public class ContactListActivity extends AppCompatActivity
                 ContactStore.get(getApplicationContext()).deleteContactEntry(mCurrContactEntry);
                 //ContactStore.get(this).deleteContactEntry(ce);
 
-                // after deletion, need to return to the list view.
+                // after deletion, need to refresh the list view.
                 FragmentManager fm = getSupportFragmentManager();
-                //Check if the id for placing the ContactListFragment in exists
+                // find the list fragment and update
                 Fragment fragment = fm.findFragmentById(R.id.fragment_container);
-                if(fragment == null) {
-                    fragment = new ContactListFragment();
-                    fm.beginTransaction()
-                            .add(R.id.fragment_container, fragment)
-                            .commit();
+                if(fragment != null) {
+                    if (fragment instanceof ContactListFragment) {
+                        ContactListFragment listFragment = (ContactListFragment) fragment;
+                        listFragment.updateUI();
+                    }
                 }
 
                 // check for the existence of the detailfragmentcontainer,
@@ -160,5 +160,35 @@ public class ContactListActivity extends AppCompatActivity
         // -- NOTE: This needs to be modified later to process the business card first.
         Intent intent = ContactEditDetailActivity.newIntent(this, null);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+
+        // Need to update the views of the fragments.
+
+        FragmentManager fm = getSupportFragmentManager();
+        // find the list fragment
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+        if(fragment != null) {
+            if (fragment instanceof ContactListFragment) {
+                ContactListFragment listFragment = (ContactListFragment) fragment;
+                listFragment.updateUI();
+            }
+        }
+
+        // check for the existence of the detailfragmentcontainer,
+        // if it is present, the view needs to be updated.
+        Fragment detailFragment = fm.findFragmentById(R.id.detail_fragment_container);
+        if(detailFragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .detach(detailFragment)
+                    .commit();
+            getSupportFragmentManager().beginTransaction()
+                    .attach(detailFragment)
+                    .commit();
+        }
     }
 }

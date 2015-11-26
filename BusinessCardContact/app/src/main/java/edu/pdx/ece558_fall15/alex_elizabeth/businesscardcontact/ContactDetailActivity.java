@@ -122,17 +122,20 @@ public class ContactDetailActivity extends AppCompatActivity
         alert.show();
     }
 
-    /*
-    public int getItemPosition(Object item) {
-
-    }
-    */
-
-    /*
     @Override
     public void onResume() {
         super.onResume();
-        // was trying to override onResume to get the ViewPager to refresh, but found an alternate way
+        Log.d(TAG, "onResume");
+
+        // refresh the fragment view
+        FragmentManager fm = getSupportFragmentManager();
+        //Check if the id for placing the ContactListFragment in exists
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+        if(fragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .detach(fragment)
+                    .attach(fragment)
+                    .commit();
+        }
     }
-    */
 }
