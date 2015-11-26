@@ -84,6 +84,14 @@ public class ContactDetailFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+
+        updateUI();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         Log.d(TAG, "onStop");
@@ -190,6 +198,12 @@ public class ContactDetailFragment extends Fragment {
                 imgView.setImageBitmap(bitmap);
             }
         }
+    }
+
+    public void updateUI() {
+        Log.d(TAG, "updateUI");
+        populateImageViews();
+        populateFieldViews();
     }
 
     // Populates all imageviews

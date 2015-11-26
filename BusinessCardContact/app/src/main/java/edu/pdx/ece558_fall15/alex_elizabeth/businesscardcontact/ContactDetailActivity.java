@@ -26,6 +26,7 @@ public class ContactDetailActivity extends AppCompatActivity
     private ViewPager mViewPager;
     private List<ContactEntry> mContactEntries;
     private ContactEntry mCurrContactEntry;
+    private int mCurrPosition;
 
     public static Intent newIntent(Context packageContext, UUID contactEntryId) {
         Intent intent = new Intent(packageContext, ContactDetailActivity.class);
@@ -51,8 +52,9 @@ public class ContactDetailActivity extends AppCompatActivity
 
         mContactEntries = ContactStore.get(this).getContactEntries();
         FragmentManager fragmentManager = getSupportFragmentManager();
-        mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
+        //FragmentStatePagerAdapter fsPagerAdapter = new FragmentStatePagerAdapter(fragmentManager);
 
+        mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
                 ContactEntry currContact = mContactEntries.get(position);
@@ -64,6 +66,23 @@ public class ContactDetailActivity extends AppCompatActivity
                 return mContactEntries.size();
             }
         });
+
+        /*
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                //ContactEntry ce = mContactEntries.get(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+        */
 
         for (int i = 0; i < mContactEntries.size(); i++) {
             if (mContactEntries.get(i).getId().equals(contactId)) {
@@ -123,19 +142,20 @@ public class ContactDetailActivity extends AppCompatActivity
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+        mCurrPosition = mViewPager.getCurrentItem();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
 
         // refresh the fragment view
-        FragmentManager fm = getSupportFragmentManager();
-        //Check if the id for placing the ContactListFragment in exists
-        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
-        if(fragment != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .detach(fragment)
-                    .attach(fragment)
-                    .commit();
-        }
+        // TODO: only update the single entry that has been changed rather than re-obtaining the entire list.
+        mContactEntries = ContactStore.get(this).getContactEntries();
+        mViewPager.getAdapter().notifyDataSetChanged();
     }
 }

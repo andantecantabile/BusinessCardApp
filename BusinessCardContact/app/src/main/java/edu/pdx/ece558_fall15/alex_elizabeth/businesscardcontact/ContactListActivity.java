@@ -183,12 +183,18 @@ public class ContactListActivity extends AppCompatActivity
         // if it is present, the view needs to be updated.
         Fragment detailFragment = fm.findFragmentById(R.id.detail_fragment_container);
         if(detailFragment != null) {
+            if (detailFragment instanceof ContactDetailFragment) {
+                ContactDetailFragment cdFragment = (ContactDetailFragment) detailFragment;
+                cdFragment.updateUI();
+            }
+            /*
             getSupportFragmentManager().beginTransaction()
                     .detach(detailFragment)
                     .commit();
             getSupportFragmentManager().beginTransaction()
                     .attach(detailFragment)
                     .commit();
+            */
         }
     }
 }
