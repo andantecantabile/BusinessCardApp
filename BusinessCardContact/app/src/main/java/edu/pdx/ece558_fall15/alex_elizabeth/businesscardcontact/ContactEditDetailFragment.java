@@ -1,9 +1,11 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -283,13 +285,36 @@ public class ContactEditDetailFragment extends Fragment{
                         .build();
                 // If this is an "Add" operation, then add the new contact
                 if (mContactEntryId == null) {
-                    ContactStore.get(getActivity()).addContactEntry(ce);
+                    // BEFORE adding the new contact, need to verify that at least the name is not null...
+                    String strName = ce.getName();
+                    if ((strName == null) || (strName.equals(""))) {
+                        // If the name is null, do NOT add the entry, and notify the user that the contact was not saved.
+                        // get confirmation from user in a dialog that they want to go back without saving changes
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                        builder.setTitle("Error: Could not save contact");
+                        builder.setMessage("Contact name needs to be specified.");
+                        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Yes, the user wants to exit, so close the activity
+                                dialog.cancel();
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                    else {
+                        ContactStore.get(getActivity()).addContactEntry(ce);
+                        mCallbacks.onContactEntrySaveChanges(mContactEntry);
+                    }
                 }
                 // Otherwise, it is a "Modify"/"Update" operation, so update the entry
                 else {
                     ContactStore.get(getActivity()).updateContactEntry(ce);
+                    mCallbacks.onContactEntrySaveChanges(mContactEntry);
                 }
-                mCallbacks.onContactEntrySaveChanges(mContactEntry);
+
                 return true;
 
             case R.id.menu_item_cancel_changes:
