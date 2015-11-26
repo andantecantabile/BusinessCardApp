@@ -1,6 +1,7 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -23,6 +25,7 @@ public class ContactDetailActivity extends AppCompatActivity
 
     private ViewPager mViewPager;
     private List<ContactEntry> mContactEntries;
+    private ContactEntry mCurrContactEntry;
 
     public static Intent newIntent(Context packageContext, UUID contactEntryId) {
         Intent intent = new Intent(packageContext, ContactDetailActivity.class);
@@ -84,12 +87,52 @@ public class ContactDetailActivity extends AppCompatActivity
     public void onContactEntryDelete(ContactEntry ce) {
         Log.d(TAG,"onContactEntryDelete");
 
-        // delete the currently selected contact entry
-        ContactStore.get(this).deleteContactEntry(ce);
+        mCurrContactEntry = ce;
 
-        // after deletion, need to return to the list view...
-        // which should be the previous activity in the backstack, so need to close this activity
-        finish();
-        // NOTE: Alternatively, if this doesn't work, would need to start the list activity here.
+        // TODO: before checking for confirmation from user that the entry should be deleted... may need to check first that the given contact entry is not null... (but this case shouldn't actually happen...)
+
+        // get confirmation from user in a dialog that they want to go back without saving changes
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Delete this contact?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Yes, the user wants to delete the contact...
+
+                // delete the currently selected contact entry
+                ContactStore.get(getApplicationContext()).deleteContactEntry(mCurrContactEntry);
+
+                // after deletion, need to return to the list view...
+                // which should be the previous activity in the backstack, so need to close this activity
+                finish();
+                // NOTE: Alternatively, if this doesn't work, would need to start the list activity here.
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Cancel the dialog here, if the user decides not to delete the currently active contact entry.
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
+
+    /*
+    public int getItemPosition(Object item) {
+
+    }
+    */
+
+    /*
+    @Override
+    public void onResume() {
+        super.onResume();
+        // was trying to override onResume to get the ViewPager to refresh, but found an alternate way
+    }
+    */
 }

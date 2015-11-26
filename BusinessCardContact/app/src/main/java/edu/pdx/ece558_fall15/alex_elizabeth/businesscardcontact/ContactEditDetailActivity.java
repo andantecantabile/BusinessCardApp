@@ -1,12 +1,14 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -64,5 +66,33 @@ public class ContactEditDetailActivity extends AppCompatActivity
 
         // On cancel, want to return to the previous activity.
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG,"onBackPressed");
+
+        // get confirmation from user in a dialog that they want to go back without saving changes
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Return without saving changes?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Yes, the user wants to exit, so close the activity
+                finish();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Cancel the closing of the activity here
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

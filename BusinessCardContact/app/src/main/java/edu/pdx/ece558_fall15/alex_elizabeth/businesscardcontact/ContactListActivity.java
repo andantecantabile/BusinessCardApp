@@ -1,11 +1,13 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -13,6 +15,7 @@ public class ContactListActivity extends AppCompatActivity
         implements ContactListFragment.Callbacks,
         ContactDetailFragment.Callbacks {
     private static final String TAG = "ContactListActivity";
+    private ContactEntry mCurrContactEntry;
 
     @LayoutRes
         private int getLayoutResId() {
@@ -91,28 +94,55 @@ public class ContactListActivity extends AppCompatActivity
     public void onContactEntryDelete(ContactEntry ce) {
         Log.d(TAG, "onContactEntryDelete");
 
-        // delete the currently selected contact entry
-        ContactStore.get(this).deleteContactEntry(ce);
+        mCurrContactEntry = ce;
 
-        // after deletion, need to return to the list view.
-        FragmentManager fm = getSupportFragmentManager();
-        //Check if the id for placing the ContactListFragment in exists
-        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
-        if(fragment == null) {
-            fragment = new ContactListFragment();
-            fm.beginTransaction()
-                    .add(R.id.fragment_container, fragment)
-                    .commit();
-        }
+        // TODO: before checking for confirmation from user that the entry should be deleted... may need to check first that the given contact entry is not null... (but this case shouldn't actually happen...)
 
-        // check for the existence of the detailfragmentcontainer,
-        // if it is present, it needs to be cleared.
-        Fragment detailFragment = fm.findFragmentById(R.id.detail_fragment_container);
-        if(detailFragment != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .remove(detailFragment)
-                    .commit();
-        }
+        // get confirmation from user in a dialog that they want to go back without saving changes
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Delete this contact?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Yes, the user wants to delete the contact...
+
+                // delete the currently selected contact entry
+                ContactStore.get(getApplicationContext()).deleteContactEntry(mCurrContactEntry);
+                //ContactStore.get(this).deleteContactEntry(ce);
+
+                // after deletion, need to return to the list view.
+                FragmentManager fm = getSupportFragmentManager();
+                //Check if the id for placing the ContactListFragment in exists
+                Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+                if(fragment == null) {
+                    fragment = new ContactListFragment();
+                    fm.beginTransaction()
+                            .add(R.id.fragment_container, fragment)
+                            .commit();
+                }
+
+                // check for the existence of the detailfragmentcontainer,
+                // if it is present, it needs to be cleared.
+                Fragment detailFragment = fm.findFragmentById(R.id.detail_fragment_container);
+                if(detailFragment != null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .remove(detailFragment)
+                            .commit();
+                }
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Cancel the dialog here, if the user decides not to delete the currently active contact entry.
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
