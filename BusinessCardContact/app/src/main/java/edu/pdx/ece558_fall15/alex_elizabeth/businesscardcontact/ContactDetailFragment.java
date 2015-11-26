@@ -167,9 +167,9 @@ public class ContactDetailFragment extends Fragment {
         }
     }
 
+    /*
     private void pickImage() {
         // need to start activity to pick an image.
-        /*
         Intent intent = new Intent(Intent.ACTION_SEND);
         String title = getResources().getString(R.string.img_chooser_title);
         // Create intent to show chooser
@@ -178,8 +178,8 @@ public class ContactDetailFragment extends Fragment {
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivity(chooser);
         }
-        */
     }
+    */
 
     // Displays the provided image file in the referenced image view.
     private void updatePhotoView(ImageView imgView, File imgFile) {
@@ -187,10 +187,10 @@ public class ContactDetailFragment extends Fragment {
             if (imgFile == null || !imgFile.exists()) {
                 //imgView.setImageDrawable(null);   // would display no image.
                 // instead, if no image file exists, display the default image.
-                //imgView.setImageResource(R.drawable.ic_add_a_photo_holo_light);
+                imgView.setImageResource(R.drawable.ic_add_a_photo_holo_light);
                 // would potentially like to change the default photo image with themes;
                 // so use a string here to reference the photo image.
-                imgView.setImageResource(getResources().getIdentifier(getResources().getString(R.string.default_photo_img), "drawable", PACKAGE_NAME ));
+                //imgView.setImageResource(getResources().getIdentifier(getResources().getString(R.string.default_photo_img), "drawable", PACKAGE_NAME ));
             } else {
                 // Uncomment this section when PictureUtils is set up.
                 Bitmap bitmap = PictureUtils.getScaledBitmap(

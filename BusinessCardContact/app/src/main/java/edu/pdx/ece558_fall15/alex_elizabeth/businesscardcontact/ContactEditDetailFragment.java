@@ -2,8 +2,11 @@ package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -18,11 +21,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.UUID;
 
 public class ContactEditDetailFragment extends Fragment{
     private static final String TAG = "ContactDetailFragment";
     private static final String PACKAGE_NAME = "edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact";
+
+    private static final int PICK_CONTACT_IMAGE_REQUEST = 1;    // contact photo request
+    private static final int PICK_BC_IMAGE_REQUEST = 2;         // business card photo request
 
     private static final String ARG_CONTACT_ENTRY_ID = "contact_entry_id";
 
@@ -130,7 +139,7 @@ public class ContactEditDetailFragment extends Fragment{
                 @Override
                 public void onClick(View v) {
                     // need to launch the chooser here
-                    pickImage();
+                    pickImage(PICK_CONTACT_IMAGE_REQUEST);
 
                     // and then need to create a separate method to
                     // process the returned file from the activity
@@ -146,8 +155,8 @@ public class ContactEditDetailFragment extends Fragment{
                 @Override
                 public void onClick(View v) {
                     // need to launch the chooser here for the business card image;
-                    // My_TODO: add a parameter to pickImage() to distinguish between contact photo and business card
-                    //pickImage();
+                    // added a parameter to pickImage() to distinguish between contact photo and business card
+                    pickImage(PICK_BC_IMAGE_REQUEST);
                 }
             });
         }
@@ -329,18 +338,21 @@ public class ContactEditDetailFragment extends Fragment{
         }
     }
 
-    private void pickImage() {
+    private void pickImage(int requestCode) {
         // need to start activity to pick an image.
-        /*
-        Intent intent = new Intent(Intent.ACTION_SEND);
+        Log.d(TAG, "pickImage");
+
+        //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         String title = getResources().getString(R.string.img_chooser_title);
         // Create intent to show chooser
         Intent chooser = Intent.createChooser(intent, title);
+
         // Verify the intent will resolve to at least one activity
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivity(chooser);
+            startActivityForResult(chooser, requestCode);
         }
-        */
+
     }
 
     // Displays the provided image file in the referenced image view.
@@ -349,10 +361,10 @@ public class ContactEditDetailFragment extends Fragment{
             if (imgFile == null || !imgFile.exists()) {
                 //imgView.setImageDrawable(null);   // would display no image.
                 // instead, if no image file exists, display the default image.
-                //imgView.setImageResource(R.drawable.ic_add_a_photo_holo_light);
+                imgView.setImageResource(R.drawable.ic_add_a_photo_holo_light);
                 // would potentially like to change the default photo image with themes;
                 // so use a string here to reference the photo image.
-                imgView.setImageResource(getResources().getIdentifier(getResources().getString(R.string.default_photo_img), "drawable", PACKAGE_NAME ));
+                //imgView.setImageResource(getResources().getIdentifier(getResources().getString(R.string.default_photo_img), "drawable", PACKAGE_NAME ));
             } else {
                 // Uncomment this section when PictureUtils is set up.
                 Bitmap bitmap = PictureUtils.getScaledBitmap(
@@ -360,5 +372,58 @@ public class ContactEditDetailFragment extends Fragment{
                 imgView.setImageBitmap(bitmap);
             }
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+
+            Uri uri = data.getData();
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                // Log.d(TAG, String.valueOf(bitmap));
+                File filesDir = getActivity().getFilesDir();
+
+                if (requestCode == PICK_CONTACT_IMAGE_REQUEST) {
+                    // update contact photo
+                    File tmpFile = persistImage(filesDir,bitmap,mContactEntry.getPhotoFilename());
+                    if (tmpFile != null) {
+                        mContactPhotoFile = tmpFile;
+                        updatePhotoView(mContactPhotoView, mContactPhotoFile);
+                    }
+                }
+                else if (requestCode == PICK_BC_IMAGE_REQUEST) {
+                    // update business card image
+                    File tmpFile = persistImage(filesDir,bitmap,mContactEntry.getBCPhotoFilename());
+                    if (tmpFile != null) {
+                        mContactBCFile = tmpFile;
+                        updatePhotoView(mContactBCView, mContactBCFile);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // helper method modified from stackoverflow
+    private static File persistImage(File filesDir, Bitmap bitmap, String name) {
+        File imageFile = new File(filesDir, name + ".jpg");
+
+        OutputStream os;
+        try {
+            os = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            Log.e(TAG, "Error writing bitmap", e);
+            return null;
+        }
+
+        return imageFile;
     }
 }
