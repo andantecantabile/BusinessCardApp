@@ -130,4 +130,8 @@ public class ContactStore {
             mContactEntries.add(ce);
         }
     }
+
+    public ContactEntry getContactEntryAtPosition(int position) {
+        return mContactEntries.get(position);
+    }
 }

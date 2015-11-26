@@ -11,10 +11,16 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.util.UUID;
+
 public class ContactListActivity extends AppCompatActivity
         implements ContactListFragment.Callbacks,
         ContactDetailFragment.Callbacks {
+
     private static final String TAG = "ContactListActivity";
+
+    private static final int REQUEST_CODE_VIEW = 0;
+
     private ContactEntry mCurrContactEntry;
 
     @LayoutRes
@@ -71,14 +77,34 @@ public class ContactListActivity extends AppCompatActivity
         //Check if the id for placing the ContactDetailFragment in exists
         if(findViewById(R.id.detail_fragment_container) == null) {
             Intent intent = ContactDetailActivity.newIntent(this, ce.getId());
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE_VIEW);
         } else {
-            Fragment newDetail = ContactDetailFragment.newInstance(ce.getId());
-
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detail_fragment_container, newDetail)
-                    .commit();
+            setDetailFragment(ce);
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if(resultCode != RESULT_OK) {
+            return;
+        }
+        if(requestCode == REQUEST_CODE_VIEW) {
+            UUID currID = ContactDetailActivity.lastViewedID(intent);
+            if(currID != null) {
+                ContactEntry ce = ContactStore.get(this).getContactEntry(currID);
+                if (findViewById(R.id.detail_fragment_container) != null) {
+                    setDetailFragment(ce);
+                }
+            }
+        }
+    }
+
+    private void setDetailFragment(ContactEntry ce) {
+        Fragment newDetail = ContactDetailFragment.newInstance(ce.getId());
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.detail_fragment_container, newDetail)
+                .commit();
     }
 
     @Override

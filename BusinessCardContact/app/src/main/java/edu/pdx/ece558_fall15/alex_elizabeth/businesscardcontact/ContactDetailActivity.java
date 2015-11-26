@@ -35,7 +35,7 @@ public class ContactDetailActivity extends AppCompatActivity
         return intent;
     }
 
-    private static UUID lastViewedID(Intent intent) {
+    public static UUID lastViewedID(Intent intent) {
         return (UUID) intent.getSerializableExtra(EXTRA_CONTACT_ENTRY_ID);
     }
 
@@ -72,8 +72,8 @@ public class ContactDetailActivity extends AppCompatActivity
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
-                mCurrContactEntry = mContactEntries.get(position);
-                return ContactDetailFragment.newInstance(mCurrContactEntry.getId());
+                return ContactDetailFragment.newInstance(ContactStore.get(getApplicationContext())
+                        .getContactEntryAtPosition(position).getId());
             }
 
             @Override
@@ -82,22 +82,19 @@ public class ContactDetailActivity extends AppCompatActivity
             }
         });
 
-        /*
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
             @Override
             public void onPageSelected(int position) {
-                //ContactEntry ce = mContactEntries.get(position);
+                mCurrContactEntry = mContactEntries.get(position);
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-            }
+            public void onPageScrollStateChanged(int state) { }
         });
-        */
 
         for (int i = 0; i < mContactEntries.size(); i++) {
             ContactEntry nextEntry = mContactEntries.get(i);
