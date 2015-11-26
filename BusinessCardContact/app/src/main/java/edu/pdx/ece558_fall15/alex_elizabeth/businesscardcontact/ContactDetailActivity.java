@@ -22,6 +22,7 @@ public class ContactDetailActivity extends AppCompatActivity
 
     private static final String EXTRA_CONTACT_ENTRY_ID =
             "edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact.contactEntryId";
+    private static final String KEY_ENTRY_ID = "entry_id";
 
     private ViewPager mViewPager;
     private List<ContactEntry> mContactEntries;
@@ -34,19 +35,33 @@ public class ContactDetailActivity extends AppCompatActivity
         return intent;
     }
 
+    private static UUID lastViewedID(Intent intent) {
+        return (UUID) intent.getSerializableExtra(EXTRA_CONTACT_ENTRY_ID);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG,"onCreate");
 
+        UUID contactId = (UUID) getIntent()
+                .getSerializableExtra(EXTRA_CONTACT_ENTRY_ID);
+
+        if(savedInstanceState != null) {
+            UUID currId = (UUID) savedInstanceState.getSerializable(KEY_ENTRY_ID);
+            if(currId != null) {
+                mCurrContactEntry = ContactStore.get(this).getContactEntry(currId);
+            }
+        }
+
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Intent data = new Intent();
+            data.putExtra(EXTRA_CONTACT_ENTRY_ID, mCurrContactEntry.getId());
+            setResult(RESULT_OK, data);
             this.finish();
         }
 
         setContentView(R.layout.activity_view_pager);
-
-        UUID contactId = (UUID) getIntent()
-                .getSerializableExtra(EXTRA_CONTACT_ENTRY_ID);
 
         mViewPager = (ViewPager) findViewById(R.id.activity_view_pager);
 
@@ -57,8 +72,8 @@ public class ContactDetailActivity extends AppCompatActivity
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
-                ContactEntry currContact = mContactEntries.get(position);
-                return ContactDetailFragment.newInstance(currContact.getId());
+                mCurrContactEntry = mContactEntries.get(position);
+                return ContactDetailFragment.newInstance(mCurrContactEntry.getId());
             }
 
             @Override
@@ -85,7 +100,9 @@ public class ContactDetailActivity extends AppCompatActivity
         */
 
         for (int i = 0; i < mContactEntries.size(); i++) {
-            if (mContactEntries.get(i).getId().equals(contactId)) {
+            ContactEntry nextEntry = mContactEntries.get(i);
+            if (nextEntry.getId().equals(contactId)) {
+                mCurrContactEntry = nextEntry;
                 mViewPager.setCurrentItem(i);
                 break;
             }
@@ -95,6 +112,8 @@ public class ContactDetailActivity extends AppCompatActivity
     @Override
     public void onContactEntryEdit(ContactEntry ce) {
         Log.d(TAG, "onContactEntryEdit");
+
+        mCurrContactEntry = ce;
 
         // start the edit detail activity
         Intent intent = ContactEditDetailActivity.newIntent(this, ce.getId());
@@ -157,5 +176,11 @@ public class ContactDetailActivity extends AppCompatActivity
         // TODO: only update the single entry that has been changed rather than re-obtaining the entire list.
         mContactEntries = ContactStore.get(this).getContactEntries();
         mViewPager.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(KEY_ENTRY_ID, mCurrContactEntry.getId());
     }
 }
