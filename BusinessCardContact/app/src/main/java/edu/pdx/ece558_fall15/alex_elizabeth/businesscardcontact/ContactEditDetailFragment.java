@@ -355,10 +355,10 @@ public class ContactEditDetailFragment extends Fragment{
         Uri outputFileUri = null;
         String chooserText = "";
         if(requestCode == PICK_CONTACT_IMAGE_REQUEST) {
-            outputFileUri = Uri.fromFile(ContactStore.get(this.getActivity()).getPhotoFile(mContactEntry));
+            outputFileUri = Uri.fromFile(ContactStore.get(this.getActivity()).getSuggestedPhotoFile(mContactEntry));
             chooserText = getResources().getString(R.string.chooserContactImage);
         } else if(requestCode == PICK_BC_IMAGE_REQUEST) {
-            outputFileUri = Uri.fromFile(ContactStore.get(this.getActivity()).getBCPhotoFile(mContactEntry));
+            outputFileUri = Uri.fromFile(ContactStore.get(this.getActivity()).getSuggestedBCFile(mContactEntry));
             chooserText = getResources().getString(R.string.chooserBCImage);
         }
 

@@ -136,6 +136,15 @@ public class ContactStore {
     }
 
     /**
+     * Get a File reference to the suggested ContactEntry photo
+     * @param ce ContactEntry to get the suggested photo location of
+     * @return File reference to the suggested photo location
+     */
+    public File getSuggestedPhotoFile(ContactEntry ce) {
+        return getImageFile(ce.getSuggestedPhotoFilename());
+    }
+
+    /**
      * Get a File reference to the ContactEntry business card photo
      * @param ce ContactEntry to get the photo of
      * @return File reference to the business card photo
@@ -145,11 +154,23 @@ public class ContactStore {
     }
 
     /**
+     * Get a File reference to the suggested ContactEntry business card photo
+     * @param ce ContactEntry to get the suggested business card photo location of
+     * @return File reference to the suggested business card photo location
+     */
+    public File getSuggestedBCFile(ContactEntry ce) {
+        return getImageFile(ce.getSuggestedBCPhotoFilename());
+    }
+
+    /**
      * Internal method to get a File from a filename
      * @param filename filename to get a File from
      * @return a File reference from a specified filename
      */
     private File getImageFile(String filename) {
+        if(filename == null) {
+            return null;
+        }
         File externalFilesDir = mContext
                 .getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         if(externalFilesDir == null) {
