@@ -24,6 +24,8 @@ public class ContactEntry {
     private String mEmail;
     private String mWebsite;
     private String mNotes;
+    private String mPhotoFilePath;
+    private String mBCFilePath;
 
     /**
      * Constructs a new empty contact with a random Id
@@ -42,19 +44,51 @@ public class ContactEntry {
     }
 
     /**
-     * Gets the filename of the picture of the contact
-     * @return the filename of the picture of the contact
+     * Gets the suggested filename of the picture of the contact
+     * @return the suggested filename of the picture of the contact
      */
-    public String getPhotoFilename() {
+    public String getSuggestedPhotoFilename() {
         return "IMG_" + getId().toString() + "_photo.jpg";
     }
 
     /**
-     * Gets the filename of the picture of the business card
-     * @return the filename of the picture of the business card
+     * Gets the suggested filename of the picture of the business card
+     * @return the suggested filename of the picture of the business card
      */
-    public String getBCPhotoFilename() {
+    public String getSuggestedBCPhotoFilename() {
         return "IMG_" + getId().toString() + "_bc.jpg";
+    }
+
+    /**
+     * Gets the filename of the picture of the contact
+     * @return the filename of the picture of the contact
+     */
+    public String getPhotoFilePath() {
+        return mPhotoFilePath;
+    }
+
+    /**
+     * Sets the filename of the picture of the contact
+     * @param photoFilePath the filename of the picture of the contact
+     */
+    public void setPhotoFilePath(String photoFilePath) {
+        mPhotoFilePath = photoFilePath;
+    }
+
+    /**
+     * Gets the filename of the business card image of the contact
+     * @return the filename of the business card image of the contact
+     */
+    public String getBCFilePath() {
+        return mPhotoFilePath;
+    }
+
+    /**
+     * Sets the filename of the business card image of the contact
+     * @param bCFilePath the filename of the business card image of the contact
+     */
+    public void setBCFilePath(String bCFilePath) {
+        mPhotoFilePath = bCFilePath;
     }
 
     /**

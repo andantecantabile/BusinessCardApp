@@ -22,8 +22,7 @@ public class ContactStore {
     private Context mContext;
     //Reference to the class that interacts with the Android Contact List
     private ContactContentResolverHelper mResolverHelper;
-
-    //TODO: Replace with ContentProvider
+    //List to store a local copy to facilitate quick access
     private List<ContactEntry> mContactEntries = new ArrayList<ContactEntry>();
 
     /**
@@ -45,9 +44,11 @@ public class ContactStore {
     private ContactStore(Context context) {
         mContext = context;
         mResolverHelper = new ContactContentResolverHelper(mContext);
+        mContactEntries = mResolverHelper.getAllContacts();
+
         //TODO: Remove once we can add contacts
         //for testing
-        ContactEntry ce1 = new ContactEntryBuilder(null)
+        /*ContactEntry ce1 = new ContactEntryBuilder(null)
                 .name("Alex")
                 .title("Technical Marketing Engineer")
                 .division("Design to Silicon")
@@ -59,33 +60,14 @@ public class ContactStore {
                 .website("www.mentor.com")
                 .build();
 
-        this.addContactEntry(ce1);
-        mResolverHelper.addNewContact(ce1);
+        mResolverHelper.addNewContact(ce1);*/
 
-        ContactEntry ce2 = new ContactEntryBuilder(null)
-                .name("Elizabeth")
-                .company("Intel")
-                .build();
-
-        this.addContactEntry(ce2);
-        mResolverHelper.addNewContact(ce2);
-
-        ContactEntry ce3 = new ContactEntryBuilder(ce1)
-                .name("Alex Pearson")
-                .company("Mentor Graphics")
-                .email("Alex_Pearson@mentor.com")
-                .website("www.mentor.com")
-                .build();
-
-        this.updateContactEntry(ce3);
-        mResolverHelper.updateContact(ce3);
-
-        mResolverHelper.getAllContacts();
-
-        List<ContactEntry> contactEntries = mResolverHelper.getAllContacts();
+        /*List<ContactEntry> contactEntries = mResolverHelper.getAllContacts();
         for (ContactEntry ce : contactEntries) {
             mResolverHelper.deleteContact(ce);
-        }
+        }*/
+
+        mContactEntries = mResolverHelper.getAllContacts();
 
         //end for testing
     }
@@ -95,7 +77,8 @@ public class ContactStore {
      * @param ce The ContactEntry to add
      */
     public void addContactEntry(ContactEntry ce) {
-        mContactEntries.add(ce);
+        mResolverHelper.addNewContact(ce);
+        mContactEntries = mResolverHelper.getAllContacts();
     }
 
     /**
@@ -103,10 +86,8 @@ public class ContactStore {
      * @param ce The ContactEntry to delete
      */
     public void deleteContactEntry(ContactEntry ce) {
-        int position = getContactEntryPosition(ce.getId());
-        if(position >= 0) {
-            mContactEntries.remove(position);
-        }
+        mResolverHelper.deleteContact(ce);
+        mContactEntries = mResolverHelper.getAllContacts();
     }
 
     /**
@@ -151,7 +132,7 @@ public class ContactStore {
      * @return File reference to the photo
      */
     public File getPhotoFile(ContactEntry ce) {
-        return getImageFile(ce.getPhotoFilename());
+        return getImageFile(ce.getPhotoFilePath());
     }
 
     /**
@@ -160,7 +141,7 @@ public class ContactStore {
      * @return File reference to the business card photo
      */
     public File getBCPhotoFile(ContactEntry ce) {
-        return getImageFile(ce.getBCPhotoFilename());
+        return getImageFile(ce.getBCFilePath());
     }
 
     /**
@@ -183,10 +164,10 @@ public class ContactStore {
      * @param ce The ContactEntry to be modified
      */
     public void updateContactEntry(ContactEntry ce) {
+        mResolverHelper.updateContact(ce);
         int position = getContactEntryPosition(ce.getId());
         if (position >= 0) {
-            mContactEntries.remove(position);
-            mContactEntries.add(ce);
+            mContactEntries.set(position,ce);
         }
     }
 

@@ -115,6 +115,16 @@ public class ContactEntryBuilder {
         return this;
     }
 
+    public ContactEntryBuilder photo(String photoPath) {
+        mContactEntry.setPhotoFilePath(photoPath);
+        return this;
+    }
+
+    public ContactEntryBuilder businessCard(String businessCardPath) {
+        mContactEntry.setBCFilePath(businessCardPath);
+        return this;
+    }
+
     /**
      * Creates the ContactEntry from the ContactEntryBuilder
      * @return the ContactEntry

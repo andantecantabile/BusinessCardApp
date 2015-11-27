@@ -81,7 +81,7 @@ public class ContactContentResolverHelper {
         updateCompanyData(rawContactId, contactEntry);
         updateWebsiteData(rawContactId, contactEntry);
         updateNoteData(rawContactId, contactEntry);
-        //updatePhotoData(rawContactId, contactEntry);
+        updatePhotoData(rawContactId, contactEntry);
     }
 
     /**
@@ -378,7 +378,7 @@ public class ContactContentResolverHelper {
                 .update(Data.CONTENT_URI,
                         values,
                         Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
-                        Data.MIMETYPE + "='" + StructuredName.CONTENT_ITEM_TYPE + "'",
+                                Data.MIMETYPE + "='" + StructuredName.CONTENT_ITEM_TYPE + "'",
                         null);
 
         //If for some reason something goes wrong and we update multiple contacts, log an
@@ -550,6 +550,31 @@ public class ContactContentResolverHelper {
         if(numRowsModified > 1) {
             Log.e(TAG, "Multiple Contacts Updated in Error");
         }
+    }
+
+    private void updatePhotoData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "updatePhotoData");
+
+        //Create a ContentValues and add the photo values
+        ContentValues values = new ContentValues();
+        addPhotoValues(contactEntry, values);
+
+        //Update the entry with the matching RawContact _ID and matching MIMETYPE
+        int numRowsModified = mContext.getContentResolver()
+                .update(Data.CONTENT_URI,
+                        values,
+                        Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
+                            Data.MIMETYPE + "='" + Photo.MIMETYPE + "'",
+                        null);
+        //If for some reason something goes wrong and we update multiple contacts, log an
+        //error message
+        if(numRowsModified > 1) {
+            Log.e(TAG, "Multiple Contacts Updated in Error");
+        }
+    }
+
+    private void updateBCData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "updateBCData");
     }
 
     /**
@@ -849,5 +874,12 @@ public class ContactContentResolverHelper {
                 this.moveToNext();
             }
         }
+    }
+
+    private class BusinessCardPhoto {
+        private static final String CONTENT_ITEM_TYPE =
+                "edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact.businesscard";;
+        private static final String PHOTO_FILE_ID = "data14";
+        private static final String PHOTO = "data15";
     }
 }
