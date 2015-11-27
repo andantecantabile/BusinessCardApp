@@ -422,13 +422,15 @@ public class ContactEditDetailFragment extends Fragment{
             Uri uri = data.getData();
 
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity()
+                        .getContentResolver(), uri);
                 // Log.d(TAG, String.valueOf(bitmap));
                 File filesDir = getActivity().getFilesDir();
 
                 if (requestCode == PICK_CONTACT_IMAGE_REQUEST) {
                     // update contact photo
-                    File tmpFile = persistImage(filesDir,bitmap,mContactEntry.getPhotoFilename());
+                    File tmpFile = persistImage(filesDir,bitmap,
+                            mContactEntry.getSuggestedPhotoFilename());
                     if (tmpFile != null) {
                         mContactPhotoFile = tmpFile;
                         updatePhotoView(mContactPhotoView, mContactPhotoFile);
@@ -436,7 +438,8 @@ public class ContactEditDetailFragment extends Fragment{
                 }
                 else if (requestCode == PICK_BC_IMAGE_REQUEST) {
                     // update business card image
-                    File tmpFile = persistImage(filesDir,bitmap,mContactEntry.getBCPhotoFilename());
+                    File tmpFile = persistImage(filesDir,bitmap,
+                            mContactEntry.getSuggestedBCPhotoFilename());
                     if (tmpFile != null) {
                         mContactBCFile = tmpFile;
                         updatePhotoView(mContactBCView, mContactBCFile);

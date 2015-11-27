@@ -682,10 +682,10 @@ public class ContactContentResolverHelper {
      * @param values ContentValues to add to
      */
     private void addPhotoValues(ContactEntry contactEntry, ContentValues values) {
-        if(contactEntry.getPhotoFilename() != null) {
-            values.put(Photo.PHOTO_FILE_ID, contactEntry.getPhotoFilename());
+        if(contactEntry.getPhotoFilePath() != null) {
+            values.put(Photo.PHOTO_FILE_ID, contactEntry.getPhotoFilePath());
             Bitmap b = PictureUtils.getScaledBitmap(
-                    contactEntry.getPhotoFilename(), 160, 160);
+                    contactEntry.getPhotoFilePath(), 160, 160);
             int bytes = b.getByteCount();
             ByteBuffer buffer = ByteBuffer.allocate(bytes);
             b.copyPixelsToBuffer(buffer);
