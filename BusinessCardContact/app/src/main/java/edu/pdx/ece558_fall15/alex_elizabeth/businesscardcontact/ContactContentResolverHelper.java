@@ -104,19 +104,8 @@ public class ContactContentResolverHelper {
                         null
                 )
         );
+        cursor.getRawContacts(contactEntries, this);
 
-        //Navigate through the cursor
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast()) {
-            //Extract the RawContact _ID and the UUID
-            long rawContactId = Long.valueOf(cursor.getString(0));
-            UUID uuid = UUID.fromString(cursor.getString(1));
-
-            //Get the contact data using the RawContact _ID and the UUID
-            //and add to the list to return
-            contactEntries.add(getContact(rawContactId, uuid));
-            cursor.moveToNext();
-        }
         //Close the cursor to not leak resources
         cursor.close();
 
@@ -336,62 +325,109 @@ public class ContactContentResolverHelper {
                 .insert(Data.CONTENT_URI, values);
     }
 
+    /**
+     * Get the RawContact _ID based on the specified UUID
+     * @param uuid Id of the RawContact entry to get
+     * @return the RawContact _ID value
+     */
     private long getRawContact(UUID uuid) {
         Log.d(TAG, "getRawContact");
+
+        //Get the RawContacts _ID column where the account name matches the UUID and the
+        //account type matches our account type
         ContactEntryCursorWrapper cursor = new ContactEntryCursorWrapper(
                 mContext.getContentResolver().query(
                         RawContacts.CONTENT_URI,
                         new String[] { RawContacts._ID },
-                        RawContacts.ACCOUNT_NAME + "='" + uuid.toString() + "'",
+                        RawContacts.ACCOUNT_NAME + "='" + uuid.toString() + "' AND " +
+                        RawContacts.ACCOUNT_TYPE + "='" + ACT_TYPE + "'",
                         null,
                         null
                 )
         );
 
-        cursor.moveToFirst();
-        long rawContactId = 0;
-        if (!cursor.isAfterLast()) {
-            rawContactId = Long.valueOf(cursor.getString(0));
+        //If for some reason something goes wrong and we match multiple contacts, log an
+        //error message
+        if(cursor.getCount() > 1) {
+            Log.e(TAG, "Multiple matching contacts found in Error");
         }
+
+        //Get the RawContact _ID value if it exists, otherwise 0
+        long rawContactId = cursor.getRawContactId();
+        //Close the cursor to prevent resource leaks
         cursor.close();
 
+        //Return the retrieved value
         return rawContactId;
     }
 
+    /**
+     * Update a name data entry from the Data table
+     * @param rawContactId the RawContact _ID to use as a foreign key
+     * @param contactEntry the ContactEntry to get the data from
+     */
     private void updateNameData(long rawContactId, ContactEntry contactEntry) {
         Log.d(TAG, "updateNameData");
+
+        //Create a ContentValues and add the name values
         ContentValues values = new ContentValues();
         addNameValues(contactEntry, values);
+
+        //Update the entry with the matching RawContact _ID and matching MIMETYPE
         int numRowsModified = mContext.getContentResolver()
                 .update(Data.CONTENT_URI,
                         values,
                         Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
                         Data.MIMETYPE + "='" + StructuredName.CONTENT_ITEM_TYPE + "'",
                         null);
+
+        //If for some reason something goes wrong and we update multiple contacts, log an
+        //error message
         if(numRowsModified > 1) {
             Log.e(TAG, "Multiple Contacts Updated in Error");
         }
     }
 
+    /**
+     * Update an email data entry from the Data table
+     * @param rawContactId the RawContact _ID to use as a foreign key
+     * @param contactEntry the ContactEntry to get the data from
+     */
     private void updateEmailData(long rawContactId, ContactEntry contactEntry) {
         Log.d(TAG, "updateEmailData");
+
+        //Create a ContentValues and add the email values
         ContentValues values = new ContentValues();
         addEmailValues(contactEntry, values);
+
+        //Update the entry with the matching RawContact _ID and matching MIMETYPE
         int numRowsModified = mContext.getContentResolver()
                 .update(Data.CONTENT_URI,
                         values,
                         Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
                         Data.MIMETYPE + "='" + Email.CONTENT_ITEM_TYPE + "'",
                         null);
+
+        //If for some reason something goes wrong and we update multiple contacts, log an
+        //error message
         if(numRowsModified > 1) {
             Log.e(TAG, "Multiple Contacts Updated in Error");
         }
     }
 
+    /**
+     * Update a phone data entry from the Data table
+     * @param rawContactId the RawContact _ID to use as a foreign key
+     * @param contactEntry the ContactEntry to get the data from
+     */
     private void updatePhoneData(long rawContactId, ContactEntry contactEntry) {
         Log.d(TAG, "updatePhoneData");
+
+        //Create a ContentValues and add the phone values
         ContentValues values = new ContentValues();
         addPhoneValues(contactEntry, values);
+
+        //Update the entry with the matching RawContact _ID, matching MIMETYPE, and TYPE
         int numRowsModified = mContext.getContentResolver()
                 .update(Data.CONTENT_URI,
                         values,
@@ -399,15 +435,27 @@ public class ContactContentResolverHelper {
                         Data.MIMETYPE + "='" + Phone.CONTENT_ITEM_TYPE + "' AND " +
                         Phone.TYPE + "='" + Phone.TYPE_WORK + "'",
                         null);
+
+        //If for some reason something goes wrong and we update multiple contacts, log an
+        //error message
         if(numRowsModified > 1) {
             Log.e(TAG, "Multiple Contacts Updated in Error");
         }
     }
 
+    /**
+     * Update a fax data entry from the Data table
+     * @param rawContactId the RawContact _ID to use as a foreign key
+     * @param contactEntry the ContactEntry to get the data from
+     */
     private void updateFaxData(long rawContactId, ContactEntry contactEntry) {
         Log.d(TAG, "updateFaxData");
+
+        //Create a ContentValues and add the fax values
         ContentValues values = new ContentValues();
-        addPhoneValues(contactEntry, values);
+        addFaxValues(contactEntry, values);
+
+        //Update the entry with the matching RawContact _ID, matching MIMETYPE, and TYPE
         int numRowsModified = mContext.getContentResolver()
                 .update(Data.CONTENT_URI,
                         values,
@@ -415,56 +463,100 @@ public class ContactContentResolverHelper {
                                 Data.MIMETYPE + "='" + Phone.CONTENT_ITEM_TYPE + "' AND " +
                                 Phone.TYPE + "='" + Phone.TYPE_FAX_WORK + "'",
                         null);
+
+        //If for some reason something goes wrong and we update multiple contacts, log an
+        //error message
         if(numRowsModified > 1) {
             Log.e(TAG, "Multiple Contacts Updated in Error");
         }
     }
 
+    /**
+     * Update a company data entry from the Data table
+     * @param rawContactId the RawContact _ID to use as a foreign key
+     * @param contactEntry the ContactEntry to get the data from
+     */
     private void updateCompanyData(long rawContactId, ContactEntry contactEntry) {
         Log.d(TAG, "updateCompanyData");
+
+        //Create a ContentVaues and add the company values
         ContentValues values = new ContentValues();
         addCompanyValues(contactEntry, values);
+
+        //Update the entry with the  matching RawContact _ID and matching MIMETYPE
         int numRowsModified = mContext.getContentResolver()
                 .update(Data.CONTENT_URI,
                         values,
                         Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
                                 Data.MIMETYPE + "='" + Organization.CONTENT_ITEM_TYPE + "'",
                         null);
+
+        //If for some reason something goes wrong and we update multiple contacts, log an
+        //error message
         if(numRowsModified > 1) {
             Log.e(TAG, "Multiple Contacts Updated in Error");
         }
     }
 
+    /**
+     * Update a website data entry from the Data table
+     * @param rawContactId the RawContact _ID to use as a foreign key
+     * @param contactEntry the ContactEntry to get the data from
+     */
     private void updateWebsiteData(long rawContactId, ContactEntry contactEntry) {
         Log.d(TAG, "updateWebsiteData");
+
+        //Create a ContentValues and add the website values
         ContentValues values = new ContentValues();
         addCompanyValues(contactEntry, values);
+
+        //Update the entry with the  matching RawContact _ID and matching MIMETYPE
         int numRowsModified = mContext.getContentResolver()
                 .update(Data.CONTENT_URI,
                         values,
                         Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
                                 Data.MIMETYPE + "='" + Website.CONTENT_ITEM_TYPE + "'",
                         null);
+
+        //If for some reason something goes wrong and we update multiple contacts, log an
+        //error message
         if(numRowsModified > 1) {
             Log.e(TAG, "Multiple Contacts Updated in Error");
         }
     }
 
+    /**
+     * Update a note data entry from the Data table
+     * @param rawContactId the RawContact _ID to use as a foreign key
+     * @param contactEntry the ContactEntry to get the data from
+     */
     private void updateNoteData(long rawContactId, ContactEntry contactEntry) {
         Log.d(TAG, "updateNoteData");
+
+        //Create a ContentValues and add the website values
         ContentValues values = new ContentValues();
         addCompanyValues(contactEntry, values);
+
+        //Update the entry with the  matching RawContact _ID and matching MIMETYPE
         int numRowsModified = mContext.getContentResolver()
                 .update(Data.CONTENT_URI,
                         values,
                         Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
                                 Data.MIMETYPE + "='" + Note.CONTENT_ITEM_TYPE + "'",
                         null);
+
+        //If for some reason something goes wrong and we update multiple contacts, log an
+        //error message
         if(numRowsModified > 1) {
             Log.e(TAG, "Multiple Contacts Updated in Error");
         }
     }
 
+    /**
+     * Adds name values to the provided ContentValues
+     * @param contactEntry ContactEntry to get the data from
+     * @param values ContentValues to add to
+     */
     private void addNameValues(ContactEntry contactEntry, ContentValues values) {
         if(contactEntry.getName() != null) {
             values.put(StructuredName.DISPLAY_NAME, contactEntry.getName());
@@ -477,6 +569,11 @@ public class ContactContentResolverHelper {
         }
     }
 
+    /**
+     * Adds email values to the provided ContentValues
+     * @param contactEntry ContactEntry to get the data from
+     * @param values ContentValues to add to
+     */
     private void addEmailValues(ContactEntry contactEntry, ContentValues values) {
         if(contactEntry.getEmail() != null) {
             values.put(Email.ADDRESS, contactEntry.getEmail());
@@ -484,17 +581,28 @@ public class ContactContentResolverHelper {
         }
     }
 
+    /**
+     * Adds phone values to the provided ContentValues
+     * @param contentEntry ContactEntry to get the data from
+     * @param values ContentValues to add to
+     */
     private void addPhoneValues(ContactEntry contentEntry, ContentValues values) {
         if(contentEntry.getPhoneNumber() != null) {
             values.put(Phone.NUMBER, contentEntry.getPhoneNumber());
             values.put(Phone.TYPE, Phone.TYPE_WORK);
         }
+
         //If there is an extension store it in a custom column
         if(contentEntry.getExtension() != null) {
             values.put(Phone.DATA4, contentEntry.getExtension());
         }
     }
 
+    /**
+     * Adds fax values to the provided ContentValues
+     * @param contactEntry ContactEntry to get the data from
+     * @param values ContentValues to add to
+     */
     private void addFaxValues(ContactEntry contactEntry, ContentValues values) {
         if(contactEntry.getFaxNumber() != null) {
             values.put(Phone.NUMBER, contactEntry.getFaxNumber());
@@ -502,15 +610,29 @@ public class ContactContentResolverHelper {
         }
     }
 
+    /**
+     * Adds company values to the provided ContentValues
+     * @param contactEntry ContactEntry to get the data from
+     * @param values ContentValues to add to
+     */
     private void addCompanyValues(ContactEntry contactEntry, ContentValues values) {
+        values.put(Organization.TYPE, Organization.TYPE_WORK);
         if(contactEntry.getCompany() != null) {
             values.put(Organization.COMPANY, contactEntry.getCompany());
+        }
+        if(contactEntry.getDivision() != null) {
             values.put(Organization.DEPARTMENT, contactEntry.getDivision());
-            values.put(Organization.TYPE, Organization.TYPE_WORK);
+        }
+        if(contactEntry.getTitle() != null) {
             values.put(Organization.TITLE, contactEntry.getTitle());
         }
     }
 
+    /**
+     * Adds website values to the provided ContentValues
+     * @param contactEntry ContactEntry to get the data from
+     * @param values ContentValues to add to
+     */
     private void addWebsiteValues(ContactEntry contactEntry, ContentValues values) {
         if(contactEntry.getWebsite() != null) {
             values.put(Website.TYPE, Website.TYPE_WORK);
@@ -518,12 +640,22 @@ public class ContactContentResolverHelper {
         }
     }
 
+    /**
+     * Adds note values to the provided ContentValues
+     * @param contactEntry ContactEntry to get the data from
+     * @param values ContentValues to add to
+     */
     private void addNoteValues(ContactEntry contactEntry, ContentValues values) {
         if(contactEntry.getNotes() != null) {
             values.put(Note.NOTE, contactEntry.getNotes());
         }
     }
 
+    /**
+     * Adds photo values to the provided ContentValues
+     * @param contactEntry ContactEntry to get the data from
+     * @param values ContentValues to add to
+     */
     private void addPhotoValues(ContactEntry contactEntry, ContentValues values) {
         if(contactEntry.getPhotoFilename() != null) {
             values.put(Photo.PHOTO_FILE_ID, contactEntry.getPhotoFilename());
@@ -536,12 +668,24 @@ public class ContactContentResolverHelper {
         }
     }
 
+    /**
+     * Get the ContactEntry from the Android Contact Storage with the specified RawContact _ID
+     * and assign it the provided UUID
+     * @param rawContactId the value of the RawContact _ID to search by
+     * @param uuid the UUID to assign
+     * @return a ContactEntry with all of the stored information set
+     */
     private ContactEntry getContact(long rawContactId, UUID uuid) {
         Log.d(TAG, "getContact");
 
+        //Create a new ContactEntry with the provided UUID
         ContactEntry contactEntry = new ContactEntry(uuid);
+
+        //Create a Uri that has the RawContact _ID and the RawContacts.Entity joined table path
         Uri rawContactUri = ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId);
         Uri entityUri = Uri.withAppendedPath(rawContactUri, RawContacts.Entity.CONTENT_DIRECTORY);
+
+        //Get the relevant columns from the Entity table
         ContactEntryCursorWrapper cursor = new ContactEntryCursorWrapper(
                 mContext.getContentResolver().query(
                         entityUri,
@@ -556,28 +700,71 @@ public class ContactContentResolverHelper {
         );
 
         try {
-            while (cursor.moveToNext()) {
-                String sourceId = cursor.getString(0);
-                if (!cursor.isNull(1)) {
-                    String mimeType = cursor.getString(2);
-                    String data1 = cursor.getString(3);
-                    String data2 = cursor.getString(4);
-                    String data3 = cursor.getString(5);
-                    String data4 = cursor.getString(6);
-                    String data5 = cursor.getString(7);
+            //Extract the values into the ContactEntry
+            cursor.extractValuesToContactEntry(contactEntry);
+        } finally {
+            //Close the cursor to not leak resources
+            cursor.close();
+        }
+
+        //Return the ContactEntry with the extracted information set
+        return contactEntry;
+    }
+
+    /**
+     * Internal class that "wraps" a cursor object, allowing for adding methods to the basic
+     * set provided by Cursor (by extending CursorWrapper)
+     * This class is responsible for all methods that need to access data in the cursor
+     */
+    private class ContactEntryCursorWrapper extends CursorWrapper {
+
+        /**
+         * Create a new ContactEntryCursorWrapper around the provied cursor
+         * @param cursor the cursor to "wrap"
+         */
+        public ContactEntryCursorWrapper(Cursor cursor) {
+            super(cursor);
+        }
+
+        /**
+         * Extract all of the values from a cursor and store them in the provided
+         * ContactEntry
+         * @param contactEntry the ContactEntry with the data fields set
+         */
+        private void extractValuesToContactEntry(ContactEntry contactEntry) {
+            while (this.moveToNext()) {
+                String sourceId = this.getString(0);
+
+                //Check if the data ID is null, if null no data to parse
+                if (!this.isNull(1)) {
+
+                    //Get the MIMETYPE to compar
+                    String mimeType = this.getString(2);
+
+                    //Get all of relevant data columns
+                    String data1 = this.getString(3);
+                    String data2 = this.getString(4);
+                    String data3 = this.getString(5);
+                    String data4 = this.getString(6);
+                    String data5 = this.getString(7);
+
+                    //Case statement based on the MIMETYPE
                     switch (mimeType) {
                         case StructuredName.CONTENT_ITEM_TYPE:
+                            //Set the name value
                             if (data1 != null) {
                                 contactEntry.setName(data1);
                             }
                             break;
                         case Email.CONTENT_ITEM_TYPE:
+                            //Set the email value
                             if (data1 != null) {
                                 contactEntry.setEmail(data1);
                             }
                             break;
                         case Phone.CONTENT_ITEM_TYPE:
                             if (data2 != null) {
+                                //Set the phone values
                                 if (Integer.parseInt(data2) == Phone.TYPE_WORK) {
                                     if (data1 != null) {
                                         contactEntry.setPhoneNumber(data1);
@@ -585,6 +772,7 @@ public class ContactContentResolverHelper {
                                     if (data4 != null) {
                                         contactEntry.setExtension(data4);
                                     }
+                                //Set the fax value
                                 } else if (Integer.parseInt(data2) == Phone.TYPE_FAX_WORK) {
                                     if (data1 != null) {
                                         contactEntry.setFaxNumber(data1);
@@ -593,6 +781,7 @@ public class ContactContentResolverHelper {
                             }
                             break;
                         case Organization.CONTENT_ITEM_TYPE:
+                            //Set the various company values
                             if (data1 != null) {
                                 contactEntry.setCompany(data1);
                             }
@@ -604,31 +793,61 @@ public class ContactContentResolverHelper {
                             }
                             break;
                         case Website.CONTENT_ITEM_TYPE:
+                            //Set the website values
                             if (data1 != null) {
                                 contactEntry.setWebsite(data1);
                             }
                             break;
                         case Note.CONTENT_ITEM_TYPE:
+                            //set the note values
                             if (data1 != null) {
                                 contactEntry.setNotes(data1);
                             }
+                            break;
+                        case Photo.CONTENT_ITEM_TYPE:
+                            //Set the photo type
+                            //TODO: Set the photo values
                             break;
                         default:
                             break;
                     }
                 }
             }
-        } finally {
-            cursor.close();
         }
 
-        return contactEntry;
-    }
+        /**
+         * Get the RawContact _ID from the cursor
+         * @return the RawContact _ID value
+         */
+        private long getRawContactId() {
+            this.moveToFirst();
+            long rawContactId = 0;
+            if (!this.isAfterLast()) {
+                rawContactId = Long.valueOf(this.getString(0));
+            }
+            return rawContactId;
+        }
 
-    private class ContactEntryCursorWrapper extends CursorWrapper {
+        /**
+         * Moves through the rows "pointed" to by the cursor, getting the RawContact _ID and UUID
+         * and calling the method necessary to get the information for each individual contact
+         * @param contactEntries A list of ContactEntry objects to add to
+         * @param helper A reference to the ContactContentResolverHelper to call the individual get
+         *               methods on
+         */
+        private void getRawContacts(List<ContactEntry> contactEntries, ContactContentResolverHelper helper) {
+            //Navigate through the cursor
+            this.moveToFirst();
+            while(!this.isAfterLast()) {
+                //Extract the RawContact _ID and the UUID
+                long rawContactId = Long.valueOf(this.getString(0));
+                UUID uuid = UUID.fromString(this.getString(1));
 
-        public ContactEntryCursorWrapper(Cursor cursor) {
-            super(cursor);
+                //Get the contact data using the RawContact _ID and the UUID
+                //and add to the list to return
+                contactEntries.add(helper.getContact(rawContactId, uuid));
+                this.moveToNext();
+            }
         }
     }
 }
