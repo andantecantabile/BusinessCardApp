@@ -36,4 +36,6 @@
 
     <!-- Default photo image (icon) name -->
     <string name="default_photo_img">R.drawable.ic_add_a_photo_holo_light</string>
+    <string name="chooserContactImage">Select a contact image:</string>
+    <string name="chooserBCImage">Select a business card image:</string>
 </resources>

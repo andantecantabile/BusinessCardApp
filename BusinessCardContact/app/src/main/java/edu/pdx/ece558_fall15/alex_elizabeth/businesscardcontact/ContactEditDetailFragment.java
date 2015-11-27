@@ -1,11 +1,15 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -16,14 +20,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class ContactEditDetailFragment extends Fragment{
@@ -139,7 +145,8 @@ public class ContactEditDetailFragment extends Fragment{
                 @Override
                 public void onClick(View v) {
                     // need to launch the chooser here
-                    pickImage(PICK_CONTACT_IMAGE_REQUEST);
+                    //pickImage(PICK_CONTACT_IMAGE_REQUEST);
+                    openImageIntent(PICK_CONTACT_IMAGE_REQUEST);
 
                     // and then need to create a separate method to
                     // process the returned file from the activity
@@ -156,7 +163,8 @@ public class ContactEditDetailFragment extends Fragment{
                 public void onClick(View v) {
                     // need to launch the chooser here for the business card image;
                     // added a parameter to pickImage() to distinguish between contact photo and business card
-                    pickImage(PICK_BC_IMAGE_REQUEST);
+                    //pickImage(PICK_BC_IMAGE_REQUEST);
+                    openImageIntent(PICK_BC_IMAGE_REQUEST);
                 }
             });
         }
@@ -338,21 +346,52 @@ public class ContactEditDetailFragment extends Fragment{
         }
     }
 
-    private void pickImage(int requestCode) {
-        // need to start activity to pick an image.
-        Log.d(TAG, "pickImage");
-
-        //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        String title = getResources().getString(R.string.img_chooser_title);
-        // Create intent to show chooser
-        Intent chooser = Intent.createChooser(intent, title);
-
-        // Verify the intent will resolve to at least one activity
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(chooser, requestCode);
+    /**
+     * Based on stackoverflow answer by David Manpearl and Austyn Mahoney
+     * @param requestCode
+     */
+    private void openImageIntent(int requestCode) {
+        Log.d(TAG, "openImageIntent");
+        Uri outputFileUri = null;
+        String chooserText = "";
+        if(requestCode == PICK_CONTACT_IMAGE_REQUEST) {
+            outputFileUri = Uri.fromFile(ContactStore.get(this.getActivity()).getPhotoFile(mContactEntry));
+            chooserText = getResources().getString(R.string.chooserContactImage);
+        } else if(requestCode == PICK_BC_IMAGE_REQUEST) {
+            outputFileUri = Uri.fromFile(ContactStore.get(this.getActivity()).getBCPhotoFile(mContactEntry));
+            chooserText = getResources().getString(R.string.chooserBCImage);
         }
 
+        // Build a list of Camera sources that could provide the correct data
+        if(outputFileUri != null) {
+            final List<Intent> cameraIntents = new ArrayList<>();
+            final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            final PackageManager packageManager = getActivity().getPackageManager();
+            final List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
+            for(ResolveInfo res : listCam) {
+                final String packageName = res.activityInfo.packageName;
+                final Intent intent = new Intent(captureIntent);
+                intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+                intent.setPackage(packageName);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                cameraIntents.add(intent);
+            }
+
+            //Build a list of FileSystem sources that could provided the correct data
+            final Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            //galleryIntent.setType("image/*");
+            //galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+
+            //Create chooser of FileSystem options
+            final Intent chooserIntent = Intent.createChooser(galleryIntent, chooserText);
+
+            //Add the camera options
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[cameraIntents.size()]));
+
+            if (chooserIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                startActivityForResult(chooserIntent, requestCode);
+            }
+        }
     }
 
     // Displays the provided image file in the referenced image view.
