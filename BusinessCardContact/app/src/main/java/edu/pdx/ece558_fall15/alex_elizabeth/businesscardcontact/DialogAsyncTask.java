@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 
-public abstract class DialogAsyncTask extends AsyncTask<String, String, Boolean> {
+public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, String, Boolean> {
     private String mInitialStatus;
     private ProgressDialog mProgressDialog;
     private ContactEntry mContactEntry = new ContactEntry();
