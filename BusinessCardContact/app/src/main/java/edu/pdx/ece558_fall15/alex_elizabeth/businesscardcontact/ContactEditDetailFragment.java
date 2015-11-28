@@ -350,9 +350,13 @@ public class ContactEditDetailFragment extends Fragment
         }
     }
 
-    // This helper function is used to hide the popup keyboard (on events such as save/cancel).
-    // Code snippet from: http://stackoverflow.com/questions/18414804/android-edittext-remove-focus-after-clicking-a-button
-    public static void hidePopUpKeyboard (Activity activity, View view)
+    /**
+     * This helper function is used to hide the popup keyboard (on events such as save/cancel).
+     * Code snippet from: http://stackoverflow.com/questions/18414804/android-edittext-remove-focus-after-clicking-a-button
+     * @param activity  current activity
+     * @param view  current view
+     */
+    public static void hidePopUpKeyboard(Activity activity, View view)
     {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
@@ -371,7 +375,9 @@ public class ContactEditDetailFragment extends Fragment
 
     }
 
-    // Async task used to commit a set of values for a contact entry to the database.
+    /**
+     * Async task used to commit a set of values for a contact entry to the database.
+     */
     private class CommitContactTask extends DialogAsyncTask<String, String, Boolean> {
         private ContactEntry mContactEntry;
         private boolean mNewContact;
@@ -422,7 +428,9 @@ public class ContactEditDetailFragment extends Fragment
         }
     }
 
-    // Displays the provided image file in the referenced image view.
+    /**
+     *  Displays the provided image file in the referenced image view.
+     */
     private void updatePhotoView(ImageView imgView, File imgFile) {
         if (imgView != null) {
             if (imgFile == null || !imgFile.exists()) {
