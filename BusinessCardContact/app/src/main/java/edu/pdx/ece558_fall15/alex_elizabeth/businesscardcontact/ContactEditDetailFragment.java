@@ -1,17 +1,13 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -30,8 +26,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class ContactEditDetailFragment extends Fragment{
@@ -388,35 +382,14 @@ public class ContactEditDetailFragment extends Fragment{
 
         // Build a list of Camera sources that could provide the correct data
         if(outputFileUri != null) {
-            final List<Intent> cameraIntents = new ArrayList<>();
-            final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            final PackageManager packageManager = getActivity().getPackageManager();
-            final List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-            for(ResolveInfo res : listCam) {
-                final String packageName = res.activityInfo.packageName;
-                final Intent intent = new Intent(captureIntent);
-                intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-                intent.setPackage(packageName);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-                cameraIntents.add(intent);
-            }
-
-            //Build a list of FileSystem sources that could provided the correct data
-            final Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            //galleryIntent.setType("image/*");
-            //galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-
-            //Create chooser of FileSystem options
-            final Intent chooserIntent = Intent.createChooser(galleryIntent, chooserText);
-
-            //Add the camera options
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[cameraIntents.size()]));
+            final Intent chooserIntent = PictureUtils.getImageChooserIntent(outputFileUri, chooserText, getActivity());
 
             if (chooserIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                 startActivityForResult(chooserIntent, requestCode);
             }
         }
     }
+
 
     // Displays the provided image file in the referenced image view.
     private void updatePhotoView(ImageView imgView, File imgFile) {
