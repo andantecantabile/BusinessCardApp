@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class ContactEditDetailFragment extends Fragment{
-    private static final String TAG = "ContactDetailFragment";
+    private static final String TAG = "ContactEditDetailFrgmt";
     private static final String PACKAGE_NAME = "edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact";
 
     private static final int PICK_CONTACT_IMAGE_REQUEST = 1;    // contact photo request
@@ -294,11 +295,13 @@ public class ContactEditDetailFragment extends Fragment{
                         .title(mContactTitleEdit.getText().toString())
                         .company(mContactCompanyEdit.getText().toString())
                         .division(mContactDepartmentEdit.getText().toString())
-                        .phoneNumber(mContactPhoneNumEdit.getText().toString(),mContactPhoneExtEdit.getText().toString())
+                        .phoneNumber(mContactPhoneNumEdit.getText().toString(), mContactPhoneExtEdit.getText().toString())
                         .faxNumber(mContactFaxNumEdit.getText().toString())
                         .email(mContactEmailEdit.getText().toString())
                         .website(mContactCompanyWebsiteEdit.getText().toString())
                         .notes(mContactNotesEdit.getText().toString())
+                        .photo(mContactPhotoFile)
+                        .businessCard(mContactBCFile)
                         .build();
                 // If this is an "Add" operation, then add the new contact
                 if (mContactEntryId == null) {
@@ -322,13 +325,13 @@ public class ContactEditDetailFragment extends Fragment{
                         alert.show();
                     }
                     else {
-                        ContactStore.get(getActivity()).addContactEntry(ce);
+                        new CommitContactTask(mContactEntry, true).execute();
                         mCallbacks.onContactEntrySaveChanges(mContactEntry);
                     }
                 }
                 // Otherwise, it is a "Modify"/"Update" operation, so update the entry
                 else {
-                    ContactStore.get(getActivity()).updateContactEntry(ce);
+                    new CommitContactTask(mContactEntry, false).execute();
                     mCallbacks.onContactEntrySaveChanges(mContactEntry);
                 }
 
@@ -343,6 +346,26 @@ public class ContactEditDetailFragment extends Fragment{
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private class CommitContactTask extends AsyncTask<Void, Void, Void> {
+        private ContactEntry mContactEntry;
+        private boolean mNewContact;
+
+        public CommitContactTask(ContactEntry contactEntry, boolean newContact) {
+            mContactEntry = contactEntry;
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            if(mNewContact) {
+                ContactStore.get(getActivity()).addContactEntry(mContactEntry);
+            } else {
+                ContactStore.get(getActivity()).updateContactEntry(mContactEntry);
+            }
+            return null;
         }
     }
 
@@ -415,38 +438,52 @@ public class ContactEditDetailFragment extends Fragment{
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+        if (resultCode == Activity.RESULT_OK) {
 
-            Uri uri = data.getData();
-
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity()
-                        .getContentResolver(), uri);
-                // Log.d(TAG, String.valueOf(bitmap));
-                File filesDir = getActivity().getFilesDir();
-
-                if (requestCode == PICK_CONTACT_IMAGE_REQUEST) {
-                    // update contact photo
-                    File tmpFile = persistImage(filesDir,bitmap,
-                            mContactEntry.getSuggestedPhotoFilename());
-                    if (tmpFile != null) {
-                        mContactPhotoFile = tmpFile;
-                        updatePhotoView(mContactPhotoView, mContactPhotoFile);
-                    }
+            //Returned from the camera
+            if(data == null) {
+                if(requestCode == PICK_CONTACT_IMAGE_REQUEST) {
+                    mContactPhotoFile = ContactStore.get(this.getActivity()).getSuggestedPhotoFile(mContactEntry);
+                    updatePhotoView(mContactPhotoView, mContactPhotoFile);
+                } else if (requestCode == PICK_BC_IMAGE_REQUEST) {
+                    mContactBCFile = ContactStore.get(this.getActivity()).getSuggestedBCFile(mContactEntry);
+                    updatePhotoView(mContactBCView, mContactBCFile);
                 }
-                else if (requestCode == PICK_BC_IMAGE_REQUEST) {
-                    // update business card image
-                    File tmpFile = persistImage(filesDir,bitmap,
-                            mContactEntry.getSuggestedBCPhotoFilename());
-                    if (tmpFile != null) {
-                        mContactBCFile = tmpFile;
-                        updatePhotoView(mContactBCView, mContactBCFile);
+            }
+
+            //Returned from the gallery
+            if(data != null && data.getData() != null){
+                Uri uri = data.getData();
+
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity()
+                            .getContentResolver(), uri);
+                    // Log.d(TAG, String.valueOf(bitmap));
+                    File filesDir = getActivity().getFilesDir();
+
+                    if (requestCode == PICK_CONTACT_IMAGE_REQUEST) {
+                        // update contact photo
+                        File tmpFile = persistImage(filesDir, bitmap,
+                                mContactEntry.getSuggestedPhotoFilename());
+                        if (tmpFile != null) {
+                            mContactPhotoFile = tmpFile;
+                            updatePhotoView(mContactPhotoView, mContactPhotoFile);
+                        }
+                    } else if (requestCode == PICK_BC_IMAGE_REQUEST) {
+                        // update business card image
+                        File tmpFile = persistImage(filesDir, bitmap,
+                                mContactEntry.getSuggestedBCPhotoFilename());
+                        if (tmpFile != null) {
+                            mContactBCFile = tmpFile;
+                            updatePhotoView(mContactBCView, mContactBCFile);
+                        }
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }
