@@ -11,6 +11,7 @@ public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, Strin
     private ContactEntry mContactEntry = new ContactEntry();
     private Callbacks mCallbacks;
     private Context mContext;
+    private int mTaskId;
 
     public ContactEntry getContactEntry() {
         return mContactEntry;
@@ -25,14 +26,15 @@ public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, Strin
     }
 
     public interface Callbacks {
-        void onAsyncTaskFinished(ContactEntry contactEntry, boolean success);
+        void onAsyncTaskFinished(ContactEntry contactEntry, boolean success, int taskId);
     }
 
-    public DialogAsyncTask(String initialStatus, Context context, Callbacks callbacks) {
+    public DialogAsyncTask(String initialStatus, Context context, Callbacks callbacks, int taskId) {
         mInitialStatus = initialStatus;
         mCallbacks = callbacks;
         mProgressDialog = new ProgressDialog(context);
         mContext = context;
+        mTaskId = taskId;
     }
 
     @Override
@@ -50,7 +52,7 @@ public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, Strin
         }
 
         // perform the callback (result should be either true/false)
-        mCallbacks.onAsyncTaskFinished(mContactEntry, result);
+        mCallbacks.onAsyncTaskFinished(mContactEntry, result, mTaskId);
 
         /*
         // Alternatively, test the result for null explicitly;
