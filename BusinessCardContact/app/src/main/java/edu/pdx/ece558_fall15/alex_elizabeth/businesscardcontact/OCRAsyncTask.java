@@ -17,11 +17,12 @@ import java.io.FileOutputStream;
  * Adapted form ABBYY Cloud OCR Github Sample Project
  */
 public class OCRAsyncTask extends DialogAsyncTask<String, String, Boolean> {
+    private static final int TASK_ID = 42;
     private static final String TAG = "OCRAsyncTask";
     private static final String instIdName = "installationId";
 
     public OCRAsyncTask(String initialStatus, Context context, Callbacks callbacks) {
-        super(initialStatus, context, callbacks);
+        super(initialStatus, context, callbacks, TASK_ID);
     }
 
     @Override
