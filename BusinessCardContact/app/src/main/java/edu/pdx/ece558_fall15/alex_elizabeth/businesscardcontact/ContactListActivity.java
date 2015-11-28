@@ -3,7 +3,11 @@ package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,15 +15,19 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 public class ContactListActivity extends AppCompatActivity
         implements ContactListFragment.Callbacks,
-        ContactDetailFragment.Callbacks {
+        ContactDetailFragment.Callbacks,
+        OCRAsyncTask.Callbacks {
 
     private static final String TAG = "ContactListActivity";
 
     private static final int REQUEST_CODE_VIEW = 0;
+    private static final int REQUEST_CODE_GET_IMAGE = 1;
 
     private ContactEntry mCurrContactEntry;
 
@@ -84,17 +92,50 @@ public class ContactListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode != RESULT_OK) {
             return;
         }
         if(requestCode == REQUEST_CODE_VIEW) {
-            UUID currID = ContactDetailActivity.lastViewedID(intent);
+            UUID currID = ContactDetailActivity.lastViewedID(data);
             if(currID != null) {
                 ContactEntry ce = ContactStore.get(this).getContactEntry(currID);
                 if (findViewById(R.id.detail_fragment_container) != null) {
                     setDetailFragment(ce);
                 }
+            }
+        } else if(requestCode == REQUEST_CODE_GET_IMAGE) {
+            File BCFile = null;
+
+            //Returned from the camera
+            if(data == null) {
+                BCFile = ContactStore.get(this).getSuggestedBCFile(mCurrContactEntry);
+            }
+            //Returned from the gallery
+            if(data != null && data.getData() != null) {
+                Uri uri = data.getData();
+
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this
+                            .getContentResolver(), uri);
+                    // Log.d(TAG, String.valueOf(bitmap));
+                    File filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+                    // update business card image
+                    File tmpFile = PictureUtils.persistImage(filesDir, bitmap,
+                            mCurrContactEntry.getSuggestedBCFilename());
+                    if (tmpFile != null) {
+                        BCFile = tmpFile;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if(BCFile != null) {
+                String tempFile = mCurrContactEntry.getId() + ".xml";
+                OCRAsyncTask parseBC = new OCRAsyncTask("Beginning Upload..", this, this);
+                parseBC.execute(BCFile.getPath(), tempFile);
             }
         }
     }
@@ -182,10 +223,11 @@ public class ContactListActivity extends AppCompatActivity
     @Override
     public void onAddNewContactCard() {
         Log.d(TAG, "onContactAddNewContactCard");
-        // Start the EditDetailActivity
-        // -- NOTE: This needs to be modified later to process the business card first.
-        Intent intent = ContactEditDetailActivity.newIntent(this, null);
-        startActivity(intent);
+        mCurrContactEntry = new ContactEntry();
+        Uri outputFileUri = Uri.fromFile(ContactStore.get(this).getSuggestedBCFile(mCurrContactEntry));
+        String chooserText = getResources().getString(R.string.chooserBCImage);
+        Intent intent = PictureUtils.getImageChooserIntent(outputFileUri, chooserText, this);
+        startActivityForResult(intent, REQUEST_CODE_GET_IMAGE);
     }
 
     @Override
@@ -221,6 +263,18 @@ public class ContactListActivity extends AppCompatActivity
                     .attach(detailFragment)
                     .commit();
             */
+        }
+    }
+
+    @Override
+    public void onAsyncTaskFinished(ContactEntry contactEntry, boolean success) {
+        if(success) {
+            mCurrContactEntry = contactEntry;
+            // Start the EditDetailActivity
+            // Intent intent = ContactEditDetailActivity.newIntent(this, mCurrContactEntry.getId());
+            // startActivity(intent);
+        } else {
+            //TODO: Alert the user that parsing the business card failed for some reason
         }
     }
 }
