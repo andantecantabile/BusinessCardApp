@@ -372,7 +372,7 @@ public class ContactEditDetailFragment extends Fragment{
 
     /**
      * Based on stackoverflow answer by David Manpearl and Austyn Mahoney
-     * @param requestCode
+     * @param requestCode Used to indicate either a contact image or a business card image.
      */
     private void openImageIntent(int requestCode) {
         Log.d(TAG, "openImageIntent");
@@ -491,6 +491,7 @@ public class ContactEditDetailFragment extends Fragment{
     }
 
     // helper method modified from stackoverflow
+    // http://stackoverflow.com/questions/22784656/convert-android-graphics-bitmap-to-java-io-file/22785013#22785013
     private static File persistImage(File filesDir, Bitmap bitmap, String name) {
         File imageFile = new File(filesDir, name + ".jpg");
 

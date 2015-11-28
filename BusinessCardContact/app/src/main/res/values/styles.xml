@@ -18,11 +18,13 @@
         <item name="android:textColorPrimary">@color/defaultColorPrimaryDark</item>
         <!-- <item name="android:textColorPrimaryInverse"></item> -->
         <item name="android:textColorLink">@color/defaultColorAccent</item>
+        <!--
         <item name="listItemCompanyColor">@color/defaultColorPrimaryDark</item>
         <item name="listItemNameColor">@color/defaultColor700</item>
         <item name="detailFieldTextLblColor">@color/defaultColorPrimaryDark</item>
         <item name="detailFieldTextValColor">@color/defaultColorPrimaryDark</item>
         <item name="detailFieldEditTextValColor">@color/defaultColorPrimaryDark</item>
+        -->
     </style>
 
     <!-- Theme 1: Eggplant -->
@@ -35,6 +37,7 @@
 
 
     <!-- TextView Styles here -->
+    <!--
     <style name="TextViewTitleLabel" parent="@android:style/Widget.TextView.ListSeparator">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -43,5 +46,5 @@
         <item name="android:paddingLeft">5dip</item>
         <item name="android:textSize">18dp</item>
     </style>
-
+    -->
 </resources>

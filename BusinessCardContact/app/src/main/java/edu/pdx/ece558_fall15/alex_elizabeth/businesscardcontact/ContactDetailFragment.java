@@ -168,27 +168,13 @@ public class ContactDetailFragment extends Fragment {
         }
     }
 
-    /*
-    private void pickImage() {
-        // need to start activity to pick an image.
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        String title = getResources().getString(R.string.img_chooser_title);
-        // Create intent to show chooser
-        Intent chooser = Intent.createChooser(intent, title);
-        // Verify the intent will resolve to at least one activity
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivity(chooser);
-        }
-    }
-    */
-
     // Displays the provided image file in the referenced image view.
     private void updatePhotoView(ImageView imgView, File imgFile) {
         if (imgView != null) {
             if (imgFile == null || !imgFile.exists()) {
                 //imgView.setImageDrawable(null);   // would display no image.
                 // instead, if no image file exists, display the default image.
-                imgView.setImageResource(R.drawable.ic_add_a_photo_holo_light);
+                imgView.setImageResource(android.R.drawable.ic_menu_camera);
                 // would potentially like to change the default photo image with themes;
                 // so use a string here to reference the photo image.
                 //imgView.setImageResource(getResources().getIdentifier(getResources().getString(R.string.default_photo_img), "drawable", PACKAGE_NAME ));
