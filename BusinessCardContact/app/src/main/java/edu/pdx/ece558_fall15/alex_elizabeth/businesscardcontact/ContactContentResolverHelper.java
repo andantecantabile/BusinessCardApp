@@ -5,11 +5,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -63,7 +61,8 @@ public class ContactContentResolverHelper {
         addCompanyData(rawContactId, contactEntry);
         addWebsiteData(rawContactId, contactEntry);
         addNoteData(rawContactId, contactEntry);
-        //addPhotoData(rawContactId, contactEntry);
+        addPhotoData(rawContactId, contactEntry);
+        addBusinessCardData(rawContactId, contactEntry);
     }
 
     /**
@@ -82,7 +81,8 @@ public class ContactContentResolverHelper {
         updateWebsiteData(rawContactId, contactEntry);
         updateNoteData(rawContactId, contactEntry);
         //writeDisplayPhoto(rawContactId, contactEntry);
-        //updatePhotoData(rawContactId, contactEntry);
+        updatePhotoData(rawContactId, contactEntry);
+        updateBusinessCardData(rawContactId, contactEntry);
     }
 
     //adapted from stackoverflow answer by Anton Klimov
@@ -380,6 +380,21 @@ public class ContactContentResolverHelper {
     }
 
     /**
+     * Add a Business Card table entry for the photo data
+     * @param rawContactId the RawContact _ID to use as a foreign key
+     * @param contactEntry the ContactEntry to get the data from
+     */
+    private void addBusinessCardData(long rawContactId, ContactEntry contactEntry) {
+        Log.d(TAG, "addPhotoData");
+        ContentValues values = new ContentValues();
+        values.put(Data.RAW_CONTACT_ID, rawContactId);
+        values.put(Data.MIMETYPE, BusinessCardPhoto.CONTENT_ITEM_TYPE);
+        addPhotoValues(contactEntry, values);
+        Uri dataUri = mContext.getContentResolver()
+                .insert(Data.CONTENT_URI, values);
+    }
+
+    /**
      * Get the RawContact _ID based on the specified UUID
      * @param uuid Id of the RawContact entry to get
      * @return the RawContact _ID value
@@ -618,8 +633,9 @@ public class ContactContentResolverHelper {
                 .update(Data.CONTENT_URI,
                         values,
                         Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
-                            Data.MIMETYPE + "='" + Photo.MIMETYPE + "'",
+                            Data.MIMETYPE + "='" + Photo.CONTENT_ITEM_TYPE + "'",
                         null);
+
         //If for some reason something goes wrong and we update multiple contacts, log an
         //error message
         if(numRowsModified > 1) {
@@ -627,8 +643,26 @@ public class ContactContentResolverHelper {
         }
     }
 
-    private void updateBCData(long rawContactId, ContactEntry contactEntry) {
+    private void updateBusinessCardData(long rawContactId, ContactEntry contactEntry) {
         Log.d(TAG, "updateBCData");
+
+        //Create a ContentValues and add the photo values
+        ContentValues values = new ContentValues();
+        addBusinessCardValues(contactEntry, values);
+
+        //Update the entry with the matching RawContact _ID and matching MIMETYPE
+        int numRowsModified = mContext.getContentResolver()
+                .update(Data.CONTENT_URI,
+                        values,
+                        Data.RAW_CONTACT_ID + "='" + rawContactId + "' AND " +
+                                Data.MIMETYPE + "='" + BusinessCardPhoto.CONTENT_ITEM_TYPE + "'",
+                        null);
+
+        //If for some reason something goes wrong and we update multiple contacts, log an
+        //error message
+        if(numRowsModified > 1) {
+            Log.e(TAG, "Multiple Contacts Updated in Error");
+        }
     }
 
     /**
@@ -737,15 +771,38 @@ public class ContactContentResolverHelper {
      */
     private void addPhotoValues(ContactEntry contactEntry, ContentValues values) {
         if(contactEntry.getPhotoFilePath() != null) {
+            Log.d(TAG, contactEntry.getPhotoFilePath());
             values.put(Photo.PHOTO_FILE_ID, contactEntry.getPhotoFilePath());
-            values.put(Data.IS_PRIMARY, 1);
+            /*values.put(Data.IS_PRIMARY, 1);
             values.put(Data.IS_SUPER_PRIMARY, 1);
             Bitmap b = PictureUtils.getScaledBitmap(
-                    contactEntry.getPhotoFilePath(), 160, 160);
-            int bytes = b.getByteCount();
-            ByteBuffer buffer = ByteBuffer.allocate(bytes);
-            b.copyPixelsToBuffer(buffer);
-            values.put(Photo.PHOTO, buffer.array());
+                    contactEntry.getPhotoFilePath(), 256, 256);
+            if(b != null) {
+                int bytes = b.getByteCount();
+                ByteBuffer buffer = ByteBuffer.allocate(bytes);
+                b.copyPixelsToBuffer(buffer);
+                values.put(Photo.PHOTO, buffer.array());
+            }*/
+        }
+    }
+
+    /**
+     * Adds business card values to the provided ContentValues
+     * @param contactEntry ContactEntry to get the data from
+     * @param values ContentValues to add to
+     */
+    private void addBusinessCardValues(ContactEntry contactEntry, ContentValues values) {
+        if(contactEntry.getPhotoFilePath() != null) {
+            Log.d(TAG, contactEntry.getBCFilePath());
+            values.put(BusinessCardPhoto.PHOTO_FILE_ID, contactEntry.getBCFilePath());
+            /*Bitmap b = PictureUtils.getScaledBitmap(
+                    contactEntry.getPhotoFilePath(), 256, 256);
+            if(b != null) {
+                int bytes = b.getByteCount();
+                ByteBuffer buffer = ByteBuffer.allocate(bytes);
+                b.copyPixelsToBuffer(buffer);
+                values.put(BusinessCardPhoto.PHOTO, buffer.array());
+            }*/
         }
     }
 
@@ -821,7 +878,7 @@ public class ContactContentResolverHelper {
                 //Check if the data ID is null, if null no data to parse
                 if (!this.isNull(1)) {
 
-                    //Get the MIMETYPE to compar
+                    //Get the MIMETYPE to compare
                     String mimeType = this.getString(2);
 
                     //Get all of relevant data columns
@@ -892,12 +949,16 @@ public class ContactContentResolverHelper {
                         case Photo.CONTENT_ITEM_TYPE:
                             //Set the photo values
                             if(data14 != null) {
+                                Log.d(TAG, data14);
                                 contactEntry.setPhotoFilePath(data14);
                             }
                             break;
                         case BusinessCardPhoto.CONTENT_ITEM_TYPE:
                             //Set the business card photo values
-                            //TODO: Set the business card photo values
+                            if(data14 != null) {
+                                Log.d(TAG, data14);
+                                contactEntry.setBCFilePath(data14);
+                            }
                             break;
                         default:
                             break;
