@@ -8,6 +8,9 @@ import android.os.AsyncTask;
 public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, String, Boolean> {
     private String mInitialStatus;
     private ProgressDialog mProgressDialog;
+    private ContactEntry mContactEntry = new ContactEntry();
+    private Callbacks mCallbacks;
+    private Context mContext;
 
     public ContactEntry getContactEntry() {
         return mContactEntry;
@@ -17,8 +20,9 @@ public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, Strin
         mContactEntry = contactEntry;
     }
 
-    private ContactEntry mContactEntry = new ContactEntry();
-    private Callbacks mCallbacks;
+    public Context getContext() {
+        return mContext.getApplicationContext();
+    }
 
     public interface Callbacks {
         void onAsyncTaskFinished(ContactEntry contactEntry, boolean success);
@@ -45,5 +49,11 @@ public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, Strin
         }
 
         mCallbacks.onAsyncTaskFinished(mContactEntry, result);
+    }
+
+    @Override
+    protected void onProgressUpdate(String... values) {
+        String stage = values[0];
+        mProgressDialog.setMessage(stage);
     }
 }
