@@ -323,7 +323,6 @@ public class ContactEditDetailFragment extends Fragment
                     else {
                         // create an async task for adding a new contact to the database
                         new CommitContactTask(getActivity(),this, true, ce).execute();
-                        mCallbacks.onContactEntrySaveChanges(mContactEntry);
                     }
                 }
                 // Otherwise, it is a "Modify"/"Update" operation, so update the entry
@@ -363,12 +362,13 @@ public class ContactEditDetailFragment extends Fragment
     }
 
     @Override
-    public void onAsyncTaskFinished(ContactEntry contactEntry, boolean success) {
+    public void onAsyncTaskFinished(ContactEntry contactEntry, boolean success, int taskId) {
         Log.d(TAG, "onAsyncTaskFinished");
         // When the async task to save a contact has been completed, need to verify success.
         if (success) {
             // save the contact entry locally
-            mContactEntry = contactEntry;
+            //mContactEntry = contactEntry;
+            mCallbacks.onContactEntrySaveChanges(mContactEntry);
         }
         // If successful, the activity should be closed (occurs in ContactEditDetailActivity).
         // However, if not successful, then needs to NOT close the activity.
@@ -382,10 +382,13 @@ public class ContactEditDetailFragment extends Fragment
         private ContactEntry mContactEntry;
         private boolean mNewContact;
 
+        // Assign a unique task id.
+        private static final int COMMIT_CONTACT_TASK_ID = 1;
+        // Define the status message for the spinning dialog
         private static final String COMMIT_CONTACT_INIT_STATUS_MSG = "Saving contact information...";
 
         public CommitContactTask(Context context, Callbacks callbacks, boolean isNewContact, ContactEntry ce) {
-            super(COMMIT_CONTACT_INIT_STATUS_MSG,context,callbacks);
+            super(COMMIT_CONTACT_INIT_STATUS_MSG,context,callbacks, COMMIT_CONTACT_TASK_ID);
             mNewContact = isNewContact;
             mContactEntry = ce;
         }

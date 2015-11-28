@@ -57,7 +57,7 @@ public class ContactEditDetailActivity extends AppCompatActivity
 
         // Note that the save operation of the contact has already been performed in the fragment.
         // Here, need to close the current activity so that it would return to the previous view (either list or detail?)
-        //finish();
+        finish();
     }
 
     @Override
