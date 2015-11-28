@@ -1,18 +1,13 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -28,11 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class ContactEditDetailFragment extends Fragment
@@ -470,7 +461,7 @@ public class ContactEditDetailFragment extends Fragment
 
                     if (requestCode == PICK_CONTACT_IMAGE_REQUEST) {
                         // update contact photo
-                        File tmpFile = persistImage(filesDir, bitmap,
+                        File tmpFile = PictureUtils.persistImage(filesDir, bitmap,
                                 mContactEntry.getSuggestedPhotoFilename());
                         if (tmpFile != null) {
                             mContactPhotoFile = tmpFile;
@@ -478,7 +469,7 @@ public class ContactEditDetailFragment extends Fragment
                         }
                     } else if (requestCode == PICK_BC_IMAGE_REQUEST) {
                         // update business card image
-                        File tmpFile = persistImage(filesDir, bitmap,
+                        File tmpFile = PictureUtils.persistImage(filesDir, bitmap,
                                 mContactEntry.getSuggestedBCFilename());
                         if (tmpFile != null) {
                             mContactBCFile = tmpFile;
@@ -490,24 +481,5 @@ public class ContactEditDetailFragment extends Fragment
                 }
             }
         }
-    }
-
-    // helper method modified from stackoverflow
-    // http://stackoverflow.com/questions/22784656/convert-android-graphics-bitmap-to-java-io-file/22785013#22785013
-    private static File persistImage(File filesDir, Bitmap bitmap, String name) {
-        File imageFile = new File(filesDir, name + ".jpg");
-
-        OutputStream os;
-        try {
-            os = new FileOutputStream(imageFile);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-            os.flush();
-            os.close();
-        } catch (Exception e) {
-            Log.e(TAG, "Error writing bitmap", e);
-            return null;
-        }
-
-        return imageFile;
     }
 }

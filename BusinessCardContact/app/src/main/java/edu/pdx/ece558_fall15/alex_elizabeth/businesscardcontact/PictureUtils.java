@@ -12,12 +12,18 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.util.Log;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 // utility methods from BNRG
 public class PictureUtils {
+    private static final String TAG = "PictureUtils";
+
     public static Bitmap getScaledBitmap(String path, Activity activity) {
         Point size = new Point();
         activity.getWindowManager().getDefaultDisplay()
@@ -75,5 +81,25 @@ public class PictureUtils {
         //Add the camera options
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[cameraIntents.size()]));
         return chooserIntent;
+    }
+
+
+    // helper method modified from stackoverflow
+    // http://stackoverflow.com/questions/22784656/convert-android-graphics-bitmap-to-java-io-file/22785013#22785013
+    public static File persistImage(File filesDir, Bitmap bitmap, String name) {
+        File imageFile = new File(filesDir, name + ".jpg");
+
+        OutputStream os;
+        try {
+            os = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            Log.e(TAG, "Error writing bitmap", e);
+            return null;
+        }
+
+        return imageFile;
     }
 }
