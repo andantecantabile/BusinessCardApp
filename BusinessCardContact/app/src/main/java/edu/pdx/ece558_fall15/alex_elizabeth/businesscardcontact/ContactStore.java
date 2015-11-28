@@ -48,7 +48,13 @@ public class ContactStore {
 
         //TODO: Remove once we can add contacts
         //for testing
-        /*ContactEntry ce1 = new ContactEntryBuilder(null)
+
+        List<ContactEntry> contactEntries = mResolverHelper.getAllContacts();
+        for (ContactEntry ce : contactEntries) {
+            mResolverHelper.deleteContact(ce);
+        }
+
+        ContactEntry ce1 = new ContactEntryBuilder(null)
                 .name("Alex")
                 .title("Technical Marketing Engineer")
                 .division("Design to Silicon")
@@ -60,7 +66,7 @@ public class ContactStore {
                 .website("www.mentor.com")
                 .build();
 
-        mResolverHelper.addNewContact(ce1);*/
+        mResolverHelper.addNewContact(ce1);
 
         /*List<ContactEntry> contactEntries = mResolverHelper.getAllContacts();
         for (ContactEntry ce : contactEntries) {
@@ -159,7 +165,7 @@ public class ContactStore {
      * @return File reference to the suggested business card photo location
      */
     public File getSuggestedBCFile(ContactEntry ce) {
-        return getImageFile(ce.getSuggestedBCPhotoFilename());
+        return getImageFile(ce.getSuggestedBCFilename());
     }
 
     /**
@@ -186,10 +192,7 @@ public class ContactStore {
      */
     public void updateContactEntry(ContactEntry ce) {
         mResolverHelper.updateContact(ce);
-        int position = getContactEntryPosition(ce.getId());
-        if (position >= 0) {
-            mContactEntries.set(position,ce);
-        }
+        mContactEntries = mResolverHelper.getAllContacts();
     }
 
     /**
