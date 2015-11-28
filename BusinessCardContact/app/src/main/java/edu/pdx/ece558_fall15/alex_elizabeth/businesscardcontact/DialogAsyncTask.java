@@ -32,6 +32,7 @@ public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, Strin
         mInitialStatus = initialStatus;
         mCallbacks = callbacks;
         mProgressDialog = new ProgressDialog(context);
+        mContext = context;
     }
 
     @Override
@@ -48,7 +49,17 @@ public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, Strin
             mProgressDialog.dismiss();
         }
 
+        // perform the callback (result should be either true/false)
         mCallbacks.onAsyncTaskFinished(mContactEntry, result);
+
+        /*
+        // Alternatively, test the result for null explicitly;
+        // set to false if for some reason, result is not null.
+        if (result != null) // test result for null
+            mCallbacks.onAsyncTaskFinished(mContactEntry, result);
+        else
+            mCallbacks.onAsyncTaskFinished(mContactEntry, false);
+        */
     }
 
     @Override

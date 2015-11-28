@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -332,6 +333,9 @@ public class ContactEditDetailFragment extends Fragment
                     mCallbacks.onContactEntrySaveChanges(mContactEntry);
                 }
 
+                View v = getActivity().findViewById(android.R.id.content);
+                hidePopUpKeyboard(getActivity(), v);
+
                 return true;
 
             case R.id.menu_item_cancel_changes:
@@ -346,6 +350,13 @@ public class ContactEditDetailFragment extends Fragment
         }
     }
 
+    // This helper function is used to hide the popup keyboard (on events such as save/cancel).
+    // Code snippet from: http://stackoverflow.com/questions/18414804/android-edittext-remove-focus-after-clicking-a-button
+    public static void hidePopUpKeyboard (Activity activity, View view)
+    {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
+    }
 
     @Override
     public void onAsyncTaskFinished(ContactEntry contactEntry, boolean success) {
@@ -381,7 +392,7 @@ public class ContactEditDetailFragment extends Fragment
             } else {
                 ContactStore.get(getActivity()).updateContactEntry(mContactEntry);
             }
-            return null;
+            return true;
         }
     }
 
