@@ -1,5 +1,7 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
+import java.io.File;
+
 /**
  * Class to help facilitate the creation of ContactEntry objects
  * through the use of a fluent interface.  The ContactEntryBuilder
@@ -115,13 +117,17 @@ public class ContactEntryBuilder {
         return this;
     }
 
-    public ContactEntryBuilder photo(String photoPath) {
-        mContactEntry.setPhotoFilePath(photoPath);
+    public ContactEntryBuilder photo(File photoFile) {
+        if(photoFile != null) {
+            mContactEntry.setPhotoFilePath(photoFile.getPath());
+        }
         return this;
     }
 
-    public ContactEntryBuilder businessCard(String businessCardPath) {
-        mContactEntry.setBCFilePath(businessCardPath);
+    public ContactEntryBuilder businessCard(File businessCardFile) {
+        if(businessCardFile != null) {
+            mContactEntry.setBCFilePath(businessCardFile.getPath());
+        }
         return this;
     }
 
