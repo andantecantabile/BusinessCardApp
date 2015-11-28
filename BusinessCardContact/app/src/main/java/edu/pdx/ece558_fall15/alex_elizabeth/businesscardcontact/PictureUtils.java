@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.util.Log;
-
-import java.io.File;
 
 // utility methods from BNRG
 public class PictureUtils {

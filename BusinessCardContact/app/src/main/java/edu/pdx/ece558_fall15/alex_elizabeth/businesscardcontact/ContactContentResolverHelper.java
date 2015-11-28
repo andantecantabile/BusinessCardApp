@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.nio.ByteBuffer;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static android.provider.ContactsContract.CALLER_IS_SYNCADAPTER;
 import static android.provider.ContactsContract.CommonDataKinds.Email;
 import static android.provider.ContactsContract.CommonDataKinds.Note;
 import static android.provider.ContactsContract.CommonDataKinds.Organization;
@@ -81,8 +81,62 @@ public class ContactContentResolverHelper {
         updateCompanyData(rawContactId, contactEntry);
         updateWebsiteData(rawContactId, contactEntry);
         updateNoteData(rawContactId, contactEntry);
-        updatePhotoData(rawContactId, contactEntry);
+        //writeDisplayPhoto(rawContactId, contactEntry);
+        //updatePhotoData(rawContactId, contactEntry);
     }
+
+    //adapted from stackoverflow answer by Anton Klimov
+    /*public void writeDisplayPhoto(long rawContactId, ContactEntry contactEntry) {
+        if(contactEntry.getPhotoFilePath() != null) {
+            Bitmap b = BitmapFactory.decodeFile(contactEntry.getPhotoFilePath());
+            int bytes = b.getByteCount();
+            ByteBuffer photo = ByteBuffer.allocate(bytes);
+            b.copyPixelsToBuffer(photo);
+            Uri rawContactPhotoUri = Uri.withAppendedPath(
+                    ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId),
+                    RawContacts.DisplayPhoto.CONTENT_DIRECTORY
+            );
+
+            try {
+                AssetFileDescriptor fd = mContext.getApplicationContext()
+                        .getContentResolver().openAssetFileDescriptor(
+                        rawContactPhotoUri,
+                        "rw"
+                );
+
+                BufferedOutputStream os = null;
+                if (fd != null) {
+                    os = new BufferedOutputStream(fd.createOutputStream());
+                    os.write(photo.array());
+                    os.close();
+                    fd.close();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Problem writing display photo:", e);
+            }
+        }
+    }*/
+
+    /*public Bitmap getDisplayPhoto(long rawContactId) {
+        Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, rawContactId);
+        Uri displayPhotoUri = Uri.withAppendedPath(contactUri, Contacts.Photo.DISPLAY_PHOTO);
+        InputStream is = Contacts.openContactPhotoInputStream(mContext.getContentResolver(), displayPhotoUri, true);
+
+        //Adapted from stackoverflow answer by Adamski
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int nRead;
+        byte[] data = new byte[16384];
+
+        try {
+            while((nRead = is.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Problem reading display photo:", e);
+        }
+
+        return BitmapFactory.decodeByteArray(buffer.toByteArray(), 0, buffer.size());
+    }*/
 
     /**
      * Returns a list of ContactEntry objects from the Android
@@ -124,7 +178,7 @@ public class ContactContentResolverHelper {
         //indicates we are a "SyncAdapter" meaning that the contact is entirely removed
         //and not just flagged for deletion.
         Uri contentSyncAdapter = RawContacts.CONTENT_URI.buildUpon()
-                .appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true")
+                .appendQueryParameter(CALLER_IS_SYNCADAPTER, "true")
                 .build();
 
         //Delete the contact only if the account name matches the specified Id and
@@ -508,7 +562,7 @@ public class ContactContentResolverHelper {
 
         //Create a ContentValues and add the website values
         ContentValues values = new ContentValues();
-        addCompanyValues(contactEntry, values);
+        addWebsiteValues(contactEntry, values);
 
         //Update the entry with the  matching RawContact _ID and matching MIMETYPE
         int numRowsModified = mContext.getContentResolver()
@@ -535,7 +589,7 @@ public class ContactContentResolverHelper {
 
         //Create a ContentValues and add the website values
         ContentValues values = new ContentValues();
-        addCompanyValues(contactEntry, values);
+        addNoteValues(contactEntry, values);
 
         //Update the entry with the  matching RawContact _ID and matching MIMETYPE
         int numRowsModified = mContext.getContentResolver()
@@ -619,7 +673,7 @@ public class ContactContentResolverHelper {
 
         //If there is an extension store it in a custom column
         if(contentEntry.getExtension() != null) {
-            values.put(Phone.DATA4, contentEntry.getExtension());
+            values.put(Phone.DATA5, contentEntry.getExtension());
         }
     }
 
@@ -684,6 +738,8 @@ public class ContactContentResolverHelper {
     private void addPhotoValues(ContactEntry contactEntry, ContentValues values) {
         if(contactEntry.getPhotoFilePath() != null) {
             values.put(Photo.PHOTO_FILE_ID, contactEntry.getPhotoFilePath());
+            values.put(Data.IS_PRIMARY, 1);
+            values.put(Data.IS_SUPER_PRIMARY, 1);
             Bitmap b = PictureUtils.getScaledBitmap(
                     contactEntry.getPhotoFilePath(), 160, 160);
             int bytes = b.getByteCount();
@@ -717,7 +773,8 @@ public class ContactContentResolverHelper {
                         new String[]{RawContacts.SOURCE_ID, RawContacts.Entity.DATA_ID,
                                 RawContacts.Entity.MIMETYPE, RawContacts.Entity.DATA1,
                                 RawContacts.Entity.DATA2, RawContacts.Entity.DATA3,
-                                RawContacts.Entity.DATA4, RawContacts.Entity.DATA5 },
+                                RawContacts.Entity.DATA4, RawContacts.Entity.DATA5,
+                                RawContacts.Entity.DATA14, RawContacts.Entity.DATA15},
                         null,
                         null,
                         null
@@ -727,6 +784,7 @@ public class ContactContentResolverHelper {
         try {
             //Extract the values into the ContactEntry
             cursor.extractValuesToContactEntry(contactEntry);
+            //getDisplayPhoto(rawContactId);
         } finally {
             //Close the cursor to not leak resources
             cursor.close();
@@ -772,6 +830,8 @@ public class ContactContentResolverHelper {
                     String data3 = this.getString(5);
                     String data4 = this.getString(6);
                     String data5 = this.getString(7);
+                    String data14 = this.getString(8);
+                    byte[] data15 = this.getBlob(9);
 
                     //Case statement based on the MIMETYPE
                     switch (mimeType) {
@@ -794,8 +854,8 @@ public class ContactContentResolverHelper {
                                     if (data1 != null) {
                                         contactEntry.setPhoneNumber(data1);
                                     }
-                                    if (data4 != null) {
-                                        contactEntry.setExtension(data4);
+                                    if (data5 != null) {
+                                        contactEntry.setExtension(data5);
                                     }
                                 //Set the fax value
                                 } else if (Integer.parseInt(data2) == Phone.TYPE_FAX_WORK) {
@@ -830,8 +890,14 @@ public class ContactContentResolverHelper {
                             }
                             break;
                         case Photo.CONTENT_ITEM_TYPE:
-                            //Set the photo type
-                            //TODO: Set the photo values
+                            //Set the photo values
+                            if(data14 != null) {
+                                contactEntry.setPhotoFilePath(data14);
+                            }
+                            break;
+                        case BusinessCardPhoto.CONTENT_ITEM_TYPE:
+                            //Set the business card photo values
+                            //TODO: Set the business card photo values
                             break;
                         default:
                             break;
