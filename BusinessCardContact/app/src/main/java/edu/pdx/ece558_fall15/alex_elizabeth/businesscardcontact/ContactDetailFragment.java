@@ -88,7 +88,7 @@ public class ContactDetailFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-
+        mContactEntry = ContactStore.get(getActivity()).getContactEntry(mContactEntryId);
         updateUI();
     }
 
