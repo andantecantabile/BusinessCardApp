@@ -356,7 +356,7 @@ public class ContactEditDetailFragment extends Fragment{
 
         public CommitContactTask(ContactEntry contactEntry, boolean newContact) {
             mContactEntry = contactEntry;
-
+            mNewContact = newContact;
         }
 
         @Override
