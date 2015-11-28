@@ -176,7 +176,7 @@ public class ContactDetailFragment extends Fragment {
             if (imgFile == null || !imgFile.exists()) {
                 //imgView.setImageDrawable(null);   // would display no image.
                 // instead, if no image file exists, display the default image.
-                imgView.setImageResource(android.R.drawable.ic_menu_camera);
+                imgView.setImageResource(R.drawable.ic_photo_camera_light);
                 // would potentially like to change the default photo image with themes;
                 // so use a string here to reference the photo image.
                 //imgView.setImageResource(getResources().getIdentifier(getResources().getString(R.string.default_photo_img), "drawable", PACKAGE_NAME ));
