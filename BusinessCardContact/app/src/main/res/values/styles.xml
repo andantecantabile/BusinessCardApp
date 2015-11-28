@@ -3,9 +3,45 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/defaultColorPrimary</item>
+        <item name="colorPrimaryDark">@color/defaultColorPrimaryDark</item>
+        <item name="colorAccent">@color/defaultColorAccent</item>
+    </style>
+
+    <style name="AppDefaultTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- define Primary and Accent Colors here -->
+        <item name="colorPrimary">@color/defaultColorPrimary</item>
+        <item name="colorPrimaryDark">@color/defaultColorPrimaryDark</item>
+        <item name="colorAccent">@color/defaultColorAccent</item>
+        <item name="android:background">@color/defaultColor50</item>
+        <item name="android:textColor">@color/defaultColorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/defaultColorPrimaryDark</item>
+        <!-- <item name="android:textColorPrimaryInverse"></item> -->
+        <item name="android:textColorLink">@color/defaultColorAccent</item>
+        <item name="listItemCompanyColor">@color/defaultColorPrimaryDark</item>
+        <item name="listItemNameColor">@color/defaultColor700</item>
+        <item name="detailFieldTextLblColor">@color/defaultColorPrimaryDark</item>
+        <item name="detailFieldTextValColor">@color/defaultColorPrimaryDark</item>
+        <item name="detailFieldEditTextValColor">@color/defaultColorPrimaryDark</item>
+    </style>
+
+    <!-- Theme 1: Eggplant -->
+    <style name="AppTheme1" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- define Primary and Accent Colors here -->
+        <item name="colorPrimary">@color/theme1ColorPrimary</item>
+        <item name="colorPrimaryDark">@color/theme1ColorPrimaryDark</item>
+        <item name="colorAccent">@color/theme1ColorAccent</item>
+    </style>
+
+
+    <!-- TextView Styles here -->
+    <style name="TextViewTitleLabel" parent="@android:style/Widget.TextView.ListSeparator">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">2dip</item>
+        <item name="android:paddingBottom">2dip</item>
+        <item name="android:paddingLeft">5dip</item>
+        <item name="android:textSize">18dp</item>
     </style>
 
 </resources>

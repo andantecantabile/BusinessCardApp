@@ -1,9 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!-- Define color palettes for main themes here -->
+    <!-- Note: For a light theme palette, these guidelines were suggested:
+                Status bar: 300 level
+                App bar:    100 level
+                Background: 50 level
+                Cards/Dialogs: White
+               On the android design page that discusses style, it was suggested that when selecting a palette:
+               Limit selection of colors by choosing three hues from the primary palette and one accent color from the secondary palette:
+                i.e. Primary 500; 300, 500, 700
+                     Secondary A200; Fallback: A100, A400
+    -->
+    
+    <!-- Define Default Theme Colors -->
+    <color name="defaultColorPrimary">#3F51B5</color>
+    <color name="defaultColorPrimaryDark">#303F9F</color>
+    <color name="defaultColor300">#4db6ac</color>
+    <color name="defaultColor50">#e0f2f1</color>
+    <color name="defaultColor700">#00796b</color>
+    <!-- accent: pink -->
+    <color name="defaultColorAccent">#FF4081</color>
+    <color name="defaultColorAccent100">#ff80ab</color>
+    <color name="defaultColorAccent400">#f50057</color>
+
+    <!-- Define Colors for Theme 1: Teal -->
+    <!-- primary: teal -->
+    <color name="theme1ColorPrimary">#009688</color>        <!-- 500 -->
+    <color name="theme1ColorPrimaryDark">#004d40</color>    <!-- 900 -->
+    <color name="theme1Color300">#4db6ac</color>
+    <color name="theme1Color50">#e0f2f1</color>
+    <color name="theme1Color700">#00796b</color>
+    <!-- accent: pink -->
+    <color name="theme1ColorAccent">#ff4081</color>    <!-- 200 -->
+    <color name="theme1ColorAccent100">#ff80ab</color>
+    <color name="theme1ColorAccent400">#f50057</color>
+
+    <!-- Define Colors for Theme 2: Eggplant -->
+    <!-- primary: deep purple -->
+    <color name="theme2ColorPrimary">#673ab7</color>        <!-- 500 -->
+    <color name="theme2ColorPrimaryDark">#311b92</color>    <!-- 900 -->
+    <color name="theme2Color300">#9575cd</color>
+    <color name="theme2Color50">#ede7f6</color>
+    <color name="theme2Color700">#512da8</color>
+    <!-- accent: green-->
+    <color name="theme2ColorAccent">#69f0ae</color> <!-- 200 -->
+    <color name="theme2ColorAccent100">#b9f6ca</color>
+    <color name="theme2ColorAccent400">#00e676</color>
+    <color name="theme2ColorAccent700">#00c853</color>
+
+    <!-- Include additional colors here -->
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796b</color>
+    <color name="colorAccent">#ff80ab</color>
     <color name="lighterGray">#D3D3D3</color>
+    <color name="darkTeal">#006f60</color>
 
     <!-- provide default android color list here: -->
     <item name="blue" type="color">#FF33B5E5</item>
