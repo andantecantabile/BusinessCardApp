@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -462,7 +463,8 @@ public class ContactEditDetailFragment extends Fragment{
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity()
                             .getContentResolver(), uri);
                     // Log.d(TAG, String.valueOf(bitmap));
-                    File filesDir = getActivity().getFilesDir();
+                    File filesDir = getActivity()
+                            .getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
                     if (requestCode == PICK_CONTACT_IMAGE_REQUEST) {
                         // update contact photo
@@ -475,7 +477,7 @@ public class ContactEditDetailFragment extends Fragment{
                     } else if (requestCode == PICK_BC_IMAGE_REQUEST) {
                         // update business card image
                         File tmpFile = persistImage(filesDir, bitmap,
-                                mContactEntry.getSuggestedBCPhotoFilename());
+                                mContactEntry.getSuggestedBCFilename());
                         if (tmpFile != null) {
                             mContactBCFile = tmpFile;
                             updatePhotoView(mContactBCView, mContactBCFile);
