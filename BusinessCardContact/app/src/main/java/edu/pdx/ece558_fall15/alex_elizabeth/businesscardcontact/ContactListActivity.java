@@ -267,7 +267,7 @@ public class ContactListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onAsyncTaskFinished(ContactEntry contactEntry, boolean success) {
+    public void onAsyncTaskFinished(ContactEntry contactEntry, boolean success, int taskId) {
         if(success) {
             mCurrContactEntry = contactEntry;
             // Start the EditDetailActivity
