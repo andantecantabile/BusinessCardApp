@@ -93,12 +93,7 @@ public class ContactEditDetailFragment extends Fragment
             mContactEntryId = (UUID) getArguments().getSerializable(ARG_CONTACT_ENTRY_ID);
             if (mContactEntryId == null)
                 mContactEntry = null;
-            else {
-                //Todo: Add an async task here to retrieve the data for the given contact id:
-                // create an async task for adding a new contact to the database
-                new LoadContactTask(getActivity(),this,mContactEntryId).execute();
-                //mContactEntry = ContactStore.get(getActivity()).getContactEntry(mContactEntryId);
-            }
+            // previously used an else clause here to start the async task when the contact entry id was not null - moved to onResume()
         }
         else {
             mContactEntryId = null;
@@ -110,6 +105,15 @@ public class ContactEditDetailFragment extends Fragment
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Add an async task here to retrieve the data for the given contact id:
+        if (mContactEntryId != null) {
+            new LoadContactTask(getActivity(), this, mContactEntryId).execute();
+        }
     }
 
     @Override
