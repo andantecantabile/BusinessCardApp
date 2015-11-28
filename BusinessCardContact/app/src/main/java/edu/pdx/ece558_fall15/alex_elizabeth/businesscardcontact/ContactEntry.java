@@ -48,15 +48,15 @@ public class ContactEntry {
      * @return the suggested filename of the picture of the contact
      */
     public String getSuggestedPhotoFilename() {
-        return "IMG_" + getId().toString() + "_photo.jpg";
+        return "IMG_" + getId().toString() + "_photo";
     }
 
     /**
      * Gets the suggested filename of the picture of the business card
      * @return the suggested filename of the picture of the business card
      */
-    public String getSuggestedBCPhotoFilename() {
-        return "IMG_" + getId().toString() + "_bc.jpg";
+    public String getSuggestedBCFilename() {
+        return "IMG_" + getId().toString() + "_bc";
     }
 
     /**
@@ -80,7 +80,7 @@ public class ContactEntry {
      * @return the filename of the business card image of the contact
      */
     public String getBCFilePath() {
-        return mPhotoFilePath;
+        return mBCFilePath;
     }
 
     /**
@@ -88,7 +88,7 @@ public class ContactEntry {
      * @param bCFilePath the filename of the business card image of the contact
      */
     public void setBCFilePath(String bCFilePath) {
-        mPhotoFilePath = bCFilePath;
+        mBCFilePath = bCFilePath;
     }
 
     /**
