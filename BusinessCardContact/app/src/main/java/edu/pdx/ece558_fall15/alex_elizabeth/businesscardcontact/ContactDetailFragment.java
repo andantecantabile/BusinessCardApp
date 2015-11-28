@@ -75,6 +75,8 @@ public class ContactDetailFragment extends Fragment {
         Log.d(TAG, "onCreate");
         setHasOptionsMenu(true);
         mContactEntryId = (UUID) getArguments().getSerializable(ARG_CONTACT_ENTRY_ID);
+
+        //Todo: Add an async task here to get the current contact entry
         mContactEntry = ContactStore.get(getActivity()).getContactEntry(mContactEntryId);
     }
 

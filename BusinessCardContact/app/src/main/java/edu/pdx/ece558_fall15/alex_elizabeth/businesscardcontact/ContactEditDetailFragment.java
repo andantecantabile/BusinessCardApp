@@ -1,13 +1,18 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -26,9 +31,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-public class ContactEditDetailFragment extends Fragment{
+public class ContactEditDetailFragment extends Fragment
+        implements DialogAsyncTask.Callbacks {
     private static final String TAG = "ContactEditDetailFrgmt";
     private static final String PACKAGE_NAME = "edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact";
 
@@ -94,6 +102,7 @@ public class ContactEditDetailFragment extends Fragment{
             if (mContactEntryId == null)
                 mContactEntry = null;
             else {
+                //Todo: Add an async task here to retrieve the data for the given contact id:
                 // otherwise, the contact entry id was provided, so this is a modify operation;
                 mContactEntry = ContactStore.get(getActivity()).getContactEntry(mContactEntryId);
             }
@@ -320,13 +329,15 @@ public class ContactEditDetailFragment extends Fragment{
                         alert.show();
                     }
                     else {
-                        new CommitContactTask(mContactEntry, true).execute();
+                        // create an async task for adding a new contact to the database
+                        new CommitContactTask(getActivity(),this, true, ce).execute();
                         mCallbacks.onContactEntrySaveChanges(mContactEntry);
                     }
                 }
                 // Otherwise, it is a "Modify"/"Update" operation, so update the entry
                 else {
-                    new CommitContactTask(mContactEntry, false).execute();
+                    // create an async task for the update operation
+                    new CommitContactTask(getActivity(),this, false, ce).execute();
                     mCallbacks.onContactEntrySaveChanges(mContactEntry);
                 }
 
@@ -344,17 +355,36 @@ public class ContactEditDetailFragment extends Fragment{
         }
     }
 
-    private class CommitContactTask extends AsyncTask<Void, Void, Void> {
+
+    @Override
+    public void onAsyncTaskFinished(ContactEntry contactEntry, boolean success) {
+        Log.d(TAG, "onAsyncTaskFinished");
+        // When the async task to save a contact has been completed, need to verify success.
+        if (success) {
+            // save the contact entry locally
+            mContactEntry = contactEntry;
+        }
+        // If successful, the activity should be closed (occurs in ContactEditDetailActivity).
+        // However, if not successful, then needs to NOT close the activity.
+
+    }
+
+    // Async task used to commit a set of values for a contact entry to the database.
+    private class CommitContactTask extends DialogAsyncTask<String, String, Boolean> {
         private ContactEntry mContactEntry;
         private boolean mNewContact;
 
-        public CommitContactTask(ContactEntry contactEntry, boolean newContact) {
-            mContactEntry = contactEntry;
-            mNewContact = newContact;
+        private static final String COMMIT_CONTACT_INIT_STATUS_MSG = "Saving contact information...";
+
+        public CommitContactTask(Context context, Callbacks callbacks, boolean isNewContact, ContactEntry ce) {
+            super(COMMIT_CONTACT_INIT_STATUS_MSG,context,callbacks);
+            mNewContact = isNewContact;
+            mContactEntry = ce;
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Boolean doInBackground(String... params) {
+            Log.d(TAG, "doInBackground");
             if(mNewContact) {
                 ContactStore.get(getActivity()).addContactEntry(mContactEntry);
             } else {
@@ -389,7 +419,6 @@ public class ContactEditDetailFragment extends Fragment{
             }
         }
     }
-
 
     // Displays the provided image file in the referenced image view.
     private void updatePhotoView(ImageView imgView, File imgFile) {
