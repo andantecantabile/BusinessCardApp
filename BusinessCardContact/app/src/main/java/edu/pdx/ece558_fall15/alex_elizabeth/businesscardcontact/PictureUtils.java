@@ -67,6 +67,7 @@ public class PictureUtils {
             intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
             intent.setPackage(packageName);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            Log.d(TAG, outputFileUri.getPath());
             cameraIntents.add(intent);
         }
 
