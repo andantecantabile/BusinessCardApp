@@ -66,6 +66,7 @@ public class ContactListFragment extends Fragment
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
+        // start async task to load the contact list
         new DialogLoadCEListTask(getActivity(), this, this).execute();
         //updateUI();
     }
@@ -109,6 +110,15 @@ public class ContactListFragment extends Fragment
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * This method provides a way for the contact list activity to start the async task to load the contact list.
+     */
+    public void refreshUI() {
+        // start async task to load the contact list; only if the adapter already exists.
+        if (mAdapter != null)
+            new DialogLoadCEListTask(getActivity(), this, this).execute();
     }
 
     /**

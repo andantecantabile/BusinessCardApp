@@ -161,6 +161,14 @@ public class ContactListActivity extends AppCompatActivity
     public void onContactEntryDelete(ContactEntry ce) {
         Log.d(TAG, "onContactEntryDelete");
 
+        FragmentManager fm = getSupportFragmentManager();
+        //Check if the id for placing the ContactListFragment in exists
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+        if ((fragment != null) && (fragment instanceof ContactListFragment)) {
+            ContactListFragment clFragment = (ContactListFragment) fragment;
+            clFragment.refreshUI();
+        }
+        /*
         mCurrContactEntry = ce;
 
         // TODO: before checking for confirmation from user that the entry should be deleted... may need to check first that the given contact entry is not null... (but this case shouldn't actually happen...)
@@ -210,6 +218,7 @@ public class ContactListActivity extends AppCompatActivity
 
         AlertDialog alert = builder.create();
         alert.show();
+        */
     }
 
     @Override
@@ -275,8 +284,11 @@ public class ContactListActivity extends AppCompatActivity
             Intent intent = ContactEditDetailActivity.newIntent(this,
                     mCurrContactEntry == null ? null : mCurrContactEntry.getId(), true);
             startActivity(intent);
-        } else {
+        }
+        /*
+        else {
             //TODO: Alert the user that parsing the business card failed for some reason
         }
+        */
     }
 }
