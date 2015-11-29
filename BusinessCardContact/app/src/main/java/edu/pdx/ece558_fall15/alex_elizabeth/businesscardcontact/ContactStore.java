@@ -45,37 +45,6 @@ public class ContactStore {
         mContext = context;
         mResolverHelper = new ContactContentResolverHelper(mContext);
         mContactEntries = mResolverHelper.getAllContacts();
-
-        //TODO: Remove once we can add contacts
-        //for testing
-
-        List<ContactEntry> contactEntries = mResolverHelper.getAllContacts();
-        for (ContactEntry ce : contactEntries) {
-            mResolverHelper.deleteContact(ce);
-        }
-
-        ContactEntry ce1 = new ContactEntryBuilder(null)
-                .name("Alex")
-                .title("Technical Marketing Engineer")
-                .division("Design to Silicon")
-                .faxNumber("503-685-1234")
-                .phoneNumber("503-685-0642", null)
-                .notes("Awesome")
-                .company("Mentor Graphics")
-                .email("Alex_Pearson@mentor.com")
-                .website("www.mentor.com")
-                .build();
-
-        mResolverHelper.addNewContact(ce1);
-
-        /*List<ContactEntry> contactEntries = mResolverHelper.getAllContacts();
-        for (ContactEntry ce : contactEntries) {
-            mResolverHelper.deleteContact(ce);
-        }*/
-
-        mContactEntries = mResolverHelper.getAllContacts();
-
-        //end for testing
     }
 
     public void setTemporaryContact(ContactEntry ce) {
