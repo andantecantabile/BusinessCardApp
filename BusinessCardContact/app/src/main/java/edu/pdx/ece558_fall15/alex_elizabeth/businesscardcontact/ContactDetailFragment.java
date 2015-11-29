@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class ContactDetailFragment extends Fragment
@@ -33,6 +35,10 @@ public class ContactDetailFragment extends Fragment
     private Callbacks mCallbacks;
 
     private UUID mContactEntryId;
+
+    private BitmapLoaderAsyncTask mBlat;
+    private LoadContactTask mLct;
+    private DeleteContactTask mDct;
 
     // images
     private File mContactPhotoFile;
@@ -96,7 +102,8 @@ public class ContactDetailFragment extends Fragment
         Log.d(TAG, "onResume");
         //Add an async task here to retrieve the data for the given contact id:
         if (mContactEntryId != null) {
-            new LoadContactTask(getActivity(), this, mContactEntryId).execute();
+            mLct = new LoadContactTask(getActivity(), this, mContactEntryId);
+            mLct.execute();
         }
         //mContactEntry = ContactStore.get(getActivity()).getContactEntry(mContactEntryId);
         updateUI();
@@ -118,6 +125,21 @@ public class ContactDetailFragment extends Fragment
         super.onDetach();
         Log.d(TAG, "onDetach");
         mCallbacks = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+        if(mBlat != null && mBlat.getStatus() != AsyncTask.Status.FINISHED) {
+            mBlat.cancel(false);
+        }
+        if(mLct != null && mLct.getStatus() != AsyncTask.Status.FINISHED) {
+            mLct.cancel(false);
+        }
+        if(mDct != null && mDct.getStatus() != AsyncTask.Status.FINISHED) {
+            mDct.cancel(false);
+        }
     }
 
     @Override
@@ -205,13 +227,31 @@ public class ContactDetailFragment extends Fragment
 
     // Populates all imageviews
     private void populateImageViews() {
+        /*
         // update the image view
         mContactPhotoFile = ContactStore.get(getActivity()).getPhotoFile(mContactEntry);
         updatePhotoView(mContactPhotoView, mContactPhotoFile);
 
         // update business card image
         mContactBCFile = ContactStore.get(getActivity()).getBCPhotoFile(mContactEntry);
-        updatePhotoView(mContactBCView, mContactBCFile);
+        updatePhotoView(mContactBCView, mContactBCFile);*/
+
+        mContactPhotoFile = ContactStore.get(getActivity()).getPhotoFile(mContactEntry);
+        mContactBCFile = ContactStore.get(getActivity()).getBCPhotoFile(mContactEntry);
+
+        ArrayList<ImageView> imageViews = new ArrayList<>();
+        ArrayList<String> paths = new ArrayList<>();
+        if(mContactPhotoView != null && mContactPhotoFile != null && mContactPhotoFile.exists()) {
+            imageViews.add(mContactPhotoView);
+            paths.add(mContactPhotoFile.getPath());
+        }
+        if(mContactBCView != null && mContactBCFile != null && mContactBCFile.exists()) {
+            imageViews.add(mContactBCView);
+            paths.add(mContactBCFile.getPath());
+        }
+        mBlat = new BitmapLoaderAsyncTask(getActivity(), this,
+                imageViews.toArray(new ImageView[imageViews.size()]));
+        mBlat.execute( paths.toArray(new String[paths.size()]));
     }
 
     // Populates the existing textviews
@@ -303,7 +343,8 @@ public class ContactDetailFragment extends Fragment
      */
     private void deleteContact() {
         // so, delete the currently selected contact entry - needs to be done in an async task
-        new DeleteContactTask(getActivity(), this, mContactEntry).execute();
+        mDct = new DeleteContactTask(getActivity(), this, mContactEntry);
+        mDct.execute();
     }
 
     /**
@@ -361,6 +402,9 @@ public class ContactDetailFragment extends Fragment
                 mCallbacks.onContactEntryDelete(mContactEntry);
             }
             // if it was not successful, would probably be good to display some message... but this case is very unlikely to happen
+        }
+        else if (taskId == BitmapLoaderAsyncTask.TASK_ID) {
+            //nothing to do
         }
     }
 

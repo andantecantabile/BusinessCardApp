@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class ContactEditDetailFragment extends Fragment
@@ -46,6 +48,10 @@ public class ContactEditDetailFragment extends Fragment
 
     private UUID mContactEntryId;
     private boolean mNewContact;
+
+    private LoadContactTask mLct;
+    private CommitContactTask mCct;
+    private BitmapLoaderAsyncTask mBlat;
 
     // images
     private File mContactPhotoFile;
@@ -104,7 +110,8 @@ public class ContactEditDetailFragment extends Fragment
                     mContactEntryId = mContactEntry.getId();
                     ContactStore.get(getActivity()).setTemporaryContact(mContactEntry);
                 } else {
-                    new LoadContactTask(getActivity(), this, mContactEntryId).execute();
+                    mLct = new LoadContactTask(getActivity(), this, mContactEntryId);
+                    mLct.execute();
                 }
             } else {
                 Log.e(TAG,"No arguments passed in for some reason.");
@@ -157,6 +164,21 @@ public class ContactEditDetailFragment extends Fragment
         super.onDetach();
         Log.d(TAG, "onDetach");
         mCallbacks = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+        if(mCct != null && mCct.getStatus() != AsyncTask.Status.FINISHED) {
+            mCct.cancel(false);
+        }
+        if(mLct != null && mLct.getStatus() != AsyncTask.Status.FINISHED) {
+            mLct.cancel(false);
+        }
+        if(mBlat != null && mBlat.getStatus() != AsyncTask.Status.FINISHED) {
+            mBlat.cancel(false);
+        }
     }
 
     @Override
@@ -227,7 +249,7 @@ public class ContactEditDetailFragment extends Fragment
      * Populates all imageviews
      */
     private void populateImageViews() {
-        if (mContactEntry != null) {
+        /*if (mContactEntry != null) {
             // need to obtain the existing contact entry and populate all of the EditText fields
             // with the existing data
             // obtain the photo here and then update the image view
@@ -237,7 +259,25 @@ public class ContactEditDetailFragment extends Fragment
         }
 
         updatePhotoView(mContactPhotoView, mContactPhotoFile);
-        updatePhotoView(mContactBCView, mContactBCFile);
+        updatePhotoView(mContactBCView, mContactBCFile);*/
+        if(mContactEntry != null) {
+            mContactPhotoFile = ContactStore.get(getActivity()).getPhotoFile(mContactEntry);
+            mContactBCFile = ContactStore.get(getActivity()).getBCPhotoFile(mContactEntry);
+
+            ArrayList<ImageView> imageViews = new ArrayList<>();
+            ArrayList<String> paths = new ArrayList<>();
+            if (mContactPhotoView != null && mContactPhotoFile != null && mContactPhotoFile.exists()) {
+                imageViews.add(mContactPhotoView);
+                paths.add(mContactPhotoFile.getPath());
+            }
+            if (mContactBCView != null && mContactBCFile != null && mContactBCFile.exists()) {
+                imageViews.add(mContactBCView);
+                paths.add(mContactBCFile.getPath());
+            }
+            mBlat = new BitmapLoaderAsyncTask(getActivity(), this,
+                    imageViews.toArray(new ImageView[imageViews.size()]));
+            mBlat.execute(paths.toArray(new String[paths.size()]));
+        }
     }
 
     /**
@@ -362,12 +402,14 @@ public class ContactEditDetailFragment extends Fragment
                     // If this is an "Add" operation, then add the new contact
                     if (mContactEntryId == null || mNewContact) {
                         // create an async task for adding a new contact to the database
-                        new CommitContactTask(getActivity(), this, true, ce).execute();
+                        mCct = new CommitContactTask(getActivity(), this, true, ce);
+                        mCct.execute();
                     }
                     // Otherwise, it is a "Modify"/"Update" operation, so update the entry
                     else {
                         // create an async task for the update operation
-                        new CommitContactTask(getActivity(), this, false, ce).execute();
+                        mCct = new CommitContactTask(getActivity(), this, false, ce);
+                        mCct.execute();
                     }
                 }
 

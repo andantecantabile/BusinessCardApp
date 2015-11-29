@@ -38,10 +38,11 @@ public class DialogLoadCEListTask extends DialogAsyncTask<String, String, Boolea
 
     @Override
     protected void onPostExecute(Boolean result) {
-        super.onPostExecute(result);
+        if(!this.isCancelled()) {
+            super.onPostExecute(result);
 
-        // perform the callback (result should be either true/false)
-        mListCallbacks.onAsyncListTaskDone(mContactEntries, result, TASK_ID);
+            // perform the callback (result should be either true/false)
+            mListCallbacks.onAsyncListTaskDone(mContactEntries, result, TASK_ID);
 
         /*
         // Alternatively, test the result for null explicitly;
@@ -51,5 +52,6 @@ public class DialogLoadCEListTask extends DialogAsyncTask<String, String, Boolea
         else
             mCallbacks.onAsyncTaskFinished(mContactEntry, false);
         */
+        }
     }
 }

@@ -47,12 +47,13 @@ public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, Strin
 
     @Override
     protected void onPostExecute(Boolean result) {
-        if(mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
+        if(!this.isCancelled()) {
+            if (mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
 
-        // perform the callback (result should be either true/false)
-        mCallbacks.onAsyncTaskFinished(mContactEntry, result, mTaskId);
+            // perform the callback (result should be either true/false)
+            mCallbacks.onAsyncTaskFinished(mContactEntry, result, mTaskId);
 
         /*
         // Alternatively, test the result for null explicitly;
@@ -62,6 +63,14 @@ public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, Strin
         else
             mCallbacks.onAsyncTaskFinished(mContactEntry, false);
         */
+        }
+    }
+
+    @Override
+    protected void onCancelled(Boolean result) {
+        if(mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 
     @Override
