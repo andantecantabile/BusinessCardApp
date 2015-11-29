@@ -35,8 +35,10 @@ public class ContactEditDetailFragment extends Fragment
     private static final int PICK_CONTACT_IMAGE_REQUEST = 1;    // contact photo request
     private static final int PICK_BC_IMAGE_REQUEST = 2;         // business card photo request
 
-    private static final String ARG_CONTACT_ENTRY_ID = "contact_entry_id";
-    private static final String ARG_NEW_CONTACT = "new_contact";
+    private static final String ARG_CONTACT_ENTRY_ID = "arg_contact_entry_id";
+    private static final String ARG_NEW_CONTACT = "arg_new_contact";
+
+    private static final String KEY_CONTACT_ENTRY_ID = "key_contact_entry_id";
 
     private ContactEntry mContactEntry;
     private Callbacks mCallbacks;
@@ -92,21 +94,23 @@ public class ContactEditDetailFragment extends Fragment
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         setHasOptionsMenu(true);
-        if (getArguments() != null) {
-            mContactEntryId = (UUID) getArguments().getSerializable(ARG_CONTACT_ENTRY_ID);
-            mNewContact = getArguments().getBoolean(ARG_NEW_CONTACT,true);
-            if (mContactEntryId == null) {
-                mContactEntry = new ContactEntry();
-                mContactEntryId = mContactEntry.getId();
-                ContactStore.get(getActivity()).setTemporaryContact(mContactEntry);
+        if(savedInstanceState.getSerializable(KEY_CONTACT_ENTRY_ID) == null) {
+            if (getArguments() != null) {
+                mContactEntryId = (UUID) getArguments().getSerializable(ARG_CONTACT_ENTRY_ID);
+                mNewContact = getArguments().getBoolean(ARG_NEW_CONTACT, true);
+                if (mContactEntryId == null && mNewContact) {
+                    mContactEntry = new ContactEntry();
+                    mContactEntryId = mContactEntry.getId();
+                    ContactStore.get(getActivity()).setTemporaryContact(mContactEntry);
+                } else {
+                    new LoadContactTask(getActivity(), this, mContactEntryId).execute();
+                }
+            } else {
+                Log.e(TAG,"No arguments passed in for some reason.");
             }
-            // previously used an else clause here to start the async task when the contact entry id was not null - moved to onResume()
-        }
-        else {
-            // load the existing contact entry
-            mContactEntry = new ContactEntry();
-            mContactEntryId = mContactEntry.getId();
-            ContactStore.get(getActivity()).setTemporaryContact(mContactEntry);
+        } else {
+            mContactEntryId = (UUID) savedInstanceState.getSerializable(KEY_CONTACT_ENTRY_ID);
+            mContactEntry = ContactStore.get(getActivity()).getTemporaryContact();
         }
     }
 
@@ -120,13 +124,13 @@ public class ContactEditDetailFragment extends Fragment
     public void onResume() {
         super.onResume();
         //Add an async task here to retrieve the data for the given contact id:
-        if (mContactEntryId != null) {
-            new LoadContactTask(getActivity(), this, mContactEntryId).execute();
-        } else {
-            mContactEntry = new ContactEntry();
-            mContactEntryId = mContactEntry.getId();
-            ContactStore.get(getActivity()).setTemporaryContact(mContactEntry);
-        }
+        //if (mContactEntryId != null) {
+        //    new LoadContactTask(getActivity(), this, mContactEntryId).execute();
+        //} else {
+        //    mContactEntry = new ContactEntry();
+        //    mContactEntryId = mContactEntry.getId();
+        //    ContactStore.get(getActivity()).setTemporaryContact(mContactEntry);
+        //}
     }
 
     @Override
@@ -138,6 +142,8 @@ public class ContactEditDetailFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState");
+        outState.putSerializable(KEY_CONTACT_ENTRY_ID, mContactEntryId);
     }
 
     @Override
@@ -423,6 +429,7 @@ public class ContactEditDetailFragment extends Fragment
             // if the Load Contact Task is successful, need to update the UI.
             if (success) {
                 mContactEntry = contactEntry;   // save the loaded contact entry
+                ContactStore.get(getActivity()).setTemporaryContact(mContactEntry);
                 updateUI();
             }
         }

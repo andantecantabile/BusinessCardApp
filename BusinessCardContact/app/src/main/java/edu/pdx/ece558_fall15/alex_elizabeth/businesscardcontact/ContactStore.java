@@ -55,6 +55,10 @@ public class ContactStore {
         mTempContactEntry = ce;
     }
 
+    public ContactEntry getTemporaryContact() {
+        return mTempContactEntry;
+    }
+
     /**
      * Adds an entry to the Android Contact Storage
      * @param ce The ContactEntry to add
