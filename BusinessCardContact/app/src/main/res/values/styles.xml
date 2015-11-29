@@ -13,12 +13,15 @@
         <item name="colorPrimary">@color/defaultColorPrimary</item>
         <item name="colorPrimaryDark">@color/defaultColorPrimaryDark</item>
         <item name="colorAccent">@color/defaultColorAccent</item>
-        <item name="android:background">@color/defaultColor50</item>
+        <item name="android:colorBackground">@color/defaultColor50</item>
+        <item name="android:itemBackground">@color/defaultColor50</item>
+        <!--
         <item name="android:textColor">@color/defaultColorPrimaryDark</item>
         <item name="android:textColorPrimary">@color/defaultColorPrimaryDark</item>
-        <!-- <item name="android:textColorPrimaryInverse"></item> -->
         <item name="android:textColorLink">@color/defaultColorAccent</item>
+        -->
         <!--
+        <item name="android:textColorPrimaryInverse"></item>
         <item name="listItemCompanyColor">@color/defaultColorPrimaryDark</item>
         <item name="listItemNameColor">@color/defaultColor700</item>
         <item name="detailFieldTextLblColor">@color/defaultColorPrimaryDark</item>
@@ -27,13 +30,46 @@
         -->
     </style>
 
-    <!-- Theme 1: Eggplant -->
-    <style name="AppTheme1" parent="Theme.AppCompat.Light.DarkActionBar">
+    <!-- Theme 1: Teal -->
+    <style name="AppThemeTeal" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- define Primary and Accent Colors here -->
         <item name="colorPrimary">@color/theme1ColorPrimary</item>
         <item name="colorPrimaryDark">@color/theme1ColorPrimaryDark</item>
         <item name="colorAccent">@color/theme1ColorAccent</item>
     </style>
+
+    <!-- Theme 2: Sage -->
+    <style name="AppThemeSage" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- define Primary and Accent Colors here -->
+        <item name="colorPrimary">@color/theme2ColorPrimary</item>
+        <item name="colorPrimaryDark">@color/theme2ColorPrimaryDark</item>
+        <item name="colorAccent">@color/theme2ColorAccent</item>
+    </style>
+
+    <!-- Theme 3: Ocean -->
+    <style name="AppThemeOcean" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- define Primary and Accent Colors here -->
+        <item name="colorPrimary">@color/theme3ColorPrimary</item>
+        <item name="colorPrimaryDark">@color/theme3ColorPrimaryDark</item>
+        <item name="colorAccent">@color/theme3ColorAccent</item>
+    </style>
+
+    <!-- Theme 4: Eggplant -->
+    <style name="AppThemeEggplant" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- define Primary and Accent Colors here -->
+        <item name="colorPrimary">@color/theme4ColorPrimary</item>
+        <item name="colorPrimaryDark">@color/theme4ColorPrimaryDark</item>
+        <item name="colorAccent">@color/theme4ColorAccent</item>
+    </style>
+
+    <!-- Theme 5: Bubblegum -->
+    <style name="AppThemeBubblegum" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- define Primary and Accent Colors here -->
+        <item name="colorPrimary">@color/theme5ColorPrimary</item>
+        <item name="colorPrimaryDark">@color/theme5ColorPrimaryDark</item>
+        <item name="colorAccent">@color/theme5ColorAccent</item>
+    </style>
+
 
 
     <!-- TextView Styles here -->

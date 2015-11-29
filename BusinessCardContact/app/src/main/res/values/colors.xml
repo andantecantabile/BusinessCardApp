@@ -35,18 +35,42 @@
     <color name="theme1ColorAccent100">#ff80ab</color>
     <color name="theme1ColorAccent400">#f50057</color>
 
-    <!-- Define Colors for Theme 2: Eggplant -->
+    <!-- Define Colors for Theme 2: Sage -->
+    <!-- primary: green -->
+    <color name="theme2ColorPrimary">#4caf50</color>        <!-- 500 -->
+    <color name="theme2ColorPrimaryDark">#1b5e20</color>    <!-- 900 -->
+    <color name="theme2Color50">#e8f5e9</color>
+    <!-- accent: lime -->
+    <color name="theme2ColorAccent">#eeff41</color> <!-- 200 -->
+
+    <!-- Define Colors for Theme 3: Ocean -->
+    <!-- primary: blue gray -->
+    <color name="theme3ColorPrimary">#607d8b</color>        <!-- 500 -->
+    <color name="theme3ColorPrimaryDark">#263238</color>    <!-- 900 -->
+    <color name="theme3Color50">#eceff1</color>
+    <!-- accent: light blue -->
+    <color name="theme3ColorAccent">#40c4ff</color> <!-- 200 -->
+
+    <!-- Define Colors for Theme 4: Eggplant -->
     <!-- primary: deep purple -->
-    <color name="theme2ColorPrimary">#673ab7</color>        <!-- 500 -->
-    <color name="theme2ColorPrimaryDark">#311b92</color>    <!-- 900 -->
-    <color name="theme2Color300">#9575cd</color>
-    <color name="theme2Color50">#ede7f6</color>
-    <color name="theme2Color700">#512da8</color>
+    <color name="theme4ColorPrimary">#673ab7</color>        <!-- 500 -->
+    <color name="theme4ColorPrimaryDark">#311b92</color>    <!-- 900 -->
+    <color name="theme4Color300">#9575cd</color>
+    <color name="theme4Color50">#ede7f6</color>
+    <color name="theme4Color700">#512da8</color>
     <!-- accent: green-->
-    <color name="theme2ColorAccent">#69f0ae</color> <!-- 200 -->
-    <color name="theme2ColorAccent100">#b9f6ca</color>
-    <color name="theme2ColorAccent400">#00e676</color>
-    <color name="theme2ColorAccent700">#00c853</color>
+    <color name="theme4ColorAccent">#69f0ae</color> <!-- 200 -->
+    <color name="theme4ColorAccent100">#b9f6ca</color>
+    <color name="theme4ColorAccent400">#00e676</color>
+    <color name="theme4ColorAccent700">#00c853</color>
+
+    <!-- Define Colors for Theme 5: Bubblegum -->
+    <!-- primary: pink -->
+    <color name="theme5ColorPrimary">#e91e63</color>        <!-- 500 -->
+    <color name="theme5ColorPrimaryDark">#880e4f</color>    <!-- 900 -->
+    <color name="theme5Color50">#fce4ec</color>
+    <!-- accent: deep purple -->
+    <color name="theme5ColorAccent">#7c4dff</color> <!-- 200 -->
 
     <!-- Include additional colors here -->
     <color name="colorPrimary">#009688</color>

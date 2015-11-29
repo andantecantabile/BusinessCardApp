@@ -40,4 +40,14 @@
     <string name="default_photo_img">R.drawable.ic_add_a_photo_holo_light</string>
     <string name="chooserContactImage">Select a contact image:</string>
     <string name="chooserBCImage">Select a business card image:</string>
+
+    <!-- strings for the About dialog -->
+    <string name="app_version">Version 1.1</string>
+    <string name="app_date">December 3rd, 2015</string>
+    <string name="about_authors">By Alex Pearson and Elizabeth Reed</string>
+    <string name="about_title">About</string>
+    <string name="about_ok_btn">Ok</string>
+
+    <!-- strings for the color settings dialog -->
+    <string name="settings_title">Settings</string>
 </resources>

@@ -40,7 +40,9 @@ public class ContactDetailActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG,"onCreate");
+        Log.d(TAG, "onCreate");
+
+        SettingsUtils.onActivityCreateSetTheme(this);   // set the activity theme
 
         UUID contactId = (UUID) getIntent()
                 .getSerializableExtra(EXTRA_CONTACT_ENTRY_ID);

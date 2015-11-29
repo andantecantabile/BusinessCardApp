@@ -38,6 +38,7 @@ public class ContactEditDetailActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
+        SettingsUtils.onActivityCreateSetTheme(this);   // set the activity theme
         setContentView(R.layout.activity_fragment);
 
         UUID contactId = (UUID) getIntent().getSerializableExtra(EXTRA_CONTACT_ENTRY_ID);

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,6 +34,10 @@ public class ContactListFragment extends Fragment
         void onContactSelected(ContactEntry ce);
         void onAddBlankContact();
         void onAddNewContactCard();
+        /*
+        void onDisplaySettings();   // display settings selection
+        */
+        void onDisplayAbout();      // display about information
     }
 
     @Override
@@ -101,14 +106,14 @@ public class ContactListFragment extends Fragment
         Log.d(TAG, "onCreateOptionsMenu");
         inflater.inflate(R.menu.menu_contact_list, menu);   // add the "Add Contact" button options
 
-        /*  // SETTINGS/ABOUT MENU OPTIONS
+        // SETTINGS/ABOUT MENU OPTIONS
         // check if the detail fragment is active.
         FragmentManager fm = getActivity().getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.detail_fragment_container);
         if(fragment == null) {  // if the detail fragment is not active, then display the menu settings.
             inflater.inflate(R.menu.menu_settings, menu);   // add the settings/about button options.
         }
-        */
+
     }
 
     @Override
@@ -125,15 +130,16 @@ public class ContactListFragment extends Fragment
                 mCallbacks.onAddNewContactCard();
                 return true;
 
-            /*  // SETTINGS/ABOUT MENU OPTIONS
+            /*
+            // SETTINGS/ABOUT MENU OPTIONS
             case R.id.menu_item_settings:
                 mCallbacks.onDisplaySettings();
                 return true;
+                */
 
             case R.id.menu_item_about:
                 mCallbacks.onDisplayAbout();
                 return true;
-            */
 
             default:
                 // If we got here, the user's action was not recognized.

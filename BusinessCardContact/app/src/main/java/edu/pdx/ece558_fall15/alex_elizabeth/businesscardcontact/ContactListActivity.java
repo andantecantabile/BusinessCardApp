@@ -1,20 +1,28 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class ContactListActivity extends AppCompatActivity
@@ -44,6 +52,8 @@ public class ContactListActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
+
+        SettingsUtils.onActivityCreateSetTheme(this);   // set the activity theme
 
         setContentView(getLayoutResId());
 
@@ -203,6 +213,76 @@ public class ContactListActivity extends AppCompatActivity
         String chooserText = getResources().getString(R.string.chooserBCImage);
         Intent intent = PictureUtils.getImageChooserIntent(outputFileUri, chooserText, this);
         startActivityForResult(intent, REQUEST_CODE_GET_IMAGE);
+    }
+
+    /*
+    @Override
+    public void onDisplaySettings() {
+
+    }
+
+    public Dialog createSettingsDialog() {
+        String[] themeList = SettingsUtils.getThemeListStr();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Set the dialog title
+        builder.setTitle(R.string.settings_title)
+                // Specify the list array, the items to be selected by default (null for none),
+                // and the listener through which to receive callbacks when items are selected
+                .setSingleChoiceItems()
+                .setMultiChoiceItems(R.array.toppings, null,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which,
+                                                boolean isChecked) {
+                                if (isChecked) {
+                                    // If the user checked the item, add it to the selected items
+                                    mSelectedItems.add(which);
+                                } else if (mSelectedItems.contains(which)) {
+                                    // Else, if the item is already in the array, remove it
+                                    mSelectedItems.remove(Integer.valueOf(which));
+                                }
+                            }
+                        })
+                        // Set the action buttons
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK, so save the mSelectedItems results somewhere
+                        // or return them to the component that opened the dialog
+                        ...
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        ...
+                    }
+                });
+
+        return builder.create();
+    }
+    */
+
+    @Override
+    public void onDisplayAbout() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = getLayoutInflater();
+
+        //builder.setTitle(R.string.about_title);
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        builder.setView(inflater.inflate(R.layout.app_about, null))
+                // Add action buttons
+        //        .setPositiveButton(R.string.about_ok_btn, new DialogInterface.OnClickListener() {
+        //            @Override
+        //            public void onClick(DialogInterface dialog, int id) {
+        //                // sign in the user ...
+        //            }
+        //        })
+                ;
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
