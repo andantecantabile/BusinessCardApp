@@ -34,7 +34,9 @@ public class ContactListFragment extends Fragment
         void onContactSelected(ContactEntry ce);
         void onAddBlankContact();
         void onAddNewContactCard();
+        /*
         void onDisplaySettings();   // display settings selection
+        */
         void onDisplayAbout();      // display about information
     }
 
@@ -128,15 +130,16 @@ public class ContactListFragment extends Fragment
                 mCallbacks.onAddNewContactCard();
                 return true;
 
+            /*
             // SETTINGS/ABOUT MENU OPTIONS
             case R.id.menu_item_settings:
                 mCallbacks.onDisplaySettings();
                 return true;
+                */
 
             case R.id.menu_item_about:
                 mCallbacks.onDisplayAbout();
                 return true;
-
 
             default:
                 // If we got here, the user's action was not recognized.

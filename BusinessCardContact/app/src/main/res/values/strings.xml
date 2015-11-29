@@ -47,4 +47,7 @@
     <string name="about_authors">By Alex Pearson and Elizabeth Reed</string>
     <string name="about_title">About</string>
     <string name="about_ok_btn">Ok</string>
+
+    <!-- strings for the color settings dialog -->
+    <string name="settings_title">Settings</string>
 </resources>

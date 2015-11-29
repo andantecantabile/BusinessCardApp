@@ -3,6 +3,8 @@ package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 import android.app.Activity;
 import android.content.Intent;
 
+import java.util.ArrayList;
+
 /**
  * This class is used to handle the dynamic setting of the activity themes.
  * Modified from sample code by Matt Quigley
@@ -13,7 +15,19 @@ public class SettingsUtils {
 
     public final static int THEME_DEFAULT = 0;
     public final static int THEME_TEAL = 1;
-    //public final static int THEME_EGGPLANT = 2;
+    public final static int THEME_SAGE = 2;
+    public final static int THEME_OCEAN = 3;
+    public final static int THEME_EGGPLANT = 4;
+    public final static int THEME_BUBBLEGUM = 5;
+
+    private static String[] mThemeListStr = {"Teal", "Sage", "Ocean", "Eggplant", "Bubblegum"};
+
+    /**
+     * Return the list of available themes
+     */
+    public static String[] getThemeListStr() {
+        return mThemeListStr;
+    }
 
     /**
      * Set the theme of the Activity, and restart it by creating a new Activity
@@ -35,16 +49,23 @@ public class SettingsUtils {
         {
             default:
             case THEME_DEFAULT:
-               // activity.setTheme(R.style.AppDefaultTheme);
+                activity.setTheme(R.style.AppDefaultTheme);
                 break;
             case THEME_TEAL:
-                activity.setTheme(R.style.AppTheme1);
+                activity.setTheme(R.style.AppThemeTeal);
                 break;
-            /*
+            case THEME_SAGE:
+                activity.setTheme(R.style.AppThemeSage);
+                break;
+            case THEME_OCEAN:
+                activity.setTheme(R.style.AppThemeOcean);
+                break;
             case THEME_EGGPLANT:
-                activity.setTheme(R.style.Theme_Blue);
+                activity.setTheme(R.style.AppThemeEggplant);
                 break;
-                */
+            case THEME_BUBBLEGUM:
+                activity.setTheme(R.style.AppThemeBubblegum);
+                break;
         }
     }
 }
