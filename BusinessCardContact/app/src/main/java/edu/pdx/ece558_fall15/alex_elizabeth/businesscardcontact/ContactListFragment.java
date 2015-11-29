@@ -1,6 +1,7 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,9 +16,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.UUID;
 
-public class ContactListFragment extends Fragment {
+public class ContactListFragment extends Fragment
+        implements DialogAsyncTask.Callbacks, DialogLoadCEListTask.ListCallbacks {
     private static final String TAG = "ContactListFragment";
+
+    private List<ContactEntry> mContactEntries; // needed to temporarily store the contact entry list before attaching to the adapter
 
     private RecyclerView mContactEntryRecyclerView;
     private ContactEntryAdapter mAdapter;
@@ -52,7 +57,7 @@ public class ContactListFragment extends Fragment {
         mContactEntryRecyclerView = (RecyclerView) view.findViewById(R.id.myList);
         mContactEntryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        updateUI();
+        //updateUI();
 
         return view;
     }
@@ -61,7 +66,8 @@ public class ContactListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        updateUI();
+        new DialogLoadCEListTask(getActivity(), this, this).execute();
+        //updateUI();
     }
 
     @Override
@@ -105,13 +111,26 @@ public class ContactListFragment extends Fragment {
         }
     }
 
+    /**
+     * Provide a default updateUI method, that will notify data set changed for an existing adapter.
+     */
     public void updateUI() {
+        if (mAdapter != null)
+            mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * The main updateUI method, which requires a contact entry list with which to populate the adapter.
+     * @param contactEntries List of contact entries to be given to the adapter as its dataset.
+     */
+    public void updateUI(List<ContactEntry> contactEntries) {
         Log.d(TAG, "updateUI");
-        List<ContactEntry> contactEntries = ContactStore
-                .get(getActivity()).getContactEntries();
         if(mAdapter == null) {
             mAdapter = new ContactEntryAdapter(contactEntries);
             mContactEntryRecyclerView.setAdapter(mAdapter);
+        }
+        else {
+            mAdapter.setContactEntries(contactEntries);
         }
         mAdapter.notifyDataSetChanged();
     }
@@ -179,4 +198,36 @@ public class ContactListFragment extends Fragment {
             mContactEntries = contactEntries;
         }
     }
+
+    @Override
+    public void onAsyncTaskFinished(ContactEntry contactEntry, boolean success, int taskId) {
+        Log.d(TAG, "onAsyncTaskFinished");
+        // When the async task to save a contact has been completed, need to verify success.
+        // First, determine the identity of the async task which has completed.
+
+        /*
+        if (taskId == DialogLoadCEListTask.TASK_ID) {
+            // if the Load Contact List Task calls this, do nothing here; just wait for the dialog to be dismissed; it will call the onAsyncListTaskDone method next
+            if (success) {
+                updateUI();
+            }
+        }
+        */
+    }
+
+    @Override
+    public void onAsyncListTaskDone(List<ContactEntry> contactEntries, boolean success, int taskId) {
+        Log.d(TAG, "onAsyncListTaskDone");
+        // When the async task to save a contact has been completed, need to verify success.
+        // First, determine the identity of the async task which has completed.
+
+        if (taskId == DialogLoadCEListTask.TASK_ID) {
+            // if the Load Contact List Task is successful, need to update the UI.
+            if (success) {
+                updateUI(contactEntries);
+            }
+        }
+    }
+
+
 }
