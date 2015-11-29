@@ -36,11 +36,13 @@ public class ContactEditDetailFragment extends Fragment
     private static final int PICK_BC_IMAGE_REQUEST = 2;         // business card photo request
 
     private static final String ARG_CONTACT_ENTRY_ID = "contact_entry_id";
+    private static final String ARG_NEW_CONTACT = "new_contact";
 
     private ContactEntry mContactEntry;
     private Callbacks mCallbacks;
 
     private UUID mContactEntryId;
+    private boolean mNewContact;
 
     // images
     private File mContactPhotoFile;
@@ -66,9 +68,10 @@ public class ContactEditDetailFragment extends Fragment
         void onContactEntryCancelChanges(ContactEntry ce);
     }
 
-    public static ContactEditDetailFragment newInstance(UUID contactEntryId) {
+    public static ContactEditDetailFragment newInstance(UUID contactEntryId, boolean newContact) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_CONTACT_ENTRY_ID, contactEntryId);
+        args.putBoolean(ARG_NEW_CONTACT, newContact);
 
         //Log.d(TAG, "ContactEditDetailFragment: ce_id="+contactEntryId);
 
@@ -91,6 +94,7 @@ public class ContactEditDetailFragment extends Fragment
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             mContactEntryId = (UUID) getArguments().getSerializable(ARG_CONTACT_ENTRY_ID);
+            mNewContact = getArguments().getBoolean(ARG_NEW_CONTACT,true);
             if (mContactEntryId == null)
                 mContactEntry = null;
             // previously used an else clause here to start the async task when the contact entry id was not null - moved to onResume()
@@ -335,7 +339,7 @@ public class ContactEditDetailFragment extends Fragment
                         .businessCard(mContactBCFile)
                         .build();
                 // If this is an "Add" operation, then add the new contact
-                if (mContactEntryId == null) {
+                if (mContactEntryId == null || mNewContact) {
                     // BEFORE adding the new contact, need to verify that at least the name is not null...
                     String strName = ce.getName();
                     if ((strName == null) || (strName.equals(""))) {
@@ -423,7 +427,7 @@ public class ContactEditDetailFragment extends Fragment
     }
 
     /**
-     * Async task used to commit a set of values for a contact entry to the database.
+     * Async task used to load a set of values for a contact entry from the database.
      */
     private class LoadContactTask extends DialogAsyncTask<String, String, Boolean> {
         private UUID mContactEntryId;    // the contact id to be loaded

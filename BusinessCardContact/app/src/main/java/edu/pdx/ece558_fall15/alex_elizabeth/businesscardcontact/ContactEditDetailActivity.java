@@ -6,13 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import java.util.List;
 import java.util.UUID;
 
 public class ContactEditDetailActivity extends AppCompatActivity
@@ -21,12 +18,15 @@ public class ContactEditDetailActivity extends AppCompatActivity
 
     private static final String EXTRA_CONTACT_ENTRY_ID =
             "edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact.contactEntryId";
+    private static final String EXTRA_NEW_CONTACT =
+            "edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact.newContact";
 
     private ContactEntry mContactEntry;
 
-    public static Intent newIntent(Context packageContext, UUID contactEntryId) {
+    public static Intent newIntent(Context packageContext, UUID contactEntryId, boolean newContact) {
         Intent intent = new Intent(packageContext, ContactEditDetailActivity.class);
         intent.putExtra(EXTRA_CONTACT_ENTRY_ID, contactEntryId);
+        intent.putExtra(EXTRA_NEW_CONTACT, newContact);
         return intent;
     }
 
@@ -37,14 +37,15 @@ public class ContactEditDetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_fragment);
 
         UUID contactId = (UUID) getIntent().getSerializableExtra(EXTRA_CONTACT_ENTRY_ID);
+        boolean newContact = getIntent().getBooleanExtra(EXTRA_NEW_CONTACT, true);
 
-        mContactEntry = ContactStore.get(this).getContactEntry(contactId);
+        mContactEntry = contactId == null ? null : ContactStore.get(this).getContactEntry(contactId);
+
         FragmentManager fm = getSupportFragmentManager();
-
         //Check if the id for placing the ContactListFragment in exists
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
         if(fragment == null) {
-            fragment = ContactEditDetailFragment.newInstance(contactId);
+            fragment = ContactEditDetailFragment.newInstance(contactId, newContact);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();
