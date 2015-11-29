@@ -1,6 +1,5 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -11,7 +10,6 @@ import android.provider.MediaStore;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -103,7 +101,9 @@ public class ContactListActivity extends AppCompatActivity
 
             //Returned from the camera
             if(data == null) {
-                BCFile = ContactStore.get(this).getSuggestedBCFile(mCurrContactEntry);
+                File filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                BCFile = new File( filesDir, ContactStore.get(this)
+                            .getSuggestedBCFile(mCurrContactEntry).getName() + ".jpg");
             }
             //Returned from the gallery
             if(data != null && data.getData() != null) {
@@ -172,7 +172,9 @@ public class ContactListActivity extends AppCompatActivity
     public void onAddNewContactCard() {
         Log.d(TAG, "onContactAddNewContactCard");
         mCurrContactEntry = new ContactEntry();
-        Uri outputFileUri = Uri.fromFile(ContactStore.get(this).getSuggestedBCFile(mCurrContactEntry));
+        File filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        Uri outputFileUri = Uri.fromFile(new File( filesDir, ContactStore.get(this)
+                        .getSuggestedBCFile(mCurrContactEntry).getName() + ".jpg"));
         String chooserText = getResources().getString(R.string.chooserBCImage);
         Intent intent = PictureUtils.getImageChooserIntent(outputFileUri, chooserText, this);
         startActivityForResult(intent, REQUEST_CODE_GET_IMAGE);
