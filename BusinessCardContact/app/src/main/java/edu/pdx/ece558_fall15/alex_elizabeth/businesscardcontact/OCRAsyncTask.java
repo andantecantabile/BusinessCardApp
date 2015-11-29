@@ -114,6 +114,7 @@ public class OCRAsyncTask extends DialogAsyncTask<String, String, Boolean> {
             fis = new FileInputStream(xmlFile);
             AbbyyResponseXmlParser parser = new AbbyyResponseXmlParser();
             ContactEntry contactEntry = parser.parse(fis);
+            contactEntry.setBCFilePath(new File(inputFile).getName());
             super.setContactEntry(contactEntry);
             fis.close();
         } catch (XmlPullParserException xppe) {
