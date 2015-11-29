@@ -322,25 +322,12 @@ public class ContactEditDetailFragment extends Fragment
         switch (item.getItemId()) {
             case R.id.menu_item_save_changes:
                 // User chose the "Save" item,
-                // First, create the contact entry...
-                ContactEntry ce = new ContactEntryBuilder(mContactEntry)
-                        .name(mContactNameEdit.getText().toString())
-                        .title(mContactTitleEdit.getText().toString())
-                        .company(mContactCompanyEdit.getText().toString())
-                        .division(mContactDepartmentEdit.getText().toString())
-                        .phoneNumber(mContactPhoneNumEdit.getText().toString(), mContactPhoneExtEdit.getText().toString())
-                        .faxNumber(mContactFaxNumEdit.getText().toString())
-                        .email(mContactEmailEdit.getText().toString())
-                        .website(mContactCompanyWebsiteEdit.getText().toString())
-                        .notes(mContactNotesEdit.getText().toString())
-                        .photo(mContactPhotoFile)
-                        .businessCard(mContactBCFile)
-                        .build();
 
                 // BEFORE allowing either the addition of a new contact, or the update of an existing contact,
                 // need to verify that at least the name is not null...
-                String strName = ce.getName();
-                if ((strName == null) || (strName.equals(""))) {
+                String strName = mContactNameEdit.getText().toString();
+                //if ((strName == null) || (strName.equals(""))) {
+                if (strName.trim().equals("")) {
                     // If the name is null, do NOT add the entry, and notify the user that the contact was not saved.
                     // get confirmation from user in a dialog that they want to go back without saving changes
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -358,9 +345,22 @@ public class ContactEditDetailFragment extends Fragment
                     alert.show();
                 }
                 else {  // Otherwise, the contact name field is not null, so allow the contact to be added or updated.
+                    // First, create the contact entry...
+                    ContactEntry ce = new ContactEntryBuilder(mContactEntry)
+                            .name(mContactNameEdit.getText().toString())
+                            .title(mContactTitleEdit.getText().toString())
+                            .company(mContactCompanyEdit.getText().toString())
+                            .division(mContactDepartmentEdit.getText().toString())
+                            .phoneNumber(mContactPhoneNumEdit.getText().toString(), mContactPhoneExtEdit.getText().toString())
+                            .faxNumber(mContactFaxNumEdit.getText().toString())
+                            .email(mContactEmailEdit.getText().toString())
+                            .website(mContactCompanyWebsiteEdit.getText().toString())
+                            .notes(mContactNotesEdit.getText().toString())
+                            .photo(mContactPhotoFile)
+                            .businessCard(mContactBCFile)
+                            .build();
                     // If this is an "Add" operation, then add the new contact
                     if (mContactEntryId == null || mNewContact) {
-
                         // create an async task for adding a new contact to the database
                         new CommitContactTask(getActivity(), this, true, ce).execute();
                     }
@@ -379,7 +379,28 @@ public class ContactEditDetailFragment extends Fragment
 
             case R.id.menu_item_cancel_changes:
                 // User chose the "Cancel" action (do not save! just return)
-                mCallbacks.onContactEntryCancelChanges(mContactEntry);
+                // get confirmation from user in a dialog that they want to go back without saving changes
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setTitle("Return without saving changes?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Yes, the user wants to exit, so close the activity
+                        mCallbacks.onContactEntryCancelChanges(mContactEntry);
+                    }
+                });
+
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Cancel the closing of the activity here
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
                 return true;
 
             default:
