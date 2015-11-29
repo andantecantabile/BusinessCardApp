@@ -110,12 +110,6 @@ public class ContactDetailFragment extends Fragment
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop");
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
@@ -128,18 +122,18 @@ public class ContactDetailFragment extends Fragment
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
+    public void onDestroyView() {
+        Log.d(TAG, "onDestroyView");
         if(mBlat != null && mBlat.getStatus() != AsyncTask.Status.FINISHED) {
-            mBlat.cancel(false);
+            mBlat.cancel(true);
         }
         if(mLct != null && mLct.getStatus() != AsyncTask.Status.FINISHED) {
-            mLct.cancel(false);
+            mLct.cancel(true);
         }
         if(mDct != null && mDct.getStatus() != AsyncTask.Status.FINISHED) {
-            mDct.cancel(false);
+            mDct.cancel(true);
         }
+        super.onDestroyView();
     }
 
     @Override

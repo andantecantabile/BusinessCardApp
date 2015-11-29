@@ -146,12 +146,6 @@ public class ContactEditDetailFragment extends Fragment
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop");
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.d(TAG, "onSaveInstanceState");
@@ -167,18 +161,18 @@ public class ContactEditDetailFragment extends Fragment
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
+    public void onDestroyView() {
+        Log.d(TAG, "onDestroyView");
         if(mCct != null && mCct.getStatus() != AsyncTask.Status.FINISHED) {
-            mCct.cancel(false);
+            mCct.cancel(true);
         }
         if(mLct != null && mLct.getStatus() != AsyncTask.Status.FINISHED) {
-            mLct.cancel(false);
+            mLct.cancel(true);
         }
         if(mBlat != null && mBlat.getStatus() != AsyncTask.Status.FINISHED) {
-            mBlat.cancel(false);
+            mBlat.cancel(true);
         }
+        super.onDestroyView();
     }
 
     @Override

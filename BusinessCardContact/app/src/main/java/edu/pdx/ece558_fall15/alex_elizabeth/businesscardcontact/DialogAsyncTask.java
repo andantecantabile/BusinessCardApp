@@ -3,9 +3,12 @@ package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 
 public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, String, Boolean> {
+    private static final String TAG = "DialogAsyncTask";
+
     private String mInitialStatus;
     private ProgressDialog mProgressDialog;
     private ContactEntry mContactEntry = new ContactEntry();
@@ -48,8 +51,12 @@ public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, Strin
     @Override
     protected void onPostExecute(Boolean result) {
         if(!this.isCancelled()) {
-            if (mProgressDialog.isShowing()) {
-                mProgressDialog.dismiss();
+            try {
+                if (mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                }
+            } catch (IllegalArgumentException iae) {
+                Log.e(TAG, "The dialog couldn't be dismissed");
             }
 
             // perform the callback (result should be either true/false)
@@ -68,8 +75,12 @@ public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, Strin
 
     @Override
     protected void onCancelled(Boolean result) {
-        if(mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
+        try {
+            if (mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
+        } catch (IllegalArgumentException iae) {
+            Log.e(TAG, "The dialog couldn't be dismissed");
         }
     }
 

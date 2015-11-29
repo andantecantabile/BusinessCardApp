@@ -1,10 +1,9 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.app.Activity;
-import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.UUID;
 
 public class ContactListFragment extends Fragment
         implements DialogAsyncTask.Callbacks, DialogLoadCEListTask.ListCallbacks {
@@ -28,6 +26,8 @@ public class ContactListFragment extends Fragment
     private RecyclerView mContactEntryRecyclerView;
     private ContactEntryAdapter mAdapter;
     private Callbacks mCallbacks;
+
+    private DialogLoadCEListTask mDlcelt;
 
     public interface Callbacks {
         void onContactSelected(ContactEntry ce);
@@ -68,7 +68,8 @@ public class ContactListFragment extends Fragment
         super.onResume();
         Log.d(TAG, "onResume");
         // start async task to load the contact list
-        new DialogLoadCEListTask(getActivity(), this, this).execute();
+        mDlcelt = new DialogLoadCEListTask(getActivity(), this, this);
+        mDlcelt.execute();
         //updateUI();
     }
 
@@ -83,6 +84,15 @@ public class ContactListFragment extends Fragment
         super.onDetach();
         Log.d(TAG, "onDetach");
         mCallbacks = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d(TAG, "onDestroyView");
+        if(mDlcelt != null && mDlcelt.getStatus() != AsyncTask.Status.FINISHED) {
+            mDlcelt.cancel(true);
+        }
+        super.onDestroyView();
     }
 
     @Override
@@ -137,8 +147,10 @@ public class ContactListFragment extends Fragment
      */
     public void refreshUI() {
         // start async task to load the contact list; only if the adapter already exists.
-        if (mAdapter != null)
-            new DialogLoadCEListTask(getActivity(), this, this).execute();
+        if (mAdapter != null) {
+            mDlcelt = new DialogLoadCEListTask(getActivity(), this, this);
+            mDlcelt.execute();
+        }
     }
 
     /**
