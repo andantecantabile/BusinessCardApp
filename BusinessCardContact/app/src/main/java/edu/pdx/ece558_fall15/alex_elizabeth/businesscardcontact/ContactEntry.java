@@ -1,5 +1,7 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
+import android.util.Log;
+
 import java.util.UUID;
 
 /**
@@ -7,7 +9,7 @@ import java.util.UUID;
  * to set and get the various pieces of information in the in-memory contact storage
  * representation (as opposed to the file backed Android Contact Storage)
  */
-public class ContactEntry {
+public class ContactEntry implements Cloneable{
 
     //Unique Id per contact
     private UUID mId;
@@ -286,5 +288,16 @@ public class ContactEntry {
      */
     public void setNotes(String notes) {
         mNotes = notes;
+    }
+
+    public Object clone() {
+        ContactEntry contactEntry = null;
+        try {
+            contactEntry = (ContactEntry)super.clone();
+        } catch (CloneNotSupportedException e){
+            Log.e("ContactEntry", "Cloning didn't work");
+        }
+        contactEntry.mId = UUID.fromString(mId.toString());
+        return contactEntry;
     }
 }

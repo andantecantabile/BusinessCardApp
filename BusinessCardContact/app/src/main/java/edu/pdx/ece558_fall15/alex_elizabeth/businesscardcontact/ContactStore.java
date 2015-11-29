@@ -93,7 +93,7 @@ public class ContactStore {
     public ContactEntry getContactEntry(UUID id) {
         for(int i = 0; i < mContactEntries.size(); i++) {
             if(mContactEntries.get(i).getId().equals(id)) {
-                return mContactEntries.get(i);
+                return (ContactEntry) mContactEntries.get(i).clone();
             }
         }
         if(mTempContactEntry.getId().equals(id)) {
@@ -186,6 +186,6 @@ public class ContactStore {
      * @return the ContactEntry at the specified position
      */
     public ContactEntry getContactEntryAtPosition(int position) {
-        return mContactEntries.get(position);
+        return (ContactEntry) mContactEntries.get(position).clone();
     }
 }

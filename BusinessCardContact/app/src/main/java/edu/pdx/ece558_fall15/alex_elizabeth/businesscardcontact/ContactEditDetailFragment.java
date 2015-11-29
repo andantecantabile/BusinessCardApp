@@ -39,6 +39,7 @@ public class ContactEditDetailFragment extends Fragment
     private static final String ARG_NEW_CONTACT = "arg_new_contact";
 
     private static final String KEY_CONTACT_ENTRY_ID = "key_contact_entry_id";
+    private static final String KEY_NEW_CONTACT = "key_new_contact";
 
     private ContactEntry mContactEntry;
     private Callbacks mCallbacks;
@@ -94,7 +95,7 @@ public class ContactEditDetailFragment extends Fragment
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         setHasOptionsMenu(true);
-        if(savedInstanceState.getSerializable(KEY_CONTACT_ENTRY_ID) == null) {
+        if(savedInstanceState == null || savedInstanceState.getSerializable(KEY_CONTACT_ENTRY_ID) == null) {
             if (getArguments() != null) {
                 mContactEntryId = (UUID) getArguments().getSerializable(ARG_CONTACT_ENTRY_ID);
                 mNewContact = getArguments().getBoolean(ARG_NEW_CONTACT, true);
@@ -111,6 +112,8 @@ public class ContactEditDetailFragment extends Fragment
         } else {
             mContactEntryId = (UUID) savedInstanceState.getSerializable(KEY_CONTACT_ENTRY_ID);
             mContactEntry = ContactStore.get(getActivity()).getTemporaryContact();
+            mNewContact = savedInstanceState.getBoolean(KEY_NEW_CONTACT, true);
+            ContactStore.get(getActivity()).setTemporaryContact(mContactEntry);
         }
     }
 
@@ -118,6 +121,8 @@ public class ContactEditDetailFragment extends Fragment
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause");
+        mContactEntry = buildContactEntryFromInput();
+        ContactStore.get(getActivity()).setTemporaryContact(mContactEntry);
     }
 
     @Override
@@ -144,6 +149,7 @@ public class ContactEditDetailFragment extends Fragment
         super.onSaveInstanceState(outState);
         Log.d(TAG, "onSaveInstanceState");
         outState.putSerializable(KEY_CONTACT_ENTRY_ID, mContactEntryId);
+        outState.putBoolean(KEY_NEW_CONTACT, mNewContact);
     }
 
     @Override
@@ -352,19 +358,7 @@ public class ContactEditDetailFragment extends Fragment
                 }
                 else {  // Otherwise, the contact name field is not null, so allow the contact to be added or updated.
                     // First, create the contact entry...
-                    ContactEntry ce = new ContactEntryBuilder(mContactEntry)
-                            .name(mContactNameEdit.getText().toString())
-                            .title(mContactTitleEdit.getText().toString())
-                            .company(mContactCompanyEdit.getText().toString())
-                            .division(mContactDepartmentEdit.getText().toString())
-                            .phoneNumber(mContactPhoneNumEdit.getText().toString(), mContactPhoneExtEdit.getText().toString())
-                            .faxNumber(mContactFaxNumEdit.getText().toString())
-                            .email(mContactEmailEdit.getText().toString())
-                            .website(mContactCompanyWebsiteEdit.getText().toString())
-                            .notes(mContactNotesEdit.getText().toString())
-                            .photo(mContactPhotoFile)
-                            .businessCard(mContactBCFile)
-                            .build();
+                    ContactEntry ce = buildContactEntryFromInput();
                     // If this is an "Add" operation, then add the new contact
                     if (mContactEntryId == null || mNewContact) {
                         // create an async task for adding a new contact to the database
@@ -414,6 +408,22 @@ public class ContactEditDetailFragment extends Fragment
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private ContactEntry buildContactEntryFromInput() {
+        return new ContactEntryBuilder(mContactEntry)
+                .name(mContactNameEdit.getText().toString())
+                .title(mContactTitleEdit.getText().toString())
+                .company(mContactCompanyEdit.getText().toString())
+                .division(mContactDepartmentEdit.getText().toString())
+                .phoneNumber(mContactPhoneNumEdit.getText().toString(), mContactPhoneExtEdit.getText().toString())
+                .faxNumber(mContactFaxNumEdit.getText().toString())
+                .email(mContactEmailEdit.getText().toString())
+                .website(mContactCompanyWebsiteEdit.getText().toString())
+                .notes(mContactNotesEdit.getText().toString())
+                .photo(mContactPhotoFile)
+                .businessCard(mContactBCFile)
+                .build();
     }
 
     /**
