@@ -566,11 +566,19 @@ public class ContactEditDetailFragment extends Fragment
         Log.d(TAG, "openImageIntent");
         Uri outputFileUri = null;
         String chooserText = "";
+        File filesDir = getActivity()
+                .getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         if(requestCode == PICK_CONTACT_IMAGE_REQUEST) {
-            outputFileUri = Uri.fromFile(ContactStore.get(this.getActivity()).getSuggestedPhotoFile(mContactEntry));
+            outputFileUri = Uri.fromFile(new File( filesDir,
+                    ContactStore.get(this.getActivity())
+                            .getSuggestedPhotoFile(mContactEntry).getName() + ".jpg"));
+            mContactPhotoFile = new File(outputFileUri.getPath());
             chooserText = getResources().getString(R.string.chooserContactImage);
         } else if(requestCode == PICK_BC_IMAGE_REQUEST) {
-            outputFileUri = Uri.fromFile(ContactStore.get(this.getActivity()).getSuggestedBCFile(mContactEntry));
+            outputFileUri = Uri.fromFile(new File( filesDir,
+                    ContactStore.get(this.getActivity())
+                            .getSuggestedBCFile(mContactEntry).getName() + ".jpg"));
+            mContactBCFile = new File(outputFileUri.getPath());
             chooserText = getResources().getString(R.string.chooserBCImage);
         }
 
@@ -620,11 +628,9 @@ public class ContactEditDetailFragment extends Fragment
             //Returned from the camera
             if(data == null) {
                 if(requestCode == PICK_CONTACT_IMAGE_REQUEST) {
-                    mContactPhotoFile = ContactStore.get(this.getActivity()).getSuggestedPhotoFile(mContactEntry);
                     mContactEntry.setPhotoFilePath(mContactPhotoFile.getPath());
                     updatePhotoView(mContactPhotoView, mContactPhotoFile);
                 } else if (requestCode == PICK_BC_IMAGE_REQUEST) {
-                    mContactBCFile = ContactStore.get(this.getActivity()).getSuggestedBCFile(mContactEntry);
                     mContactEntry.setBCFilePath(mContactBCFile.getPath());
                     updatePhotoView(mContactBCView, mContactBCFile);
                 }
