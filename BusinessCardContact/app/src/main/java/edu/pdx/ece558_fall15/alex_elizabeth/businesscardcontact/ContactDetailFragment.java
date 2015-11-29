@@ -1,9 +1,12 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,7 +20,8 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.UUID;
 
-public class ContactDetailFragment extends Fragment {
+public class ContactDetailFragment extends Fragment
+        implements DialogAsyncTask.Callbacks {
     private static final String TAG = "ContactDetailFragment";
 
     private static final String PACKAGE_NAME =
@@ -90,7 +94,11 @@ public class ContactDetailFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        mContactEntry = ContactStore.get(getActivity()).getContactEntry(mContactEntryId);
+        //Add an async task here to retrieve the data for the given contact id:
+        if (mContactEntryId != null) {
+            new LoadContactTask(getActivity(), this, mContactEntryId).execute();
+        }
+        //mContactEntry = ContactStore.get(getActivity()).getContactEntry(mContactEntryId);
         updateUI();
     }
 
@@ -160,7 +168,7 @@ public class ContactDetailFragment extends Fragment {
 
             case R.id.menu_item_delete_contact:
                 // User chose the "Delete Contact" action
-                mCallbacks.onContactEntryDelete(mContactEntry);
+                deleteContactCheck();
                 return true;
 
             default:
@@ -287,6 +295,119 @@ public class ContactDetailFragment extends Fragment {
                 mContactNotesView.setText(notesVal, TextView.BufferType.EDITABLE);
             else
                 mContactNotesView.setText("", TextView.BufferType.EDITABLE);
+        }
+    }
+
+    /**
+     * Method that starts the async task to actually delete the active contact.
+     */
+    private void deleteContact() {
+        // so, delete the currently selected contact entry - needs to be done in an async task
+        new DeleteContactTask(getActivity(), this, mContactEntry).execute();
+    }
+
+    /**
+     * Wrapper method to first confirm that the user wants to delete the active contact, before allowing it to be deleted.
+     */
+    private void deleteContactCheck() {
+        // TODO: before checking for confirmation from user that the entry should be deleted... may need to check first that the given contact entry is not null... (but this case shouldn't actually happen...)
+
+        // get confirmation from user in a dialog that they want to go back without saving changes
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setTitle("Delete this contact?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Yes, the user wants to delete the contact...
+                deleteContact();
+                //ContactStore.get(getActivity().getApplicationContext()).deleteContactEntry(mContactEntry);
+
+                // Note: after deletion, need to return to the list view...
+                // which should be the previous activity in the backstack, so need to close this activity
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Cancel the dialog here, if the user decides not to delete the currently active contact entry.
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+    @Override
+    public void onAsyncTaskFinished(ContactEntry contactEntry, boolean success, int taskId) {
+        Log.d(TAG, "onAsyncTaskFinished; ceId: "+mContactEntryId);
+        // When the async task to save a contact has been completed, need to verify success.
+        // First, determine the identity of the async task which has completed.
+
+        if (taskId == LoadContactTask.TASK_ID) {
+            if (success) {
+                // if the Load Contact Task is successful, need to update the UI.
+                mContactEntry = contactEntry;   // save the loaded contact entry
+                updateUI();
+            }
+        }
+        else if (taskId == DeleteContactTask.TASK_ID) {
+            if (success) {
+                // once the contact is successfully deleted, just need to perform the callback to the activity so that the activity will be closed.
+                mCallbacks.onContactEntryDelete(mContactEntry);
+            }
+            // if it was not successful, would probably be good to display some message... but this case is very unlikely to happen
+        }
+    }
+
+    /**
+     * Async task used to commit a set of values for a contact entry to the database.
+     */
+    private class LoadContactTask extends DialogAsyncTask<String, String, Boolean> {
+        private UUID mContactEntryId;    // the contact id to be loaded
+
+        // Assign a unique task id.
+        public static final int TASK_ID = 1;
+        // Define the status message for the spinning dialog
+        private static final String INIT_STATUS_MSG = "Loading contact information...";
+
+        public LoadContactTask(Context context, Callbacks callbacks, UUID ceId) {
+            super(INIT_STATUS_MSG,context,callbacks, TASK_ID);
+            mContactEntryId = ceId;
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            Log.d(TAG, "doInBackground");
+            // retrieve the contact entry data for the given id
+            setContactEntry(ContactStore.get(getActivity()).getContactEntry(mContactEntryId));
+            return true;
+        }
+    }
+
+    /**
+     * Async task used to commit a set of values for a contact entry to the database.
+     */
+    private class DeleteContactTask extends DialogAsyncTask<String, String, Boolean> {
+        // Assign a unique task id.
+        public static final int TASK_ID = 2;
+        // Define the status message for the spinning dialog
+        private static final String INIT_STATUS_MSG = "Deleting contact information...";
+
+        public DeleteContactTask(Context context, Callbacks callbacks, ContactEntry ce) {
+            super(INIT_STATUS_MSG,context,callbacks, TASK_ID);
+            setContactEntry(ce);
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            Log.d(TAG, "doInBackground");
+            // delete the given contact entry
+            ContactStore.get(getActivity().getApplicationContext()).deleteContactEntry(getContactEntry());
+            return true;
         }
     }
 }

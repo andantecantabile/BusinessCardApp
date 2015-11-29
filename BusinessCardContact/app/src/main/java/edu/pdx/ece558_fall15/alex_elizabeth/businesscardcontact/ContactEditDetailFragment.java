@@ -401,7 +401,7 @@ public class ContactEditDetailFragment extends Fragment
         // When the async task to save a contact has been completed, need to verify success.
         // First, determine the identity of the async task which has completed.
 
-        if (taskId == CommitContactTask.COMMIT_CONTACT_TASK_ID) {
+        if (taskId == CommitContactTask.TASK_ID) {
             // if the Save (Update or Add Contact) Task is successful, then perform the callback to the activity.
             // If successful, the activity should be closed (occurs in ContactEditDetailActivity).
             // However, if not successful, then needs to NOT close the activity.
@@ -412,10 +412,37 @@ public class ContactEditDetailFragment extends Fragment
                 mCallbacks.onContactEntrySaveChanges(mContactEntry);
             }
         }
-        else if (taskId == LoadContactTask.LOAD_CONTACT_TASK_ID) {
+        else if (taskId == LoadContactTask.TASK_ID) {
             // if the Load Contact Task is successful, need to update the UI.
-            mContactEntry = contactEntry;   // save the loaded contact entry
-            updateUI();
+            if (success) {
+                mContactEntry = contactEntry;   // save the loaded contact entry
+                updateUI();
+            }
+        }
+    }
+
+    /**
+     * Async task used to commit a set of values for a contact entry to the database.
+     */
+    private class LoadContactTask extends DialogAsyncTask<String, String, Boolean> {
+        private UUID mContactEntryId;    // the contact id to be loaded
+
+        // Assign a unique task id.
+        public static final int TASK_ID = 1;
+        // Define the status message for the spinning dialog
+        private static final String INIT_STATUS_MSG = "Loading contact information...";
+
+        public LoadContactTask(Context context, Callbacks callbacks, UUID ceId) {
+            super(INIT_STATUS_MSG,context,callbacks, TASK_ID);
+            mContactEntryId = ceId;
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            Log.d(TAG, "doInBackground");
+            // retrieve the contact entry data for the given id
+            setContactEntry(ContactStore.get(getActivity()).getContactEntry(mContactEntryId));
+            return true;
         }
     }
 
@@ -426,12 +453,12 @@ public class ContactEditDetailFragment extends Fragment
         private boolean mNewContact;    // flag indicating if the given contact is a new contact
 
         // Assign a unique task id.
-        public static final int COMMIT_CONTACT_TASK_ID = 1;
+        public static final int TASK_ID = 2;
         // Define the status message for the spinning dialog
-        private static final String COMMIT_CONTACT_INIT_STATUS_MSG = "Saving contact information...";
+        private static final String INIT_STATUS_MSG = "Saving contact information...";
 
         public CommitContactTask(Context context, Callbacks callbacks, boolean isNewContact, ContactEntry ce) {
-            super(COMMIT_CONTACT_INIT_STATUS_MSG,context,callbacks, COMMIT_CONTACT_TASK_ID);
+            super(INIT_STATUS_MSG,context,callbacks, TASK_ID);
             mNewContact = isNewContact;
             setContactEntry(ce); // save the given contact entry
         }
@@ -446,31 +473,6 @@ public class ContactEditDetailFragment extends Fragment
                 ContactEntry ce = getContactEntry();
                 ContactStore.get(getActivity()).updateContactEntry(ce);
             }
-            return true;
-        }
-    }
-
-    /**
-     * Async task used to commit a set of values for a contact entry to the database.
-     */
-    private class LoadContactTask extends DialogAsyncTask<String, String, Boolean> {
-        private UUID mContactEntryId;    // the contact id to be loaded
-
-        // Assign a unique task id.
-        public static final int LOAD_CONTACT_TASK_ID = 2;
-        // Define the status message for the spinning dialog
-        private static final String LOAD_CONTACT_INIT_STATUS_MSG = "Loading contact information...";
-
-        public LoadContactTask(Context context, Callbacks callbacks, UUID ceId) {
-            super(LOAD_CONTACT_INIT_STATUS_MSG,context,callbacks, LOAD_CONTACT_TASK_ID);
-            mContactEntryId = ceId;
-        }
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-            Log.d(TAG, "doInBackground");
-            // retrieve the contact entry data for the given id
-            setContactEntry(ContactStore.get(getActivity()).getContactEntry(mContactEntryId));
             return true;
         }
     }
