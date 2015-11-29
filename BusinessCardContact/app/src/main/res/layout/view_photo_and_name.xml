@@ -22,7 +22,7 @@
             android:scaleType="centerInside"
             android:background="@color/lighterGray"
             android:cropToPadding="true"
-            android:src="@drawable/ic_add_a_photo_holo_light" />
+            android:src="@drawable/ic_photo_camera_light" />
         <!--
         <ImageButton
             android:id="@+id/ContactPicture"

@@ -26,6 +26,8 @@
     <string name="menu_delete_contact">Delete Contact</string>
     <string name="menu_save_changes">Save</string>
     <string name="menu_cancel_changes">Cancel</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_about">About</string>
 
     <!-- image chooser title -->
     <string name="img_chooser_title">Find an Image</string>
