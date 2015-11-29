@@ -26,8 +26,10 @@ public class ContactListActivity extends AppCompatActivity
 
     private static final int REQUEST_CODE_VIEW = 0;
     private static final int REQUEST_CODE_GET_IMAGE = 1;
+    private static final int REQUEST_CODE_EDIT = 2;
 
     private ContactEntry mCurrContactEntry;
+    private boolean mNeedUpdate = false;
 
     @LayoutRes
         private int getLayoutResId() {
@@ -58,6 +60,18 @@ public class ContactListActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart");
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.d(TAG, "onRestart");
+        super.onRestart();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         Log.d(TAG, "onSaveInstanceState");
         removeDetailFragmentUI();   // remove the detail fragment
@@ -79,7 +93,10 @@ public class ContactListActivity extends AppCompatActivity
             Intent intent = ContactDetailActivity.newIntent(this, ce.getId());
             startActivityForResult(intent, REQUEST_CODE_VIEW);
         } else {
-            setDetailFragment(ce);
+            if(mCurrContactEntry == null || !mCurrContactEntry.getId().equals(ce.getId())) {
+                mCurrContactEntry = ce;
+                setDetailFragment(ce);
+            }
         }
     }
 
@@ -93,8 +110,15 @@ public class ContactListActivity extends AppCompatActivity
             if(currID != null) {
                 ContactEntry ce = ContactStore.get(this).getContactEntry(currID);
                 if (findViewById(R.id.detail_fragment_container) != null) {
+                    mCurrContactEntry = ce;
                     setDetailFragment(ce);
                 }
+            }
+        } else if(requestCode == REQUEST_CODE_EDIT) {
+            UUID currID = ContactEditDetailActivity.lastEditedId(data);
+            if(currID != null) {
+                mCurrContactEntry = ContactStore.get(this).getContactEntry(currID);
+                mNeedUpdate = true;
             }
         } else if(requestCode == REQUEST_CODE_GET_IMAGE) {
             File BCFile = null;
@@ -147,8 +171,9 @@ public class ContactListActivity extends AppCompatActivity
         Log.d(TAG, "onContactEntryEdit");
 
         // start the edit detail activity
+        mCurrContactEntry = ce;
         Intent intent = ContactEditDetailActivity.newIntent(this, ce.getId(), false);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_EDIT);
     }
 
     @Override
@@ -165,7 +190,7 @@ public class ContactListActivity extends AppCompatActivity
         Log.d(TAG, "onContactAddBlank");
         // Start the EditDetailActivity
         Intent intent = ContactEditDetailActivity.newIntent(this, null, true);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_EDIT);
     }
 
     @Override
@@ -173,8 +198,8 @@ public class ContactListActivity extends AppCompatActivity
         Log.d(TAG, "onContactAddNewContactCard");
         mCurrContactEntry = new ContactEntry();
         File filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        Uri outputFileUri = Uri.fromFile(new File( filesDir, ContactStore.get(this)
-                        .getSuggestedBCFile(mCurrContactEntry).getName() + ".jpg"));
+        Uri outputFileUri = Uri.fromFile(new File(filesDir, ContactStore.get(this)
+                .getSuggestedBCFile(mCurrContactEntry).getName() + ".jpg"));
         String chooserText = getResources().getString(R.string.chooserBCImage);
         Intent intent = PictureUtils.getImageChooserIntent(outputFileUri, chooserText, this);
         startActivityForResult(intent, REQUEST_CODE_GET_IMAGE);
@@ -184,6 +209,13 @@ public class ContactListActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
+
+        if(mNeedUpdate) {
+            if (findViewById(R.id.detail_fragment_container) != null) {
+                setDetailFragment(mCurrContactEntry);
+            }
+            mNeedUpdate = false;
+        }
 
         // Need to update the views of the fragments.
         updateListFragmentUI();
@@ -251,7 +283,7 @@ public class ContactListActivity extends AppCompatActivity
             // Start the EditDetailActivity
             Intent intent = ContactEditDetailActivity.newIntent(this,
                     mCurrContactEntry == null ? null : mCurrContactEntry.getId(), true);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE_EDIT);
         }
         /*
         else {

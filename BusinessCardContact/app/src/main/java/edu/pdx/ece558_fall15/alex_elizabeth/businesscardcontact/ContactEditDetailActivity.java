@@ -30,6 +30,10 @@ public class ContactEditDetailActivity extends AppCompatActivity
         return intent;
     }
 
+    public static UUID lastEditedId(Intent intent) {
+        return (UUID) intent.getSerializableExtra(EXTRA_CONTACT_ENTRY_ID);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +46,7 @@ public class ContactEditDetailActivity extends AppCompatActivity
         mContactEntry = contactId == null ? null : ContactStore.get(this).getContactEntry(contactId);
 
         FragmentManager fm = getSupportFragmentManager();
-        //Check if the id for placing the ContactListFragment in exists
+        //Check if the id for placing the ContactEditDetailFragment in exists
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
         if(fragment == null) {
             fragment = ContactEditDetailFragment.newInstance(contactId, newContact);
@@ -59,7 +63,7 @@ public class ContactEditDetailActivity extends AppCompatActivity
         mContactEntry = ce;
         // Note that the save operation of the contact has already been performed in the fragment.
         // Here, need to close the current activity so that it would return to the previous view (either list or detail?)
-        finish();
+        finishActivity();
     }
 
     @Override
@@ -68,7 +72,7 @@ public class ContactEditDetailActivity extends AppCompatActivity
 
         mContactEntry = ce;
         // On cancel, want to return to the previous activity.
-        finish();
+        finishActivity();
     }
 
     @Override
@@ -83,7 +87,7 @@ public class ContactEditDetailActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Yes, the user wants to exit, so close the activity
-                finish();
+                finishActivity();
             }
         });
 
@@ -97,5 +101,12 @@ public class ContactEditDetailActivity extends AppCompatActivity
 
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private void finishActivity() {
+        Intent data = new Intent();
+        setResult(RESULT_OK, data);
+        data.putExtra(EXTRA_CONTACT_ENTRY_ID, mContactEntry.getId());
+        finish();
     }
 }
