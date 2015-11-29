@@ -343,7 +343,8 @@ public class ContactDetailFragment extends Fragment
 
     @Override
     public void onAsyncTaskFinished(ContactEntry contactEntry, boolean success, int taskId) {
-        Log.d(TAG, "onAsyncTaskFinished; ceId: "+mContactEntryId);
+        //Log.d(TAG, "onAsyncTaskFinished; ceId: "+mContactEntryId);
+        Log.d(TAG, "onAsyncTaskFinished");
         // When the async task to save a contact has been completed, need to verify success.
         // First, determine the identity of the async task which has completed.
 
