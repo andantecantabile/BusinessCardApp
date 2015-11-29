@@ -103,6 +103,7 @@ public class ContactEditDetailFragment extends Fragment
             // previously used an else clause here to start the async task when the contact entry id was not null - moved to onResume()
         }
         else {
+            // load the existing contact entry
             mContactEntry = new ContactEntry();
             mContactEntryId = mContactEntry.getId();
             ContactStore.get(getActivity()).setTemporaryContact(mContactEntry);
@@ -346,38 +347,42 @@ public class ContactEditDetailFragment extends Fragment
                         .photo(mContactPhotoFile)
                         .businessCard(mContactBCFile)
                         .build();
-                // If this is an "Add" operation, then add the new contact
-                if (mContactEntryId == null || mNewContact) {
-                    // BEFORE adding the new contact, need to verify that at least the name is not null...
-                    String strName = ce.getName();
-                    if ((strName == null) || (strName.equals(""))) {
-                        // If the name is null, do NOT add the entry, and notify the user that the contact was not saved.
-                        // get confirmation from user in a dialog that they want to go back without saving changes
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                        builder.setTitle("Error: Could not save contact");
-                        builder.setMessage("Contact name needs to be specified.");
-                        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Yes, the user wants to exit, so close the activity
-                                dialog.cancel();
-                            }
-                        });
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                    }
-                    else {
+                // BEFORE allowing either the addition of a new contact, or the update of an existing contact,
+                // need to verify that at least the name is not null...
+                String strName = ce.getName();
+                if ((strName == null) || (strName.equals(""))) {
+                    // If the name is null, do NOT add the entry, and notify the user that the contact was not saved.
+                    // get confirmation from user in a dialog that they want to go back without saving changes
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                    builder.setTitle("Error: Could not save contact");
+                    builder.setMessage("Contact name needs to be specified.");
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Yes, the user wants to exit, so close the activity
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+                else {  // Otherwise, the contact name field is not null, so allow the contact to be added or updated.
+                    // If this is an "Add" operation, then add the new contact
+                    if (mContactEntryId == null || mNewContact) {
+
                         // create an async task for adding a new contact to the database
-                        new CommitContactTask(getActivity(),this, true, ce).execute();
+                        new CommitContactTask(getActivity(), this, true, ce).execute();
+                    }
+                    // Otherwise, it is a "Modify"/"Update" operation, so update the entry
+                    else {
+                        // create an async task for the update operation
+                        new CommitContactTask(getActivity(), this, false, ce).execute();
                     }
                 }
-                // Otherwise, it is a "Modify"/"Update" operation, so update the entry
-                else {
-                    // create an async task for the update operation
-                    new CommitContactTask(getActivity(),this, false, ce).execute();
-                }
 
+                // hide the popup keyboard on the current view (if it is actively displayed)
                 View v = getActivity().findViewById(android.R.id.content);
                 hidePopUpKeyboard(getActivity(), v);
 
