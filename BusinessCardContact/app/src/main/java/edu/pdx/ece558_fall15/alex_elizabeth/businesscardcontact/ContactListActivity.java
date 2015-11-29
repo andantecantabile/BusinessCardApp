@@ -3,10 +3,12 @@ package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +49,8 @@ public class ContactListActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
+
+        SettingsUtils.onActivityCreateSetTheme(this);
 
         setContentView(getLayoutResId());
 
@@ -176,6 +183,54 @@ public class ContactListActivity extends AppCompatActivity
         String chooserText = getResources().getString(R.string.chooserBCImage);
         Intent intent = PictureUtils.getImageChooserIntent(outputFileUri, chooserText, this);
         startActivityForResult(intent, REQUEST_CODE_GET_IMAGE);
+    }
+
+    @Override
+    public void onDisplaySettings() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = getLayoutInflater();
+
+        builder.setTitle(R.string.about_title);
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        builder.setView(inflater.inflate(R.layout.app_about, null))
+        // Add action buttons
+                /*
+                .setPositiveButton(R.string.about_ok_btn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                    }
+                })
+                */
+        ;
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    @Override
+    public void onDisplayAbout() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = getLayoutInflater();
+
+        //builder.setTitle(R.string.about_title);
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        builder.setView(inflater.inflate(R.layout.app_about, null))
+                // Add action buttons
+                /*
+                .setPositiveButton(R.string.about_ok_btn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                    }
+                })
+                */
+                ;
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
