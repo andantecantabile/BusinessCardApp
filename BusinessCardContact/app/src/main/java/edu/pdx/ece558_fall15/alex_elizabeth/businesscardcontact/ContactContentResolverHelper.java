@@ -385,11 +385,11 @@ public class ContactContentResolverHelper {
      * @param contactEntry the ContactEntry to get the data from
      */
     private void addBusinessCardData(long rawContactId, ContactEntry contactEntry) {
-        Log.d(TAG, "addPhotoData");
+        Log.d(TAG, "addBusinessCardData");
         ContentValues values = new ContentValues();
         values.put(Data.RAW_CONTACT_ID, rawContactId);
         values.put(Data.MIMETYPE, BusinessCardPhoto.CONTENT_ITEM_TYPE);
-        addPhotoValues(contactEntry, values);
+        addBusinessCardValues(contactEntry, values);
         Uri dataUri = mContext.getContentResolver()
                 .insert(Data.CONTENT_URI, values);
     }
@@ -792,7 +792,7 @@ public class ContactContentResolverHelper {
      * @param values ContentValues to add to
      */
     private void addBusinessCardValues(ContactEntry contactEntry, ContentValues values) {
-        if(contactEntry.getPhotoFilePath() != null) {
+        if(contactEntry.getBCFilePath() != null) {
             Log.d(TAG, contactEntry.getBCFilePath());
             values.put(BusinessCardPhoto.PHOTO_FILE_ID, contactEntry.getBCFilePath());
             /*Bitmap b = PictureUtils.getScaledBitmap(
@@ -949,14 +949,14 @@ public class ContactContentResolverHelper {
                         case Photo.CONTENT_ITEM_TYPE:
                             //Set the photo values
                             if(data14 != null) {
-                                Log.d(TAG, data14);
+                                Log.d(TAG, "Retrieved Photo Path: " + data14);
                                 contactEntry.setPhotoFilePath(data14);
                             }
                             break;
                         case BusinessCardPhoto.CONTENT_ITEM_TYPE:
                             //Set the business card photo values
                             if(data14 != null) {
-                                Log.d(TAG, data14);
+                                Log.d(TAG, "Retrieved BC Path: " + data14);
                                 contactEntry.setBCFilePath(data14);
                             }
                             break;

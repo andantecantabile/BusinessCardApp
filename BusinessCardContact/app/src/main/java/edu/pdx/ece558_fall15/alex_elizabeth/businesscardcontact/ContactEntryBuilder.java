@@ -119,14 +119,14 @@ public class ContactEntryBuilder {
 
     public ContactEntryBuilder photo(File photoFile) {
         if(photoFile != null) {
-            mContactEntry.setPhotoFilePath(photoFile.getName());
+            mContactEntry.setPhotoFilePath(photoFile.getPath());
         }
         return this;
     }
 
     public ContactEntryBuilder businessCard(File businessCardFile) {
         if(businessCardFile != null) {
-            mContactEntry.setBCFilePath(businessCardFile.getName());
+            mContactEntry.setBCFilePath(businessCardFile.getPath());
         }
         return this;
     }

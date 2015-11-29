@@ -88,7 +88,7 @@ public class PictureUtils {
     // http://stackoverflow.com/questions/22784656/convert-android-graphics-bitmap-to-java-io-file/22785013#22785013
     public static File persistImage(File filesDir, Bitmap bitmap, String name) {
         File imageFile = new File(filesDir, name + ".jpg");
-
+        Log.d(TAG, "Image File Path: " + imageFile.getAbsolutePath());
         OutputStream os;
         try {
             os = new FileOutputStream(imageFile);

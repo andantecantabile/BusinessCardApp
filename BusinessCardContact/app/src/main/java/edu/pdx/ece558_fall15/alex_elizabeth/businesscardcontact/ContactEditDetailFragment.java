@@ -95,13 +95,17 @@ public class ContactEditDetailFragment extends Fragment
         if (getArguments() != null) {
             mContactEntryId = (UUID) getArguments().getSerializable(ARG_CONTACT_ENTRY_ID);
             mNewContact = getArguments().getBoolean(ARG_NEW_CONTACT,true);
-            if (mContactEntryId == null)
-                mContactEntry = null;
+            if (mContactEntryId == null) {
+                mContactEntry = new ContactEntry();
+                mContactEntryId = mContactEntry.getId();
+                ContactStore.get(getActivity()).setTemporaryContact(mContactEntry);
+            }
             // previously used an else clause here to start the async task when the contact entry id was not null - moved to onResume()
         }
         else {
-            mContactEntryId = null;
-            mContactEntry = null;
+            mContactEntry = new ContactEntry();
+            mContactEntryId = mContactEntry.getId();
+            ContactStore.get(getActivity()).setTemporaryContact(mContactEntry);
         }
     }
 
@@ -117,6 +121,10 @@ public class ContactEditDetailFragment extends Fragment
         //Add an async task here to retrieve the data for the given contact id:
         if (mContactEntryId != null) {
             new LoadContactTask(getActivity(), this, mContactEntryId).execute();
+        } else {
+            mContactEntry = new ContactEntry();
+            mContactEntryId = mContactEntry.getId();
+            ContactStore.get(getActivity()).setTemporaryContact(mContactEntry);
         }
     }
 
@@ -463,7 +471,7 @@ public class ContactEditDetailFragment extends Fragment
         private static final String INIT_STATUS_MSG = "Saving contact information...";
 
         public CommitContactTask(Context context, Callbacks callbacks, boolean isNewContact, ContactEntry ce) {
-            super(INIT_STATUS_MSG,context,callbacks, TASK_ID);
+            super(INIT_STATUS_MSG, context, callbacks, TASK_ID);
             mNewContact = isNewContact;
             setContactEntry(ce); // save the given contact entry
         }
@@ -512,6 +520,7 @@ public class ContactEditDetailFragment extends Fragment
      *  Displays the provided image file in the referenced image view.
      */
     private void updatePhotoView(ImageView imgView, File imgFile) {
+        Log.d(TAG, "updatePhotoView");
         if (imgView != null) {
             if (imgFile == null || !imgFile.exists()) {
                 //imgView.setImageDrawable(null);   // would display no image.
@@ -524,6 +533,10 @@ public class ContactEditDetailFragment extends Fragment
                 // Uncomment this section when PictureUtils is set up.
                 Bitmap bitmap = PictureUtils.getScaledBitmap(
                         imgFile.getPath(), getActivity());
+                Log.d(TAG, "Bitmap path: " + imgFile.getPath());
+                if(!imgFile.exists()) {
+                    Log.d(TAG, "Bitmap doesn't exist.");
+                }
                 imgView.setImageBitmap(bitmap);
             }
         }
@@ -540,9 +553,11 @@ public class ContactEditDetailFragment extends Fragment
             if(data == null) {
                 if(requestCode == PICK_CONTACT_IMAGE_REQUEST) {
                     mContactPhotoFile = ContactStore.get(this.getActivity()).getSuggestedPhotoFile(mContactEntry);
+                    mContactEntry.setPhotoFilePath(mContactPhotoFile.getPath());
                     updatePhotoView(mContactPhotoView, mContactPhotoFile);
                 } else if (requestCode == PICK_BC_IMAGE_REQUEST) {
                     mContactBCFile = ContactStore.get(this.getActivity()).getSuggestedBCFile(mContactEntry);
+                    mContactEntry.setBCFilePath(mContactBCFile.getPath());
                     updatePhotoView(mContactBCView, mContactBCFile);
                 }
             }
@@ -564,6 +579,7 @@ public class ContactEditDetailFragment extends Fragment
                                 mContactEntry.getSuggestedPhotoFilename());
                         if (tmpFile != null) {
                             mContactPhotoFile = tmpFile;
+                            mContactEntry.setPhotoFilePath(tmpFile.getPath());
                             updatePhotoView(mContactPhotoView, mContactPhotoFile);
                         }
                     } else if (requestCode == PICK_BC_IMAGE_REQUEST) {
@@ -572,6 +588,7 @@ public class ContactEditDetailFragment extends Fragment
                                 mContactEntry.getSuggestedBCFilename());
                         if (tmpFile != null) {
                             mContactBCFile = tmpFile;
+                            mContactEntry.setBCFilePath(tmpFile.getPath());
                             updatePhotoView(mContactBCView, mContactBCFile);
                         }
                     }

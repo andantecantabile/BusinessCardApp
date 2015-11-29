@@ -1,7 +1,6 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.content.Context;
-import android.os.Environment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,6 +44,11 @@ public class ContactStore {
         mContext = context;
         mResolverHelper = new ContactContentResolverHelper(mContext);
         mContactEntries = mResolverHelper.getAllContacts();
+
+        //Uncomment to delete all contacts
+        //for(int i = 0; i < mContactEntries.size(); i++) {
+        //   deleteContactEntry(mContactEntries.get(i));
+        //}
     }
 
     public void setTemporaryContact(ContactEntry ce) {
@@ -153,13 +157,14 @@ public class ContactStore {
         if(filename == null) {
             return null;
         }
-        File externalFilesDir = mContext
+        /*File externalFilesDir = mContext
                 .getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         if(externalFilesDir == null) {
             return null;
         }
 
-        return new File(externalFilesDir, filename);
+        return new File(externalFilesDir, filename);*/
+        return new File(filename);
     }
 
     /**

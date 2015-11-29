@@ -56,6 +56,7 @@ public class ContactEditDetailActivity extends AppCompatActivity
     public void onContactEntrySaveChanges(ContactEntry ce) {
         Log.d(TAG, "onContactEntrySaveChanges");
 
+        mContactEntry = ce;
         // Note that the save operation of the contact has already been performed in the fragment.
         // Here, need to close the current activity so that it would return to the previous view (either list or detail?)
         finish();
@@ -65,6 +66,7 @@ public class ContactEditDetailActivity extends AppCompatActivity
     public void onContactEntryCancelChanges(ContactEntry ce) {
         Log.d(TAG,"onContactEntryCancelChanges");
 
+        mContactEntry = ce;
         // On cancel, want to return to the previous activity.
         finish();
     }
