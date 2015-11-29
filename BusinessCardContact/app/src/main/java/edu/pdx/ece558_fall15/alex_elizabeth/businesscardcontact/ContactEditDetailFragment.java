@@ -243,79 +243,68 @@ public class ContactEditDetailFragment extends Fragment
                 {
                     mContactNameEdit.setText(nameVal, TextView.BufferType.EDITABLE);
                 }
-                else
-                    mContactNameEdit.setText("", TextView.BufferType.EDITABLE);
             }
             if (mContactTitleEdit != null) {
                 String titleVal = mContactEntry.getTitle();
-                if (titleVal != null)
+                if (titleVal != null) {
                     mContactTitleEdit.setText(titleVal, TextView.BufferType.EDITABLE);
-                else
-                    mContactTitleEdit.setText("", TextView.BufferType.EDITABLE);
+                }
             }
 
             if (mContactCompanyEdit != null) {
                 String companyVal = mContactEntry.getCompany();
-                if (companyVal != null)
+                if (companyVal != null) {
                     mContactCompanyEdit.setText(companyVal, TextView.BufferType.EDITABLE);
-                else
-                    mContactCompanyEdit.setText("", TextView.BufferType.EDITABLE);
+                }
             }
 
             if (mContactDepartmentEdit != null) {
                 String departmentVal = mContactEntry.getDivision();
-                if (departmentVal != null)
+                if (departmentVal != null) {
                     mContactDepartmentEdit.setText(departmentVal, TextView.BufferType.EDITABLE);
-                else
-                    mContactDepartmentEdit.setText("", TextView.BufferType.EDITABLE);
+                }
             }
 
             if (mContactPhoneNumEdit != null) {
                 String phoneNumVal = mContactEntry.getPhoneNumber();
-                if (phoneNumVal != null)
+                if (phoneNumVal != null) {
                     mContactPhoneNumEdit.setText(phoneNumVal, TextView.BufferType.EDITABLE);
-                else
-                    mContactPhoneNumEdit.setText("", TextView.BufferType.EDITABLE);
+                }
             }
 
             if (mContactPhoneExtEdit != null) {
                 String phoneExtVal = mContactEntry.getExtension();
-                if (phoneExtVal != null)
+                if (phoneExtVal != null) {
                     mContactPhoneExtEdit.setText(phoneExtVal, TextView.BufferType.EDITABLE);
-                else
-                    mContactPhoneExtEdit.setText("", TextView.BufferType.EDITABLE);
+                }
             }
 
             if (mContactFaxNumEdit != null) {
                 String faxNumVal = mContactEntry.getFaxNumber();
-                if (faxNumVal != null)
+                if (faxNumVal != null) {
                     mContactFaxNumEdit.setText(faxNumVal, TextView.BufferType.EDITABLE);
-                else
-                    mContactFaxNumEdit.setText("", TextView.BufferType.EDITABLE);
+                }
             }
 
             if (mContactEmailEdit != null) {
                 String emailVal = mContactEntry.getEmail();
-                if (emailVal != null)
+                if (emailVal != null) {
                     mContactEmailEdit.setText(emailVal, TextView.BufferType.EDITABLE);
-                else
-                    mContactEmailEdit.setText("", TextView.BufferType.EDITABLE);
+                }
             }
 
             if (mContactCompanyWebsiteEdit != null) {
                 String companyWebsiteVal = mContactEntry.getWebsite();
-                if (companyWebsiteVal != null)
+                if (companyWebsiteVal != null) {
                     mContactCompanyWebsiteEdit.setText(companyWebsiteVal, TextView.BufferType.EDITABLE);
-                else
-                    mContactCompanyWebsiteEdit.setText("", TextView.BufferType.EDITABLE);
+                }
             }
 
             if (mContactNotesEdit != null) {
                 String notesVal = mContactEntry.getNotes();
-                if (notesVal != null)
+                if (notesVal != null) {
                     mContactNotesEdit.setText(notesVal, TextView.BufferType.EDITABLE);
-                else
-                    mContactNotesEdit.setText("", TextView.BufferType.EDITABLE);
+                }
             }
         }
     }
