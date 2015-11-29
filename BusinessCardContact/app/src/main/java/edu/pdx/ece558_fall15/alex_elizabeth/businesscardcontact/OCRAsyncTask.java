@@ -1,17 +1,15 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Environment;
-import android.provider.Settings;
 import android.util.Log;
 
-import com.abbyy.ocrsdk.BusCardSettings;
-import com.abbyy.ocrsdk.Client;
-import com.abbyy.ocrsdk.Task;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Adapted form ABBYY Cloud OCR Github Sample Project
@@ -30,7 +28,7 @@ public class OCRAsyncTask extends DialogAsyncTask<String, String, Boolean> {
         String inputFile = params[0];
         String tempFile = params[1];
 
-        try {
+        /*try {
             //Setup a Client to interact with the cloud OCR service
             Client restClient = new Client();
             //Set the ID and password for our application
@@ -99,11 +97,36 @@ public class OCRAsyncTask extends DialogAsyncTask<String, String, Boolean> {
             } else {
                 throw new Exception("Task failed");
             }
-
-            return true;
         } catch (Exception e) {
             Log.e(TAG, "Error during OCR: " + e.getMessage(), e);
             return false;
+        }*/
+
+        //Process the returned XML file.
+        //When done testing replace with
+        //File xmlFile = new File(super.getContext()
+        //      .getExternalFilesDir(Environment.DIRECTORY_PICTURES),tempFile);
+        File xmlFile = new File(super.getContext()
+            .getExternalFilesDir(Environment.DIRECTORY_PICTURES), "0fe75364-aacb-47a7-9c55-cb920fb87b84.xml");
+
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(xmlFile);
+            AbbyyResponseXmlParser parser = new AbbyyResponseXmlParser();
+            ContactEntry contactEntry = parser.parse(fis);
+            super.setContactEntry(contactEntry);
+            fis.close();
+        } catch (XmlPullParserException xppe) {
+            Log.e(TAG, "Problem with XML parser: ", xppe);
+            return false;
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "Problem finding the xml file we just created: ", e);
+            return false;
+        } catch (IOException ioe) {
+            Log.e(TAG, "Problem parsing file: ", ioe);
+            return false;
         }
+
+        return true;
     }
 }

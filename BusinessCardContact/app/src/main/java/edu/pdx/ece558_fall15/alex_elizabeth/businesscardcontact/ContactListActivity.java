@@ -153,7 +153,7 @@ public class ContactListActivity extends AppCompatActivity
         Log.d(TAG, "onContactEntryEdit");
 
         // start the edit detail activity
-        Intent intent = ContactEditDetailActivity.newIntent(this, ce.getId());
+        Intent intent = ContactEditDetailActivity.newIntent(this, ce.getId(), false);
         startActivity(intent);
     }
 
@@ -216,7 +216,7 @@ public class ContactListActivity extends AppCompatActivity
     public void onAddBlankContact() {
         Log.d(TAG, "onContactAddBlank");
         // Start the EditDetailActivity
-        Intent intent = ContactEditDetailActivity.newIntent(this, null);
+        Intent intent = ContactEditDetailActivity.newIntent(this, null, true);
         startActivity(intent);
     }
 
@@ -270,9 +270,11 @@ public class ContactListActivity extends AppCompatActivity
     public void onAsyncTaskFinished(ContactEntry contactEntry, boolean success, int taskId) {
         if(success) {
             mCurrContactEntry = contactEntry;
+            ContactStore.get(this).setTemporaryContact(mCurrContactEntry);
             // Start the EditDetailActivity
-            // Intent intent = ContactEditDetailActivity.newIntent(this, mCurrContactEntry.getId());
-            // startActivity(intent);
+            Intent intent = ContactEditDetailActivity.newIntent(this,
+                    mCurrContactEntry == null ? null : mCurrContactEntry.getId(), true);
+            startActivity(intent);
         } else {
             //TODO: Alert the user that parsing the business card failed for some reason
         }

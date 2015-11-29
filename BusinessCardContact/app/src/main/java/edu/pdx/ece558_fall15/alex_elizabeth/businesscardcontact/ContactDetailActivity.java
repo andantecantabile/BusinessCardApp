@@ -1,7 +1,6 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -113,8 +111,7 @@ public class ContactDetailActivity extends AppCompatActivity
         mCurrContactEntry = ce;
 
         // start the edit detail activity
-        Intent intent = ContactEditDetailActivity.newIntent(this, ce.getId());
-        //intent.putExtra(EXTRA_CONTACT_ENTRY_ID, ce.getId());
+        Intent intent = ContactEditDetailActivity.newIntent(this, ce.getId(), false);
         startActivity(intent);
     }
 

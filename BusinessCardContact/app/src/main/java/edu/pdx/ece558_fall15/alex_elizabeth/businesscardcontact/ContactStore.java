@@ -24,7 +24,7 @@ public class ContactStore {
     private ContactContentResolverHelper mResolverHelper;
     //List to store a local copy to facilitate quick access
     private List<ContactEntry> mContactEntries = new ArrayList<ContactEntry>();
-
+    private ContactEntry mTempContactEntry;
     /**
      * Creates (or returns if already created) the reference to the ContactStore
      * @param context The context from which this is invoked
@@ -78,6 +78,10 @@ public class ContactStore {
         //end for testing
     }
 
+    public void setTemporaryContact(ContactEntry ce) {
+        mTempContactEntry = ce;
+    }
+
     /**
      * Adds an entry to the Android Contact Storage
      * @param ce The ContactEntry to add
@@ -114,6 +118,9 @@ public class ContactStore {
             if(mContactEntries.get(i).getId().equals(id)) {
                 return mContactEntries.get(i);
             }
+        }
+        if(mTempContactEntry.getId().equals(id)) {
+            return mTempContactEntry;
         }
         return null;
     }
