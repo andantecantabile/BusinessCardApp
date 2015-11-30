@@ -27,8 +27,9 @@
     <!-- primary: teal -->
     <color name="theme1ColorPrimary">#009688</color>        <!-- 500 -->
     <color name="theme1ColorPrimaryDark">#004d40</color>    <!-- 900 -->
-    <color name="theme1Color300">#4db6ac</color>
     <color name="theme1Color50">#e0f2f1</color>
+    <color name="theme1Color100">#B2DFDB</color>
+    <color name="theme1Color300">#4db6ac</color>
     <color name="theme1Color700">#00796b</color>
     <!-- accent: pink -->
     <color name="theme1ColorAccent">#ff4081</color>    <!-- 200 -->

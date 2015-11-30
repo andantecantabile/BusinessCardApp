@@ -14,8 +14,8 @@
         <item name="colorPrimaryDark">@color/defaultColorPrimaryDark</item>
         <item name="colorAccent">@color/defaultColorAccent</item>
         <item name="android:windowBackground">@color/defaultColor50</item>
-        <item name="android:statusBarColor">@color/defaultColor700</item>
         <!--
+        <item name="android:statusBarColor">@color/defaultColor700</item>
         <item name="android:textColor">@color/defaultColorPrimaryDark</item>
         <item name="android:textColorPrimary">@color/defaultColorPrimaryDark</item>
         <item name="android:textColorLink">@color/defaultColorAccent</item>
@@ -36,9 +36,34 @@
         <item name="colorPrimary">@color/theme1ColorPrimary</item>
         <item name="colorPrimaryDark">@color/theme1ColorPrimaryDark</item>
         <item name="colorAccent">@color/theme1ColorAccent</item>
-        <item name="android:windowBackground">@color/theme1Color50</item>
+        <!-- Action Bar testing... not working
+        <item name="android:actionBarStyle">@style/theme1ActionBarStyle</item>
+        <item name="actionBarStyle">@style/theme1ActionBarStyle</item>
+        -->
+        <!--
+        <item name="android:windowBackground">@color/theme1Color100</item>
+        <item name="android:background">@color/theme1Color50</item>
+        <item name="android:panelFullBackground">@color/theme1Color100</item>
+        <item name="android:actionBarItemBackground">@color/theme1ColorPrimary</item>
+        <item name="android:textColor">@color/theme1ColorPrimaryDark</item>
+        -->
+        <!--
+        <item name="android:colorPrimary">@color/theme1ColorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/theme1ColorPrimaryDark</item>
+        <item name="android:colorAccent">@color/theme1ColorAccent</item>
         <item name="android:statusBarColor">@color/theme1Color700</item>
         <item name="android:navigationBarColor">@color/theme1Color700</item>
+        -->
+    </style>
+
+    <!-- set the action bar style for appcompatv7 -->
+    <style name="theme1ActionBarStyle" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="background">@color/theme1ColorPrimary</item>
+        <item name="backgroundStacked">@color/theme1ColorPrimary</item>
+        <item name="backgroundSplit">@color/theme1ColorPrimary</item>
+        <item name="android:background">@color/theme1ColorPrimary</item>
+        <item name="android:backgroundStacked">@color/theme1ColorPrimary</item>
+        <item name="android:backgroundSplit">@color/theme1ColorPrimary</item>
     </style>
 
     <!-- Theme 2: Sage -->
@@ -72,8 +97,6 @@
         <item name="colorPrimaryDark">@color/theme5ColorPrimaryDark</item>
         <item name="colorAccent">@color/theme5ColorAccent</item>
     </style>
-
-
 
     <!-- TextView Styles here -->
     <!--
