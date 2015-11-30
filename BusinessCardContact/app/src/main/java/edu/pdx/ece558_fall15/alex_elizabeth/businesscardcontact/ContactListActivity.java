@@ -7,12 +7,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
@@ -21,12 +19,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.UUID;
 
 public class ContactListActivity extends AppCompatActivity
@@ -38,12 +33,14 @@ public class ContactListActivity extends AppCompatActivity
 
     private static final int REQUEST_CODE_VIEW = 0;
     private static final int REQUEST_CODE_GET_IMAGE = 1;
+    private static final int REQUEST_CODE_EDIT = 2;
 
     private int mSelectedTheme;     // stores the index of the active theme
     private int mTmpSelectedTheme;  // stores the index of the selected theme in the settings dialog
     private Activity mActivity; // used to reference the current activity to correctly update the theme
 
     private ContactEntry mCurrContactEntry;
+    private boolean mNeedUpdate = false;
 
     @LayoutRes
         private int getLayoutResId() {
@@ -81,6 +78,18 @@ public class ContactListActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart");
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.d(TAG, "onRestart");
+        super.onRestart();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         Log.d(TAG, "onSaveInstanceState");
         removeDetailFragmentUI();   // remove the detail fragment
@@ -102,7 +111,10 @@ public class ContactListActivity extends AppCompatActivity
             Intent intent = ContactDetailActivity.newIntent(this, ce.getId());
             startActivityForResult(intent, REQUEST_CODE_VIEW);
         } else {
-            setDetailFragment(ce);
+            if(mCurrContactEntry == null || !mCurrContactEntry.getId().equals(ce.getId())) {
+                mCurrContactEntry = ce;
+                setDetailFragment(ce);
+            }
         }
     }
 
@@ -116,15 +128,24 @@ public class ContactListActivity extends AppCompatActivity
             if(currID != null) {
                 ContactEntry ce = ContactStore.get(this).getContactEntry(currID);
                 if (findViewById(R.id.detail_fragment_container) != null) {
+                    mCurrContactEntry = ce;
                     setDetailFragment(ce);
                 }
+            }
+        } else if(requestCode == REQUEST_CODE_EDIT) {
+            UUID currID = ContactEditDetailActivity.lastEditedId(data);
+            if(currID != null) {
+                mCurrContactEntry = ContactStore.get(this).getContactEntry(currID);
+                mNeedUpdate = true;
             }
         } else if(requestCode == REQUEST_CODE_GET_IMAGE) {
             File BCFile = null;
 
             //Returned from the camera
             if(data == null) {
-                BCFile = ContactStore.get(this).getSuggestedBCFile(mCurrContactEntry);
+                File filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                BCFile = new File( filesDir, ContactStore.get(this)
+                            .getSuggestedBCFile(mCurrContactEntry).getName() + ".jpg");
             }
             //Returned from the gallery
             if(data != null && data.getData() != null) {
@@ -168,8 +189,9 @@ public class ContactListActivity extends AppCompatActivity
         Log.d(TAG, "onContactEntryEdit");
 
         // start the edit detail activity
+        mCurrContactEntry = ce;
         Intent intent = ContactEditDetailActivity.newIntent(this, ce.getId(), false);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_EDIT);
     }
 
     @Override
@@ -186,14 +208,16 @@ public class ContactListActivity extends AppCompatActivity
         Log.d(TAG, "onContactAddBlank");
         // Start the EditDetailActivity
         Intent intent = ContactEditDetailActivity.newIntent(this, null, true);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_EDIT);
     }
 
     @Override
     public void onAddNewContactCard() {
         Log.d(TAG, "onContactAddNewContactCard");
         mCurrContactEntry = new ContactEntry();
-        Uri outputFileUri = Uri.fromFile(ContactStore.get(this).getSuggestedBCFile(mCurrContactEntry));
+        File filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        Uri outputFileUri = Uri.fromFile(new File(filesDir, ContactStore.get(this)
+                .getSuggestedBCFile(mCurrContactEntry).getName() + ".jpg"));
         String chooserText = getResources().getString(R.string.chooserBCImage);
         Intent intent = PictureUtils.getImageChooserIntent(outputFileUri, chooserText, this);
         startActivityForResult(intent, REQUEST_CODE_GET_IMAGE);
@@ -273,6 +297,13 @@ public class ContactListActivity extends AppCompatActivity
         super.onResume();
         Log.d(TAG, "onResume");
 
+        if(mNeedUpdate) {
+            if (findViewById(R.id.detail_fragment_container) != null) {
+                setDetailFragment(mCurrContactEntry);
+            }
+            mNeedUpdate = false;
+        }
+
         // Need to update the views of the fragments.
         updateListFragmentUI();
         updateDetailFragmentUI();
@@ -339,7 +370,7 @@ public class ContactListActivity extends AppCompatActivity
             // Start the EditDetailActivity
             Intent intent = ContactEditDetailActivity.newIntent(this,
                     mCurrContactEntry == null ? null : mCurrContactEntry.getId(), true);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE_EDIT);
         }
         /*
         else {
