@@ -22,8 +22,9 @@ public class SettingsUtils {
     public final static int THEME_OCEAN = 2;
     public final static int THEME_EGGPLANT = 3;
     public final static int THEME_BUBBLEGUM = 4;
+    public final static int THEME_STANDARD = 5;
 
-    private static String[] mThemeListStr = {"Teal", "Sage", "Ocean", "Eggplant", "Bubblegum"};
+    private static String[] mThemeListStr = {"Teal", "Sage", "Ocean", "Eggplant", "Bubblegum", "Standard"};
 
     /**
      * Return the currently selected theme
@@ -65,10 +66,6 @@ public class SettingsUtils {
     {
         switch (sTheme)
         {
-            default:
-            //case THEME_DEFAULT:
-            //    activity.setTheme(R.style.AppDefaultTheme);
-            //    break;
             case THEME_TEAL:
                 activity.setTheme(R.style.AppThemeTeal);
                 break;
@@ -83,6 +80,10 @@ public class SettingsUtils {
                 break;
             case THEME_BUBBLEGUM:
                 activity.setTheme(R.style.AppThemeBubblegum);
+                break;
+            case THEME_STANDARD:
+            default:
+                activity.setTheme(R.style.AppThemeStandard);
                 break;
         }
     }

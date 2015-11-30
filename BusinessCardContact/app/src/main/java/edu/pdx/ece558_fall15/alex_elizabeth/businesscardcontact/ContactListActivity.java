@@ -240,7 +240,8 @@ public class ContactListActivity extends AppCompatActivity
      * This method creates the dialog to select the Color Theme setting for the application (the selected theme will be applied to all activities).
      */
     public AlertDialog createSettingsDialog() {
-        mSelectedTheme = SettingsUtils.getActiveTheme();
+        mSelectedTheme = SettingsUtils.getActiveTheme();    // load the index of the active theme
+        mTmpSelectedTheme = mSelectedTheme; // set temporary selected theme to be the same as the active theme initially
         String[] themeList = SettingsUtils.getThemeListStr();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Set the dialog title
@@ -258,12 +259,15 @@ public class ContactListActivity extends AppCompatActivity
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        mSelectedTheme = mTmpSelectedTheme; // save the newly selected theme
-                        SharedPreferences sharedPref = mActivity.getPreferences(Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putInt(getString(R.string.saved_color_theme), mSelectedTheme);
-                        editor.commit();
-                        SettingsUtils.changeToTheme(mActivity,mSelectedTheme);   // update the current activity
+                        // if the selected theme is different from the original active theme, need to update the display and save the new theme choice
+                        if (mSelectedTheme != mTmpSelectedTheme) {
+                            mSelectedTheme = mTmpSelectedTheme; // save the newly selected theme
+                            SharedPreferences sharedPref = mActivity.getPreferences(Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putInt(getString(R.string.saved_color_theme), mSelectedTheme);
+                            editor.commit();
+                            SettingsUtils.changeToTheme(mActivity, mSelectedTheme);   // update the current activity
+                        }
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
