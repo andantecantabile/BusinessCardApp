@@ -41,6 +41,7 @@ public class ContactListActivity extends AppCompatActivity
 
     private ContactEntry mCurrContactEntry;
     private boolean mNeedUpdate = false;
+    private boolean mNoRefresh = false;
 
     @LayoutRes
         private int getLayoutResId() {
@@ -169,6 +170,11 @@ public class ContactListActivity extends AppCompatActivity
             }
 
             if(BCFile != null) {
+                mNoRefresh = true;
+                ContactListFragment clFragment = (ContactListFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment_container);
+                clFragment.setNoRefresh(true);
+
                 String tempFile = mCurrContactEntry.getId() + ".xml";
                 OCRAsyncTask parseBC = new OCRAsyncTask("Beginning Upload..", this, this);
                 parseBC.execute(BCFile.getPath(), tempFile);
@@ -304,9 +310,13 @@ public class ContactListActivity extends AppCompatActivity
             mNeedUpdate = false;
         }
 
-        // Need to update the views of the fragments.
-        updateListFragmentUI();
-        updateDetailFragmentUI();
+        if(mNoRefresh) {
+            mNoRefresh = false;
+        } else {
+            // Need to update the views of the fragments.
+            updateListFragmentUI();
+            updateDetailFragmentUI();
+        }
     }
 
     /**

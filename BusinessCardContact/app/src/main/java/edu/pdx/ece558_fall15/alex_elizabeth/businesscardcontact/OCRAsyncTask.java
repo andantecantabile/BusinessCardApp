@@ -1,14 +1,21 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
+
+import com.abbyy.ocrsdk.BusCardSettings;
+import com.abbyy.ocrsdk.Client;
+import com.abbyy.ocrsdk.Task;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -28,7 +35,7 @@ public class OCRAsyncTask extends DialogAsyncTask<String, String, Boolean> {
         String inputFile = params[0];
         String tempFile = params[1];
 
-        /*try {
+        try {
             //Setup a Client to interact with the cloud OCR service
             Client restClient = new Client();
             //Set the ID and password for our application
@@ -100,21 +107,21 @@ public class OCRAsyncTask extends DialogAsyncTask<String, String, Boolean> {
         } catch (Exception e) {
             Log.e(TAG, "Error during OCR: " + e.getMessage(), e);
             return false;
-        }*/
+        }
 
         //Process the returned XML file.
         //When done testing replace with
-        //File xmlFile = new File(super.getContext()
-        //      .getExternalFilesDir(Environment.DIRECTORY_PICTURES),tempFile);
         File xmlFile = new File(super.getContext()
-            .getExternalFilesDir(Environment.DIRECTORY_PICTURES), "0fe75364-aacb-47a7-9c55-cb920fb87b84.xml");
+              .getExternalFilesDir(Environment.DIRECTORY_PICTURES), tempFile);
+        //File xmlFile = new File(super.getContext()
+        //    .getExternalFilesDir(Environment.DIRECTORY_PICTURES), "0fe75364-aacb-47a7-9c55-cb920fb87b84.xml");
 
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(xmlFile);
             AbbyyResponseXmlParser parser = new AbbyyResponseXmlParser();
             ContactEntry contactEntry = parser.parse(fis);
-            contactEntry.setBCFilePath(new File(inputFile).getName());
+            contactEntry.setBCFilePath(new File(inputFile).getPath());
             super.setContactEntry(contactEntry);
             fis.close();
         } catch (XmlPullParserException xppe) {
