@@ -29,6 +29,7 @@ public class ContactListFragment extends Fragment
     private Callbacks mCallbacks;
 
     private DialogLoadCEListTask mDlcelt;
+    private boolean mNoRefresh = false;
 
     public interface Callbacks {
         void onContactSelected(ContactEntry ce);
@@ -38,6 +39,10 @@ public class ContactListFragment extends Fragment
         void onDisplaySettings();   // display settings selection
         */
         void onDisplayAbout();      // display about information
+    }
+
+    public void setNoRefresh(boolean noRefresh) {
+        mNoRefresh = noRefresh;
     }
 
     @Override
@@ -72,10 +77,14 @@ public class ContactListFragment extends Fragment
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        // start async task to load the contact list
-        mDlcelt = new DialogLoadCEListTask(getActivity(), this, this);
-        mDlcelt.execute();
-        //updateUI();
+        if(mNoRefresh) {
+            mNoRefresh = false;
+        } else {
+            // start async task to load the contact list
+            mDlcelt = new DialogLoadCEListTask(getActivity(), this, this);
+            mDlcelt.execute();
+            //updateUI();
+        }
     }
 
     @Override
