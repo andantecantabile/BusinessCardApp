@@ -48,5 +48,14 @@
         android:paddingRight="24dp"
         android:textColor="@color/theme1Color50"
         android:text="@string/about_authors"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:textColor="@color/theme1Color50"
+        android:text="Launcher Icon provided by https://icons8.com/"/>
     </LinearLayout>
 </LinearLayout>
