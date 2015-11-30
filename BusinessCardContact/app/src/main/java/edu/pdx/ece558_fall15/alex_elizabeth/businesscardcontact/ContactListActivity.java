@@ -278,6 +278,20 @@ public class ContactListActivity extends AppCompatActivity
                 });
 
         return builder.create();
+
+        /*
+        AlertDialog alert = builder.create();
+
+        //2. now setup to change color of the button
+        alert.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(android:textColorLink);
+            }
+        };
+
+        return alert;
+        */
     }
 
     @Override

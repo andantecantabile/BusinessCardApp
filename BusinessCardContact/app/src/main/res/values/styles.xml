@@ -155,7 +155,17 @@
         <item name="android:textColorLink">@color/theme5ColorAccent</item>
         <item name="android:textColorAlertDialogListItem">@color/theme5ColorPrimary</item>
         <item name="photo_img_bg">@color/theme5Color100</item>
+        <!-- customizing the alert dialog this way requires API 21
+        <item name="android:alertDialogTheme">@style/AlertDialogCustomTheme5</item>
+        -->
     </style>
+
+    <!-- alert dialog requires API 21
+    <style name="AlertDialogCustom" parent="android:Theme.Material.Light.Dialog.Alert">
+        <item name="android:colorPrimary">#00397F</item>
+        <item name="android:colorAccent">#0AAEEF</item>
+    </style>
+    -->
 
     <style name="AppThemeStandard" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- define Primary and Accent Colors here -->
