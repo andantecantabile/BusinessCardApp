@@ -8,10 +8,12 @@
         android:id="@+id/menu_item_settings"
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/menu_settings"
+        android:orderInCategory="5"
         app:showAsAction="never"/>
     <item
         android:id="@+id/menu_item_about"
         android:icon="@android:drawable/ic_menu_info_details"
         android:title="@string/menu_about"
+        android:orderInCategory="6"
         app:showAsAction="never"/>
 </menu>
