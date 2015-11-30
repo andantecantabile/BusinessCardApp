@@ -70,12 +70,16 @@ public class AbbyyResponseXmlParser {
                 company = fields.get(i).value;
             } else if (type.equalsIgnoreCase("job")) {
                 List<Fields.FieldComponents> f = fields.get(i).fieldComponents;
-                for(int j = 0; j < f.size(); j++) {
-                    String innerType = f.get(j).type;
-                    if(innerType.equalsIgnoreCase("jobposition")) {
-                        jobTitle = f.get(j).value;
-                    } else if(innerType.equalsIgnoreCase("jobdepartment")) {
-                        division = f.get(j).value;
+                if(f.size() == 0) {
+                    jobTitle = fields.get(i).value;
+                } else {
+                    for (int j = 0; j < f.size(); j++) {
+                        String innerType = f.get(j).type;
+                        if (innerType.equalsIgnoreCase("jobposition")) {
+                            jobTitle = f.get(j).value;
+                        } else if (innerType.equalsIgnoreCase("jobdepartment")) {
+                            division = f.get(j).value;
+                        }
                     }
                 }
             }
