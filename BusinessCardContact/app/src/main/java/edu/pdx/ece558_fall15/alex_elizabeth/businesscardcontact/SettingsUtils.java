@@ -13,14 +13,32 @@ import java.util.ArrayList;
 public class SettingsUtils {
     private static int sTheme;
 
-    public final static int THEME_DEFAULT = 0;
-    public final static int THEME_TEAL = 1;
-    public final static int THEME_SAGE = 2;
-    public final static int THEME_OCEAN = 3;
-    public final static int THEME_EGGPLANT = 4;
-    public final static int THEME_BUBBLEGUM = 5;
+    // assign the default theme
+    public final static int DEFAULT_COLOR_THEME = 0;
+
+    //public final static int THEME_DEFAULT = 0;
+    public final static int THEME_TEAL = 0;
+    public final static int THEME_SAGE = 1;
+    public final static int THEME_OCEAN = 2;
+    public final static int THEME_EGGPLANT = 3;
+    public final static int THEME_BUBBLEGUM = 4;
 
     private static String[] mThemeListStr = {"Teal", "Sage", "Ocean", "Eggplant", "Bubblegum"};
+
+    /**
+     * Return the currently selected theme
+     */
+    public static int getActiveTheme() {
+        return sTheme;
+    }
+
+    /**
+     * Sets the active theme.
+     * Note: This is used only in onCreate() of the first activity to retrieve savedPreferences and load the saved theme here.
+     */
+    public static void setActiveTheme(int selectedTheme) {
+        sTheme = selectedTheme;
+    }
 
     /**
      * Return the list of available themes
@@ -48,9 +66,9 @@ public class SettingsUtils {
         switch (sTheme)
         {
             default:
-            case THEME_DEFAULT:
-                activity.setTheme(R.style.AppDefaultTheme);
-                break;
+            //case THEME_DEFAULT:
+            //    activity.setTheme(R.style.AppDefaultTheme);
+            //    break;
             case THEME_TEAL:
                 activity.setTheme(R.style.AppThemeTeal);
                 break;

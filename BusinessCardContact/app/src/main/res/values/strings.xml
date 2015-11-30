@@ -50,4 +50,12 @@
 
     <!-- strings for the color settings dialog -->
     <string name="settings_title">Settings</string>
+
+    <!-- common strings -->
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Shared Preferences key strings -->
+    <string name="saved_color_theme">edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact.PREFERENCE_COLOR_THEME</string>
+    <string name="saved_color_theme_default">0</string>
 </resources>

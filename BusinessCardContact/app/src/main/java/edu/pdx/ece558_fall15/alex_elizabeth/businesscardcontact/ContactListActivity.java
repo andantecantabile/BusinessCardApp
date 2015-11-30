@@ -1,8 +1,11 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -36,6 +39,10 @@ public class ContactListActivity extends AppCompatActivity
     private static final int REQUEST_CODE_VIEW = 0;
     private static final int REQUEST_CODE_GET_IMAGE = 1;
 
+    private int mSelectedTheme;     // stores the index of the active theme
+    private int mTmpSelectedTheme;  // stores the index of the selected theme in the settings dialog
+    private Activity mActivity; // used to reference the current activity to correctly update the theme
+
     private ContactEntry mCurrContactEntry;
 
     @LayoutRes
@@ -52,6 +59,11 @@ public class ContactListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
 
+        // Obtain the previously saved color theme preference, and load the activity with that theme.
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        int defaultColorTheme = SettingsUtils.DEFAULT_COLOR_THEME;
+        int colorTheme = sharedPref.getInt(getString(R.string.saved_color_theme), defaultColorTheme);
+        SettingsUtils.setActiveTheme(colorTheme);
         SettingsUtils.onActivityCreateSetTheme(this);   // set the activity theme
 
         setContentView(getLayoutResId());
@@ -187,53 +199,52 @@ public class ContactListActivity extends AppCompatActivity
         startActivityForResult(intent, REQUEST_CODE_GET_IMAGE);
     }
 
-    /*
     @Override
     public void onDisplaySettings() {
-
+        mActivity = this;   // save reference to the current activity
+        AlertDialog alert = createSettingsDialog();
+        alert.show();
     }
 
-    public Dialog createSettingsDialog() {
+    /**
+     * This method creates the dialog to select the Color Theme setting for the application (the selected theme will be applied to all activities).
+     */
+    public AlertDialog createSettingsDialog() {
+        mSelectedTheme = SettingsUtils.getActiveTheme();
         String[] themeList = SettingsUtils.getThemeListStr();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Set the dialog title
         builder.setTitle(R.string.settings_title)
                 // Specify the list array, the items to be selected by default (null for none),
                 // and the listener through which to receive callbacks when items are selected
-                .setSingleChoiceItems()
-                .setMultiChoiceItems(R.array.toppings, null,
-                        new DialogInterface.OnMultiChoiceClickListener() {
+                .setSingleChoiceItems(themeList,mSelectedTheme,
+                        new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which,
-                                                boolean isChecked) {
-                                if (isChecked) {
-                                    // If the user checked the item, add it to the selected items
-                                    mSelectedItems.add(which);
-                                } else if (mSelectedItems.contains(which)) {
-                                    // Else, if the item is already in the array, remove it
-                                    mSelectedItems.remove(Integer.valueOf(which));
-                                }
+                            public void onClick(DialogInterface dialog, int activeItem) {
+                                mTmpSelectedTheme = activeItem;
                             }
                         })
                         // Set the action buttons
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK, so save the mSelectedItems results somewhere
-                        // or return them to the component that opened the dialog
-                        ...
+                        mSelectedTheme = mTmpSelectedTheme; // save the newly selected theme
+                        SharedPreferences sharedPref = mActivity.getPreferences(Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putInt(getString(R.string.saved_color_theme), mSelectedTheme);
+                        editor.commit();
+                        SettingsUtils.changeToTheme(mActivity,mSelectedTheme);   // update the current activity
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        ...
+                        mTmpSelectedTheme = mSelectedTheme; // no update
                     }
                 });
 
         return builder.create();
     }
-    */
 
     @Override
     public void onDisplayAbout() {

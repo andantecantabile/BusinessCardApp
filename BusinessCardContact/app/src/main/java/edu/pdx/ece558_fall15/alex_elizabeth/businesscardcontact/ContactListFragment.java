@@ -34,9 +34,9 @@ public class ContactListFragment extends Fragment
         void onContactSelected(ContactEntry ce);
         void onAddBlankContact();
         void onAddNewContactCard();
-        /*
+        ///*    // TODO_SETTINGS
         void onDisplaySettings();   // display settings selection
-        */
+        //*/
         void onDisplayAbout();      // display about information
     }
 
@@ -107,13 +107,17 @@ public class ContactListFragment extends Fragment
         inflater.inflate(R.menu.menu_contact_list, menu);   // add the "Add Contact" button options
 
         // SETTINGS/ABOUT MENU OPTIONS
+        inflater.inflate(R.menu.menu_settings, menu);   // add the settings/about button options.
+
+        /*
+        // SETTINGS/ABOUT MENU OPTIONS
         // check if the detail fragment is active.
         FragmentManager fm = getActivity().getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.detail_fragment_container);
         if(fragment == null) {  // if the detail fragment is not active, then display the menu settings.
             inflater.inflate(R.menu.menu_settings, menu);   // add the settings/about button options.
         }
-
+        */
     }
 
     @Override
@@ -130,12 +134,12 @@ public class ContactListFragment extends Fragment
                 mCallbacks.onAddNewContactCard();
                 return true;
 
-            /*
-            // SETTINGS/ABOUT MENU OPTIONS
+            ///*
+            // SETTINGS/ABOUT MENU OPTIONS - TODO_SETTINGS
             case R.id.menu_item_settings:
                 mCallbacks.onDisplaySettings();
                 return true;
-                */
+            //*/
 
             case R.id.menu_item_about:
                 mCallbacks.onDisplayAbout();
