@@ -12,41 +12,50 @@
         android:paddingBottom="24dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
-        android:background="@color/theme1Color300"
+        android:background="?about_bg_light"
         android:text="@string/app_name"
-        android:textColor="@android:color/black"
+        android:textColor="?about_bg_text_dark"
         android:textSize="26sp"/>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/theme1Color700">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="12dp"
-        android:paddingBottom="4dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        android:textColor="@color/theme1Color50"
-        android:text="@string/app_version"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="4dp"
-        android:paddingBottom="12dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        android:textColor="@color/theme1Color50"
-        android:text="@string/app_date"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        android:textColor="@color/theme1Color50"
-        android:text="@string/about_authors"/>
+        android:background="?about_bg_dark">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:textColor="@color/theme1Color50"
+            android:text="@string/app_version"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingBottom="12dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:textColor="@color/theme1Color50"
+            android:text="@string/app_date"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:textColor="@color/theme1Color50"
+            android:text="@string/about_authors"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:textColor="@color/theme1Color50"
+            android:text="Launcher Icon provided by https://icons8.com/"/>
     </LinearLayout>
 </LinearLayout>

@@ -49,7 +49,7 @@
     <string name="about_ok_btn">Ok</string>
 
     <!-- strings for the color settings dialog -->
-    <string name="settings_title">Settings</string>
+    <string name="settings_title">Select Color Theme</string>
 
     <!-- common strings -->
     <string name="ok">Ok</string>

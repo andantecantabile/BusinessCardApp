@@ -174,7 +174,7 @@
                 android:paddingTop="@dimen/picture_padding"
                 android:contentDescription="@string/ContactPictureDesc"
                 android:scaleType="centerInside"
-                android:background="@color/lighterGray"
+                android:background="?photo_img_bg"
                 android:cropToPadding="true"
                 android:src="@drawable/ic_add_a_photo_holo_light" />
         </LinearLayout>

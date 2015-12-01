@@ -36,28 +36,25 @@
         <item name="colorPrimary">@color/theme1ColorPrimary</item>
         <item name="colorPrimaryDark">@color/theme1ColorPrimaryDark</item>
         <item name="colorAccent">@color/theme1ColorAccent</item>
-        <!-- Action Bar testing... not working
-        <item name="android:actionBarStyle">@style/theme1ActionBarStyle</item>
-        <item name="actionBarStyle">@style/theme1ActionBarStyle</item>
+        <item name="linearlayout_bg_main">@android:color/white</item>
+        <item name="linearlayout_bg_2">@color/theme1Color50</item>
+        <!-- alternate bg combination
+        <item name="linearlayout_bg_main">@color/theme1Color50</item>
+        <item name="linearlayout_bg_2">@color/theme1Color100</item>
         -->
-        <!--
-        <item name="android:windowBackground">@color/theme1Color100</item>
-        <item name="android:background">@color/theme1Color50</item>
-        <item name="android:panelFullBackground">@color/theme1Color100</item>
-        <item name="android:actionBarItemBackground">@color/theme1ColorPrimary</item>
-        <item name="android:textColor">@color/theme1ColorPrimaryDark</item>
-        -->
-        <!--
-        <item name="android:colorPrimary">@color/theme1ColorPrimary</item>
-        <item name="android:colorPrimaryDark">@color/theme1ColorPrimaryDark</item>
-        <item name="android:colorAccent">@color/theme1ColorAccent</item>
-        <item name="android:statusBarColor">@color/theme1Color700</item>
-        <item name="android:navigationBarColor">@color/theme1Color700</item>
-        -->
+        <item name="divider_line">@color/theme1ColorPrimaryDark</item>
+        <item name="about_bg_light">@color/theme1Color300</item>
+        <item name="about_bg_dark">@color/theme1ColorPrimary</item>
+        <item name="about_bg_text_dark">@color/theme1ColorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/theme1ColorPrimaryDark</item>
+        <item name="android:textColorPrimaryInverse">@color/theme1Color50</item>
+        <item name="android:textColorLink">@color/theme1ColorAccent100</item>
+        <item name="android:textColorAlertDialogListItem">@color/theme1ColorPrimary</item>
+        <item name="photo_img_bg">@color/theme1Color100</item>
     </style>
 
     <!-- set the action bar style for appcompatv7 -->
-    <style name="theme1ActionBarStyle" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+    <!--<style name="theme1ActionBarStyle" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="background">@color/theme1ColorPrimary</item>
         <item name="backgroundStacked">@color/theme1ColorPrimary</item>
         <item name="backgroundSplit">@color/theme1ColorPrimary</item>
@@ -65,6 +62,7 @@
         <item name="android:backgroundStacked">@color/theme1ColorPrimary</item>
         <item name="android:backgroundSplit">@color/theme1ColorPrimary</item>
     </style>
+    -->
 
     <!-- Theme 2: Sage -->
     <style name="AppThemeSage" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -72,6 +70,21 @@
         <item name="colorPrimary">@color/theme2ColorPrimary</item>
         <item name="colorPrimaryDark">@color/theme2ColorPrimaryDark</item>
         <item name="colorAccent">@color/theme2ColorAccent</item>
+        <item name="linearlayout_bg_main">@android:color/white</item>
+        <item name="linearlayout_bg_2">@color/theme2Color50</item>
+        <!-- alternate bg combination
+        <item name="linearlayout_bg_main">@color/theme2Color50</item>
+        <item name="linearlayout_bg_2">@color/theme2Color100</item>
+        -->
+        <item name="divider_line">@color/theme2ColorPrimaryDark</item>
+        <item name="about_bg_light">@color/theme2Color300</item>
+        <item name="about_bg_dark">@color/theme2ColorPrimary</item>
+        <item name="about_bg_text_dark">@color/theme2ColorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/theme2ColorPrimaryDark</item>
+        <item name="android:textColorPrimaryInverse">@color/theme2Color50</item>
+        <item name="android:textColorLink">@color/theme2ColorAccent</item>
+        <item name="android:textColorAlertDialogListItem">@color/theme2ColorPrimary</item>
+        <item name="photo_img_bg">@color/theme2Color100</item>
     </style>
 
     <!-- Theme 3: Ocean -->
@@ -80,14 +93,45 @@
         <item name="colorPrimary">@color/theme3ColorPrimary</item>
         <item name="colorPrimaryDark">@color/theme3ColorPrimaryDark</item>
         <item name="colorAccent">@color/theme3ColorAccent</item>
+        <item name="linearlayout_bg_main">@android:color/white</item>
+        <item name="linearlayout_bg_2">@color/theme3Color50</item>
+        <!-- alternate bg combination
+        <item name="linearlayout_bg_main">@color/theme3Color50</item>
+        <item name="linearlayout_bg_2">@color/theme3Color100</item>
+        -->
+        <item name="divider_line">@color/theme3ColorPrimaryDark</item>
+        <item name="about_bg_light">@color/theme3Color300</item>
+        <item name="about_bg_dark">@color/theme3ColorPrimary</item>
+        <item name="about_bg_text_dark">@color/theme3ColorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/theme3ColorPrimaryDark</item>
+        <item name="android:textColorPrimaryInverse">@color/theme3Color50</item>
+        <item name="android:textColorLink">@color/theme3ColorAccent</item>
+        <item name="android:textColorAlertDialogListItem">@color/theme3ColorPrimary</item>
+        <item name="photo_img_bg">@color/theme3Color100</item>
+        -->
     </style>
 
-    <!-- Theme 4: Eggplant -->
+<!-- Theme 4: Eggplant -->
     <style name="AppThemeEggplant" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- define Primary and Accent Colors here -->
         <item name="colorPrimary">@color/theme4ColorPrimary</item>
         <item name="colorPrimaryDark">@color/theme4ColorPrimaryDark</item>
         <item name="colorAccent">@color/theme4ColorAccent</item>
+        <item name="linearlayout_bg_main">@android:color/white</item>
+        <item name="linearlayout_bg_2">@color/theme4Color50</item>
+        <!-- alternate bg combination
+        <item name="linearlayout_bg_main">@color/theme4Color50</item>
+        <item name="linearlayout_bg_2">@color/theme4Color100</item>
+        -->
+        <item name="divider_line">@color/theme4ColorPrimaryDark</item>
+        <item name="about_bg_light">@color/theme4Color300</item>
+        <item name="about_bg_dark">@color/theme4ColorPrimary</item>
+        <item name="about_bg_text_dark">@color/theme4ColorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/theme4ColorPrimaryDark</item>
+        <item name="android:textColorPrimaryInverse">@color/theme4Color50</item>
+        <item name="android:textColorLink">@color/theme4ColorAccent</item>
+        <item name="android:textColorAlertDialogListItem">@color/theme4ColorPrimary</item>
+        <item name="photo_img_bg">@color/theme4Color100</item>
     </style>
 
     <!-- Theme 5: Bubblegum -->
@@ -96,6 +140,50 @@
         <item name="colorPrimary">@color/theme5ColorPrimary</item>
         <item name="colorPrimaryDark">@color/theme5ColorPrimaryDark</item>
         <item name="colorAccent">@color/theme5ColorAccent</item>
+        <item name="linearlayout_bg_main">@android:color/white</item>
+        <item name="linearlayout_bg_2">@color/theme5Color50</item>
+        <!--
+        <item name="linearlayout_bg_main">@color/theme5Color50</item>
+        <item name="linearlayout_bg_2">@color/theme5Color100</item>
+        -->
+        <item name="divider_line">@color/theme5ColorPrimaryDark</item>
+        <item name="about_bg_light">@color/theme5Color300</item>
+        <item name="about_bg_dark">@color/theme5ColorPrimary</item>
+        <item name="about_bg_text_dark">@color/theme5ColorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/theme5ColorPrimaryDark</item>
+        <item name="android:textColorPrimaryInverse">@color/theme5Color50</item>
+        <item name="android:textColorLink">@color/theme5ColorAccent</item>
+        <item name="android:textColorAlertDialogListItem">@color/theme5ColorPrimary</item>
+        <item name="photo_img_bg">@color/theme5Color100</item>
+        <!-- customizing the alert dialog this way requires API 21
+        <item name="android:alertDialogTheme">@style/AlertDialogCustomTheme5</item>
+        -->
+    </style>
+
+    <!-- alert dialog requires API 21
+    <style name="AlertDialogCustom" parent="android:Theme.Material.Light.Dialog.Alert">
+        <item name="android:colorPrimary">#00397F</item>
+        <item name="android:colorAccent">#0AAEEF</item>
+    </style>
+    -->
+
+    <style name="AppThemeStandard" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- define Primary and Accent Colors here -->
+        <item name="colorPrimary">@color/defaultColorPrimary</item>
+        <item name="colorPrimaryDark">@color/defaultColorPrimaryDark</item>
+        <item name="colorAccent">@color/defaultColorAccent</item>
+        <item name="android:windowBackground">@color/defaultColor50</item>
+        <item name="linearlayout_bg_main">@android:color/white</item>
+        <item name="linearlayout_bg_2">@android:color/white</item>
+        <item name="divider_line">@color/defaultColorPrimaryDark</item>
+        <item name="about_bg_light">@color/defaultColor300</item>
+        <item name="about_bg_dark">@color/defaultColorPrimary</item>
+        <item name="about_bg_text_dark">@color/defaultColorPrimaryDark</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorPrimaryInverse">@color/defaultColor50</item>
+        <item name="android:textColorLink">@color/defaultColorAccent</item>
+        <item name="android:textColorAlertDialogListItem">@color/defaultColorPrimary</item>
+        <item name="photo_img_bg">@color/lighterGray</item>
     </style>
 
     <!-- TextView Styles here -->

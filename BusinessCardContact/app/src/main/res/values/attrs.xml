@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="linearlayout_bg_main" format="reference" />
+    <attr name="linearlayout_bg_2" format="reference" />
+    <attr name="divider_line" format="reference" />
+    <attr name="about_bg_light" format="reference" />
+    <attr name="about_bg_dark" format="reference" />
+    <attr name="about_bg_text_dark" format="reference" />
+    <attr name="photo_img_bg" format="reference" />
+</resources>
