@@ -10,6 +10,10 @@ import java.io.Reader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+/**
+ * Task class to interpret the status of the submitted task when querying the server.
+ * Initial version from ABBYY Cloud OCR example.
+ */
 public class Task {
 	public enum TaskStatus {
 		Unknown, Submitted, Queued, InProgress, Completed, ProcessingFailed, Deleted, NotEnoughCredits
