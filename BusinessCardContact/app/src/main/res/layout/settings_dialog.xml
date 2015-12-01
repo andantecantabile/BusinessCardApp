@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This custom layout is for the Edit Settings dialog where the color theme may be selected. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- Requires a radio button group for single selection -->
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/RadioGrpSelectTheme"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <RadioButton android:id="@+id/radio_color_theme_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_color_theme_1"
+            android:onClick="onColorThemeRadioBtnClicked"/>
+        <RadioButton android:id="@+id/radio_color_theme_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_color_theme_2"
+            android:onClick="onColorThemeRadioBtnClicked"/>
+        <RadioButton android:id="@+id/radio_color_theme_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_color_theme_3"
+            android:onClick="onColorThemeRadioBtnClicked"/>
+        <RadioButton android:id="@+id/radio_color_theme_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_color_theme_4"
+            android:onClick="onColorThemeRadioBtnClicked"/>
+        <RadioButton android:id="@+id/radio_color_theme_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_color_theme_5"
+            android:onClick="onColorThemeRadioBtnClicked"/>
+        <RadioButton android:id="@+id/radio_color_theme_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_color_theme_6"
+            android:onClick="onColorThemeRadioBtnClicked"/>
+    </RadioGroup>
+</LinearLayout>

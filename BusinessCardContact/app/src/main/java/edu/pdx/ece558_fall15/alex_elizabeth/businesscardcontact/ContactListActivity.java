@@ -19,6 +19,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +35,8 @@ public class ContactListActivity extends AppCompatActivity
     private static final int REQUEST_CODE_VIEW = 0;
     private static final int REQUEST_CODE_GET_IMAGE = 1;
     private static final int REQUEST_CODE_EDIT = 2;
+
+    private static final String KEY_ENTRY_ID = "entry_id";  // used to save the id of the currently displayed contact entry detail
 
     private int mSelectedTheme;     // stores the index of the active theme
     private int mTmpSelectedTheme;  // stores the index of the selected theme in the settings dialog
@@ -76,6 +79,25 @@ public class ContactListActivity extends AppCompatActivity
                     .add(R.id.fragment_container, fragment)
                     .commit();
         }
+
+        // check if there is a contact entry id saved
+        String currIdStr = sharedPref.getString(getString(R.string.saved_ce_uuid), null);
+        //if ((currIdStr != null) && !(currIdStr.equals("")) && !(currIdStr.equals("null"))) { // verify that the currId exists/is not null
+        if ((currIdStr != null) && !(currIdStr.equals(""))) { // verify that the currId exists/is not null
+            UUID currId = UUID.fromString(currIdStr);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(getString(R.string.saved_ce_uuid), null);  // put null in the saved uuid to reset it; only want to maintain on dismiss from settings
+            editor.commit();
+            onContactSelected(ContactStore.get(this).getContactEntry(currId));
+        }
+        /*
+        if(savedInstanceState != null) {
+            UUID currId = (UUID) savedInstanceState.getSerializable(KEY_ENTRY_ID);
+            if(currId != null) {    // if there is a contact entry id, load the detail of that entry
+                onContactSelected(ContactStore.get(this).getContactEntry(currId));
+            }
+        }
+        */
     }
 
     @Override
@@ -95,11 +117,26 @@ public class ContactListActivity extends AppCompatActivity
         Log.d(TAG, "onSaveInstanceState");
         removeDetailFragmentUI();   // remove the detail fragment
         super.onSaveInstanceState(outState);
+        /*  // the following does NOT work when the activity is dismissed
+        if (mCurrContactEntry != null) {    // if the current contact entry exists,
+            outState.putSerializable(KEY_ENTRY_ID, mCurrContactEntry.getId());  // save the id of the currently displayed detail
+        }
+        */
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        /*  // The following was not working consistently in this location (might need to be before calling the super method.
+            // Also, only want to save the currently selected entry if the settings are being changed --> so moved to just before the settings dialog is created.
+        // Save the currently selected entry, if one is present
+        if (mCurrContactEntry != null) {
+            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(getString(R.string.saved_ce_uuid), mCurrContactEntry.getId().toString());
+            editor.commit();
+        }
+        */
         Log.d(TAG, "onDestroy");
 
     }
@@ -240,6 +277,14 @@ public class ContactListActivity extends AppCompatActivity
      * This method creates the dialog to select the Color Theme setting for the application (the selected theme will be applied to all activities).
      */
     public AlertDialog createSettingsDialog() {
+        // Save the currently selected entry, if one is present
+        if (mCurrContactEntry != null) {
+            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(getString(R.string.saved_ce_uuid), mCurrContactEntry.getId().toString());
+            editor.commit();
+        }
+
         mSelectedTheme = SettingsUtils.getActiveTheme();    // load the index of the active theme
         mTmpSelectedTheme = mSelectedTheme; // set temporary selected theme to be the same as the active theme initially
         String[] themeList = SettingsUtils.getThemeListStr();
@@ -292,6 +337,10 @@ public class ContactListActivity extends AppCompatActivity
 
         return alert;
         */
+    }
+
+    public void onColorThemeRadioBtnClicked(View view) {
+        // handle radio button selection here
     }
 
     @Override

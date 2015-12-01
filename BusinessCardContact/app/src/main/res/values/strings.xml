@@ -50,6 +50,12 @@
 
     <!-- strings for the color settings dialog -->
     <string name="settings_title">Select Color Theme</string>
+    <string name="settings_color_theme_1">Teal</string>
+    <string name="settings_color_theme_2">Sage</string>
+    <string name="settings_color_theme_3">Ocean</string>
+    <string name="settings_color_theme_4">Eggplant</string>
+    <string name="settings_color_theme_5">Bubblegum</string>
+    <string name="settings_color_theme_6">Standard</string>
 
     <!-- common strings -->
     <string name="ok">Ok</string>
@@ -58,4 +64,5 @@
     <!-- Shared Preferences key strings -->
     <string name="saved_color_theme">edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact.PREFERENCE_COLOR_THEME</string>
     <string name="saved_color_theme_default">0</string>
+    <string name="saved_ce_uuid">edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact.PREFERENCE_CE_UUID_DETAIL</string>
 </resources>
