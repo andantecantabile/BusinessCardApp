@@ -6,14 +6,18 @@
          should be displayed in the menu. -->
     <item
         android:id="@+id/menu_item_edit_contact"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/ic_edit_white"
         android:title="@string/menu_edit_contact"
         android:orderInCategory="3"
         app:showAsAction="ifRoom"/>
+    <!-- Original:
+        android:icon="@android:drawable/ic_menu_edit" -->
     <item
         android:id="@+id/menu_item_delete_contact"
-        android:icon="@android:drawable/ic_menu_delete"
+        android:icon="@drawable/ic_delete_white"
         android:title="@string/menu_delete_contact"
         android:orderInCategory="4"
         app:showAsAction="ifRoom"/>
+    <!-- Original:
+        android:icon="@android:drawable/ic_menu_delete" -->
 </menu>

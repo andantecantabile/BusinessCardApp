@@ -46,6 +46,7 @@
         <item name="about_bg_light">@color/theme1Color300</item>
         <item name="about_bg_dark">@color/theme1ColorPrimary</item>
         <item name="about_bg_text_dark">@color/theme1ColorPrimaryDark</item>
+        <item name="companyTextColor">@color/theme1Color700</item>
         <item name="android:textColorPrimary">@color/theme1ColorPrimaryDark</item>
         <item name="android:textColorPrimaryInverse">@color/theme1Color50</item>
         <item name="android:textColorLink">@color/theme1ColorAccent100</item>
@@ -80,6 +81,7 @@
         <item name="about_bg_light">@color/theme2Color300</item>
         <item name="about_bg_dark">@color/theme2ColorPrimary</item>
         <item name="about_bg_text_dark">@color/theme2ColorPrimaryDark</item>
+        <item name="companyTextColor">@color/theme2Color700</item>
         <item name="android:textColorPrimary">@color/theme2ColorPrimaryDark</item>
         <item name="android:textColorPrimaryInverse">@color/theme2Color50</item>
         <item name="android:textColorLink">@color/theme2ColorAccent</item>
@@ -103,6 +105,7 @@
         <item name="about_bg_light">@color/theme3Color300</item>
         <item name="about_bg_dark">@color/theme3ColorPrimary</item>
         <item name="about_bg_text_dark">@color/theme3ColorPrimaryDark</item>
+        <item name="companyTextColor">@color/theme3Color700</item>
         <item name="android:textColorPrimary">@color/theme3ColorPrimaryDark</item>
         <item name="android:textColorPrimaryInverse">@color/theme3Color50</item>
         <item name="android:textColorLink">@color/theme3ColorAccent</item>
@@ -127,6 +130,7 @@
         <item name="about_bg_light">@color/theme4Color300</item>
         <item name="about_bg_dark">@color/theme4ColorPrimary</item>
         <item name="about_bg_text_dark">@color/theme4ColorPrimaryDark</item>
+        <item name="companyTextColor">@color/theme4Color700</item>
         <item name="android:textColorPrimary">@color/theme4ColorPrimaryDark</item>
         <item name="android:textColorPrimaryInverse">@color/theme4Color50</item>
         <item name="android:textColorLink">@color/theme4ColorAccent</item>
@@ -150,6 +154,7 @@
         <item name="about_bg_light">@color/theme5Color300</item>
         <item name="about_bg_dark">@color/theme5ColorPrimary</item>
         <item name="about_bg_text_dark">@color/theme5ColorPrimaryDark</item>
+        <item name="companyTextColor">@color/theme5Color700</item>
         <item name="android:textColorPrimary">@color/theme5ColorPrimaryDark</item>
         <item name="android:textColorPrimaryInverse">@color/theme5Color50</item>
         <item name="android:textColorLink">@color/theme5ColorAccent</item>
@@ -179,6 +184,7 @@
         <item name="about_bg_light">@color/defaultColor300</item>
         <item name="about_bg_dark">@color/defaultColorPrimary</item>
         <item name="about_bg_text_dark">@color/defaultColorPrimaryDark</item>
+        <item name="companyTextColor">@color/defaultColor700</item>
         <item name="android:textColorPrimary">@android:color/black</item>
         <item name="android:textColorPrimaryInverse">@color/defaultColor50</item>
         <item name="android:textColorLink">@color/defaultColorAccent</item>

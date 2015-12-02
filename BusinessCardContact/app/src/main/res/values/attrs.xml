@@ -7,4 +7,5 @@
     <attr name="about_bg_dark" format="reference" />
     <attr name="about_bg_text_dark" format="reference" />
     <attr name="photo_img_bg" format="reference" />
+    <attr name="companyTextColor" format="reference" />
 </resources>
