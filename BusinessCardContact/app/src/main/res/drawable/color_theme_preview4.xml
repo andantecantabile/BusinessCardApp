@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/color_theme_preview">
+    <!-- Drawable code modified from sample code by Alexey Starykh -->
+    <!-- http://stackoverflow.com/questions/26311785/android-drawing-custom-shapes -->
+
+    <!-- Colored rectangle #1: Primary Color -->
+    <item>
+        <shape android:shape="rectangle">
+            <size
+                android:width="140dp"
+                android:height="20dp" />	<!-- 60 x 3 for three segments -->
+            <solid android:color="@color/theme4ColorPrimary" />
+        </shape>
+    </item>
+
+    <!-- This rectangle for the left side -->
+    <!-- Its color should be the same as background layout -->
+    <item
+        android:right="130dp"
+        android:left="-10dp">	<!-- right is total width - 10 dp -->
+        <rotate
+            android:fromDegrees="45">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/defaultDialogBg" />	<!-- bg color here -->
+            </shape>
+        </rotate>
+    </item>
+
+    <!-- These rectangles for the right side -->
+    <!-- Their color should be the same as Colored rectangle #2 -->
+    <item
+        android:top="-20dp"
+        android:bottom="30dp"
+        android:right="70dp">	<!-- right is end of segment 1 (120) minus 25dp -->
+        <rotate
+            android:fromDegrees="45">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/theme4ColorPrimaryDark" />	<!-- primary dark here -->
+            </shape>
+        </rotate>
+    </item>
+    <item
+        android:top="30dp"
+        android:bottom="-20dp"
+        android:right="70dp">
+        <rotate
+            android:fromDegrees="-45">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/theme4ColorPrimaryDark" />	<!-- primary dark here -->
+            </shape>
+        </rotate>
+    </item>
+
+    <!--====================================================-->
+    <!-- Colored rectangle #2: Primary Dark Color -->
+    <item
+        android:height="20dp"
+        android:left="55dp"
+        android:right="43dp">	<!-- left is the left edge of shape #2 + 10? -->
+        <shape android:shape="rectangle">
+            <solid android:color="@color/theme4ColorPrimaryDark" />	<!-- primary dark here -->
+        </shape>
+    </item>
+
+    <!-- These rectangles for the right side -->
+    <!-- Their color should be the same as Colored rectangle #3 -->
+    <item
+        android:top="-20dp"
+        android:bottom="31dp"
+        android:right="-15dp">	<!-- right is end of segment 2 (60) minus 25dp -->
+        <rotate
+            android:fromDegrees="45">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/theme4ColorAccent" />	<!-- accent here -->
+            </shape>
+        </rotate>
+    </item>
+    <item
+        android:top="31dp"
+        android:bottom="-20dp"
+        android:right="-15dp">
+        <rotate
+            android:fromDegrees="-45">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/theme4ColorAccent" />	<!-- accent here -->
+            </shape>
+        </rotate>
+    </item>
+
+
+    <!--====================================================-->
+    <!-- Colored rectangle #3: Accent Color -->
+    <item
+        android:height="20dp"
+        android:left="98dp">	<!-- left is the left edge of shape #3 + 10? -->
+        <shape android:shape="rectangle">
+            <solid android:color="@color/theme4ColorAccent" />	<!-- accent here -->
+        </shape>
+    </item>
+
+    <!-- These rectangles for the right side -->
+    <!-- Their color should be the same as layout bg -->
+    <item
+        android:top="-20dp"
+        android:bottom="31dp"
+        android:right="-95dp">	<!-- right is end of segment 2 (60) minus 25dp -->
+        <rotate
+            android:fromDegrees="45">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/defaultDialogBg" />	<!-- bg here -->
+            </shape>
+        </rotate>
+    </item>
+    <item
+        android:top="31dp"
+        android:bottom="-20dp"
+        android:right="-95dp">
+        <rotate
+            android:fromDegrees="-45">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/defaultDialogBg" />	<!-- bg here -->
+            </shape>
+        </rotate>
+    </item>
+</layer-list>

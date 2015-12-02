@@ -8,4 +8,6 @@
     <attr name="about_bg_text_dark" format="reference" />
     <attr name="photo_img_bg" format="reference" />
     <attr name="companyTextColor" format="reference" />
+
+    <attr name="dialog_bg" format="reference" />
 </resources>

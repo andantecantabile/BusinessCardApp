@@ -22,9 +22,11 @@ public class SettingsUtils {
     public final static int THEME_OCEAN = 2;
     public final static int THEME_EGGPLANT = 3;
     public final static int THEME_BUBBLEGUM = 4;
-    public final static int THEME_STANDARD = 5;
+    public final static int THEME_CRANBERRY = 5;
+    public final static int THEME_MONOCHROME = 6;
+    public final static int THEME_STANDARD = 7;
 
-    private static String[] mThemeListStr = {"Teal", "Sage", "Ocean", "Eggplant", "Bubblegum", "Standard"};
+    private static String[] mThemeListStr = {"Teal", "Sage", "Ocean", "Eggplant", "Bubblegum", "Cranberry", "Monochrome", "Standard"};
 
     /**
      * Return the currently selected theme
@@ -80,6 +82,12 @@ public class SettingsUtils {
                 break;
             case THEME_BUBBLEGUM:
                 activity.setTheme(R.style.AppThemeBubblegum);
+                break;
+            case THEME_CRANBERRY:
+                activity.setTheme(R.style.AppThemeCranberry);
+                break;
+            case THEME_MONOCHROME:
+                activity.setTheme(R.style.AppThemeMonochrome);
                 break;
             case THEME_STANDARD:
             default:

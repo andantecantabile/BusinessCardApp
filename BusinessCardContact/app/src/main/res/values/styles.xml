@@ -52,6 +52,7 @@
         <item name="android:textColorLink">@color/theme1ColorAccent100</item>
         <item name="android:textColorAlertDialogListItem">@color/theme1ColorPrimary</item>
         <item name="photo_img_bg">@color/theme1Color100</item>
+        <item name="dialog_bg">@color/theme1Color50</item>
     </style>
 
     <!-- set the action bar style for appcompatv7 -->
@@ -87,6 +88,7 @@
         <item name="android:textColorLink">@color/theme2ColorAccent</item>
         <item name="android:textColorAlertDialogListItem">@color/theme2ColorPrimary</item>
         <item name="photo_img_bg">@color/theme2Color100</item>
+        <item name="dialog_bg">@color/theme2Color50</item>
     </style>
 
     <!-- Theme 3: Ocean -->
@@ -111,6 +113,7 @@
         <item name="android:textColorLink">@color/theme3ColorAccent</item>
         <item name="android:textColorAlertDialogListItem">@color/theme3ColorPrimary</item>
         <item name="photo_img_bg">@color/theme3Color100</item>
+        <item name="dialog_bg">@color/theme3Color50</item>
         -->
     </style>
 
@@ -136,6 +139,7 @@
         <item name="android:textColorLink">@color/theme4ColorAccent</item>
         <item name="android:textColorAlertDialogListItem">@color/theme4ColorPrimary</item>
         <item name="photo_img_bg">@color/theme4Color100</item>
+        <item name="dialog_bg">@color/theme4Color50</item>
     </style>
 
     <!-- Theme 5: Bubblegum -->
@@ -160,9 +164,53 @@
         <item name="android:textColorLink">@color/theme5ColorAccent</item>
         <item name="android:textColorAlertDialogListItem">@color/theme5ColorPrimary</item>
         <item name="photo_img_bg">@color/theme5Color100</item>
+        <item name="dialog_bg">@color/theme5Color50</item>
         <!-- customizing the alert dialog this way requires API 21
         <item name="android:alertDialogTheme">@style/AlertDialogCustomTheme5</item>
         -->
+    </style>
+
+
+    <!-- Theme 6: Cranberry -->
+    <style name="AppThemeCranberry" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- define Primary and Accent Colors here -->
+        <item name="colorPrimary">@color/theme7ColorPrimary</item>
+        <item name="colorPrimaryDark">@color/theme7ColorPrimaryDark</item>
+        <item name="colorAccent">@color/theme7Color300</item>
+        <item name="linearlayout_bg_main">@color/theme7Color400</item>
+        <item name="linearlayout_bg_2">@color/theme7Color700</item>
+        <item name="divider_line">@color/theme7ColorPrimaryDark</item>
+        <item name="about_bg_light">@color/theme7Color300</item>
+        <item name="about_bg_dark">@color/theme7ColorPrimary</item>
+        <item name="about_bg_text_dark">@color/theme7ColorPrimaryDark</item>
+        <item name="companyTextColor">@color/theme7Color100</item>
+        <item name="android:textColorPrimary">@color/theme7Color50</item>
+        <item name="android:textColorPrimaryInverse">@color/theme7ColorPrimaryDark</item>
+        <item name="android:textColorLink">@color/theme7ColorAccent</item>
+        <item name="android:textColorAlertDialogListItem">@color/theme7ColorPrimary</item>
+        <item name="photo_img_bg">@color/theme7Color300</item>
+        <item name="dialog_bg">@color/theme7Color50</item>
+    </style>
+
+    <!-- Theme 7: Monochrome -->
+    <style name="AppThemeMonochrome" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- define Primary and Accent Colors here -->
+        <item name="colorPrimary">@color/theme6ColorPrimary</item>
+        <item name="colorPrimaryDark">@color/theme6ColorPrimaryDark</item>
+        <item name="colorAccent">@color/theme6ColorAccent100</item>
+        <item name="linearlayout_bg_main">@color/theme6Color600</item>
+        <item name="linearlayout_bg_2">@color/theme6Color800</item>
+        <item name="divider_line">@color/theme6ColorPrimaryDark</item>
+        <item name="about_bg_light">@color/theme6Color300</item>
+        <item name="about_bg_dark">@color/theme6ColorPrimary</item>
+        <item name="about_bg_text_dark">@color/theme6ColorPrimaryDark</item>
+        <item name="companyTextColor">@color/theme6Color100</item>
+        <item name="android:textColorPrimary">@color/theme6Color50</item>
+        <item name="android:textColorPrimaryInverse">@color/theme6ColorPrimaryDark</item>
+        <item name="android:textColorLink">@color/theme6ColorAccent</item>
+        <item name="android:textColorAlertDialogListItem">@color/theme6ColorPrimary</item>
+        <item name="photo_img_bg">@color/theme6Color400</item>
+        <item name="dialog_bg">@color/theme6Color50</item>
     </style>
 
     <!-- alert dialog requires API 21
@@ -190,6 +238,7 @@
         <item name="android:textColorLink">@color/defaultColorAccent</item>
         <item name="android:textColorAlertDialogListItem">@color/defaultColorPrimary</item>
         <item name="photo_img_bg">@color/lighterGray</item>
+        <item name="dialog_bg">@color/defaultColor50</item>
     </style>
 
     <!-- TextView Styles here -->

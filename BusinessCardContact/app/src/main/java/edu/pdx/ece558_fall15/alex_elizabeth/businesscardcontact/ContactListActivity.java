@@ -21,6 +21,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import java.io.File;
 import java.io.IOException;
@@ -284,7 +286,41 @@ public class ContactListActivity extends AppCompatActivity
     public void onDisplaySettings() {
         mActivity = this;   // save reference to the current activity
         AlertDialog alert = createSettingsDialog();
+
         alert.show();
+
+        // try setting the radio button here; find the radio group object
+        RadioGroup colorSelectRadioGrp = (RadioGroup) alert.findViewById(R.id.RadioGrpSelectTheme);
+        if (colorSelectRadioGrp != null) {
+            //Log.d(TAG, "onDisplaySettings; mSelectedTheme: "+mSelectedTheme);
+            switch (mSelectedTheme) {
+                case 0:
+                    colorSelectRadioGrp.check(R.id.radio_color_theme_1);  // set the corresponding radio button for the currently selected theme.
+                    break;
+                case 1:
+                    colorSelectRadioGrp.check(R.id.radio_color_theme_2);  // set the corresponding radio button for the currently selected theme.
+                    break;
+                case 2:
+                    colorSelectRadioGrp.check(R.id.radio_color_theme_3);
+                    break;
+                case 3:
+                    colorSelectRadioGrp.check(R.id.radio_color_theme_4);
+                    break;
+                case 4:
+                    colorSelectRadioGrp.check(R.id.radio_color_theme_5);
+                    break;
+                case 5:
+                    colorSelectRadioGrp.check(R.id.radio_color_theme_6);
+                    break;
+                case 6:
+                    colorSelectRadioGrp.check(R.id.radio_color_theme_7);
+                    break;
+                case 7:
+                default:
+                    colorSelectRadioGrp.check(R.id.radio_color_theme_8);
+                    break;
+            }
+        }
     }
 
     /**
@@ -303,17 +339,23 @@ public class ContactListActivity extends AppCompatActivity
         mTmpSelectedTheme = mSelectedTheme; // set temporary selected theme to be the same as the active theme initially
         String[] themeList = SettingsUtils.getThemeListStr();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = getLayoutInflater();
+
         // Set the dialog title
         builder.setTitle(R.string.settings_title)
+               .setView(inflater.inflate(R.layout.settings_dialog, null))
+               /* // Original:
                 // Specify the list array, the items to be selected by default (null for none),
-                // and the listener through which to receive callbacks when items are selected
-                .setSingleChoiceItems(themeList,mSelectedTheme,
+                       // and the listener through which to receive callbacks when items are selected
+                .setSingleChoiceItems(themeList, mSelectedTheme,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int activeItem) {
-                                mTmpSelectedTheme = activeItem;
+                                        mTmpSelectedTheme = activeItem;
                             }
                         })
+                */
                         // Set the action buttons
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -355,6 +397,44 @@ public class ContactListActivity extends AppCompatActivity
 
     public void onColorThemeRadioBtnClicked(View view) {
         // handle radio button selection here
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked, and store the corresponding value of the currently selected theme.
+        switch(view.getId()) {
+            case R.id.radio_color_theme_1:
+                if (checked)
+                    mTmpSelectedTheme = 0;
+                    break;
+            case R.id.radio_color_theme_2:
+                if (checked)
+                    mTmpSelectedTheme = 1;
+                    break;
+            case R.id.radio_color_theme_3:
+                if (checked)
+                    mTmpSelectedTheme = 2;
+                break;
+            case R.id.radio_color_theme_4:
+                if (checked)
+                    mTmpSelectedTheme = 3;
+                break;
+            case R.id.radio_color_theme_5:
+                if (checked)
+                    mTmpSelectedTheme = 4;
+                break;
+            case R.id.radio_color_theme_6:
+                if (checked)
+                    mTmpSelectedTheme = 5;
+                break;
+            case R.id.radio_color_theme_7:
+                if (checked)
+                    mTmpSelectedTheme = 6;
+                break;
+            case R.id.radio_color_theme_8:
+                if (checked)
+                    mTmpSelectedTheme = 7;
+                break;
+        }
     }
 
     @Override

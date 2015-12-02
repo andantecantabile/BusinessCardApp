@@ -56,7 +56,9 @@ public class ContactDetailActivity extends AppCompatActivity
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Intent data = new Intent();
-            data.putExtra(EXTRA_CONTACT_ENTRY_ID, mCurrContactEntry.getId());
+            if (mCurrContactEntry != null) {
+                data.putExtra(EXTRA_CONTACT_ENTRY_ID, mCurrContactEntry.getId());
+            }
             setResult(RESULT_OK, data);
             this.finish();
         }
