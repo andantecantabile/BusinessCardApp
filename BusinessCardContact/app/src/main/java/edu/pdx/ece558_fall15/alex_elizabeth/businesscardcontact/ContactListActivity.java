@@ -1,13 +1,14 @@
 package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -257,13 +258,26 @@ public class ContactListActivity extends AppCompatActivity
     @Override
     public void onAddNewContactCard() {
         Log.d(TAG, "onContactAddNewContactCard");
-        mCurrContactEntry = new ContactEntry();
-        File filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        Uri outputFileUri = Uri.fromFile(new File(filesDir, ContactStore.get(this)
-                .getSuggestedBCFile(mCurrContactEntry).getName() + ".jpg"));
-        String chooserText = getResources().getString(R.string.chooserBCImage);
-        Intent intent = PictureUtils.getImageChooserIntent(outputFileUri, chooserText, this);
-        startActivityForResult(intent, REQUEST_CODE_GET_IMAGE);
+
+        // Check to make sure the network is active.
+        ConnectivityManager connMan = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMan.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected()) {
+            mCurrContactEntry = new ContactEntry();
+            File filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            Uri outputFileUri = Uri.fromFile(new File(filesDir, ContactStore.get(this)
+                    .getSuggestedBCFile(mCurrContactEntry).getName() + ".jpg"));
+            String chooserText = getResources().getString(R.string.chooserBCImage);
+            Intent intent = PictureUtils.getImageChooserIntent(outputFileUri, chooserText, this);
+            startActivityForResult(intent, REQUEST_CODE_GET_IMAGE);
+        } else {
+            AlertDialog alertDialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.action_unavailable)
+                    .setMessage(R.string.network_not_available)
+                    .setPositiveButton(R.string.okay, null)
+                    .create();
+            alertDialog.show();
+        }
     }
 
     @Override

@@ -65,4 +65,7 @@
     <string name="saved_color_theme">edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact.PREFERENCE_COLOR_THEME</string>
     <string name="saved_color_theme_default">0</string>
     <string name="saved_ce_uuid">edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact.PREFERENCE_CE_UUID_DETAIL</string>
+    <string name="action_unavailable">Action Unavailable</string>
+    <string name="network_not_available">Network is not available, please connect to use this feature.</string>
+    <string name="okay">Okay</string>
 </resources>
