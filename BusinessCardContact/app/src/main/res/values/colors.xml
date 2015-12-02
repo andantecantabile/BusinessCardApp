@@ -90,6 +90,12 @@
     <color name="theme5ColorAccent">#7c4dff</color> <!-- 200 -->
     <color name="theme5ColorAccent400">#651FFF</color>
 
+    <!-- Define Colors for Theme 6: Monochrome -->
+    <!-- primary: gray -->
+
+
+    <!--================================================-->
+
     <!-- Include additional colors here -->
     <color name="colorPrimary">#009688</color>
     <color name="colorPrimaryDark">#00796b</color>

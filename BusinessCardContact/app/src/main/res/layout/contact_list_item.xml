@@ -24,7 +24,10 @@
                 android:paddingTop="8dp"
                 android:paddingLeft="8dp"
                 android:paddingBottom="2dp"
-                style="?android:listSeparatorTextViewStyle"/>
+                android:textAllCaps="true"
+                />
+            <!-- Alternatively:
+                style="?android:listSeparatorTextViewStyle" -->
         </LinearLayout>
         <TextView
             android:id="@+id/contact_list_item_contact_name"
