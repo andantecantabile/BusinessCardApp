@@ -64,7 +64,7 @@ public class ContactEditDetailActivity extends AppCompatActivity
         mContactEntry = ce;
         // Note that the save operation of the contact has already been performed in the fragment.
         // Here, need to close the current activity so that it would return to the previous view (either list or detail?)
-        finishActivity();
+        finishActivity(true);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ContactEditDetailActivity extends AppCompatActivity
 
         mContactEntry = ce;
         // On cancel, want to return to the previous activity.
-        finishActivity();
+        finishActivity(false);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class ContactEditDetailActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Yes, the user wants to exit, so close the activity
-                finishActivity();
+                finishActivity(false);
             }
         });
 
@@ -104,10 +104,14 @@ public class ContactEditDetailActivity extends AppCompatActivity
         alert.show();
     }
 
-    private void finishActivity() {
+    private void finishActivity(boolean returnContact) {
         Intent data = new Intent();
-        setResult(RESULT_OK, data);
-        data.putExtra(EXTRA_CONTACT_ENTRY_ID, mContactEntry.getId());
+        if(returnContact) {
+            setResult(RESULT_OK, data);
+            data.putExtra(EXTRA_CONTACT_ENTRY_ID, mContactEntry.getId());
+        } else {
+            setResult(RESULT_CANCELED, data);
+        }
         finish();
     }
 }
