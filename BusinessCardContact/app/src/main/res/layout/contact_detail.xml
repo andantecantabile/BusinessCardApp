@@ -20,28 +20,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ContactPhoneNumLbl"
-            android:layout_weight="0"
             style="?android:listSeparatorTextViewStyle"/>
         <TextView
             android:id="@+id/ContactPhoneNumVal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginLeft="@dimen/contact_field_margin_left"/>
         <TextView
             android:id="@+id/ContactPhoneExtLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
             android:text="@string/ContactPhoneExtLbl"
+            android:layout_marginLeft="@dimen/contact_field_margin_left"
             style="?android:listSeparatorTextViewStyle"/>
         <TextView
             android:id="@+id/ContactPhoneExtVal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:layout_marginLeft="@dimen/contact_field_margin_left"
-            android:text="                  "/>
+            android:layout_marginLeft="@dimen/ext_field_padding"
+            android:text=" "/>
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
