@@ -162,6 +162,7 @@ public class ContactListActivity extends AppCompatActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode != RESULT_OK) {
+            removeDetailFragmentUI();
             return;
         }
         if(requestCode == REQUEST_CODE_VIEW) {
