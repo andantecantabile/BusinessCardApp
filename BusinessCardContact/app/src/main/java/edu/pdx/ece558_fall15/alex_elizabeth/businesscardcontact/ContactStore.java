@@ -19,19 +19,27 @@ public class ContactStore {
 
     //Context from which the class is invoked.
     private Context mContext;
+
     //Reference to the class that interacts with the Android Contact List
     private ContactContentResolverHelper mResolverHelper;
+
     //List to store a local copy to facilitate quick access
     private List<ContactEntry> mContactEntries = new ArrayList<ContactEntry>();
+
+    //Temporary storage point for a contact that isn't committed to the Android Contact
+    //Storage but also needs to be accessed across multiple Activities
     private ContactEntry mTempContactEntry;
+
     /**
      * Creates (or returns if already created) the reference to the ContactStore
      * @param context The context from which this is invoked
     **/
     public static ContactStore get(Context context) {
         if(sContactStore == null) {
+            //Create a new one only if it doesn't exist
             sContactStore = new ContactStore(context);
         }
+        //Return the old one if it exists or the new one if it didn't
         return sContactStore;
     }
 
@@ -42,19 +50,26 @@ public class ContactStore {
      */
     private ContactStore(Context context) {
         mContext = context;
-        mResolverHelper = new ContactContentResolverHelper(mContext);
-        mContactEntries = mResolverHelper.getAllContacts();
 
-        //Uncomment to delete all contacts
-        //for(int i = 0; i < mContactEntries.size(); i++) {
-        //   deleteContactEntry(mContactEntries.get(i));
-        //}
+        //Create the ContactContentResolverHelper to use to write to the database
+        mResolverHelper = new ContactContentResolverHelper(mContext);
+
+        //Update the local copy list of entries
+        mContactEntries = mResolverHelper.getAllContacts();
     }
 
+    /**
+     * Set a temporary contact entry
+     * @param ce Temporary ContactEntry to set
+     */
     public void setTemporaryContact(ContactEntry ce) {
         mTempContactEntry = ce;
     }
 
+    /**
+     * Get a temporary contact entry
+     * @return the temporary ContactEntry
+     */
     public ContactEntry getTemporaryContact() {
         return mTempContactEntry;
     }
@@ -64,7 +79,10 @@ public class ContactStore {
      * @param ce The ContactEntry to add
      */
     public void addContactEntry(ContactEntry ce) {
+        //Add a new contact to the database
         mResolverHelper.addNewContact(ce);
+
+        //Update the local copy list of entries
         mContactEntries = mResolverHelper.getAllContacts();
     }
 
@@ -73,7 +91,10 @@ public class ContactStore {
      * @param ce The ContactEntry to delete
      */
     public void deleteContactEntry(ContactEntry ce) {
+        //Delete an existing contact from the database
         mResolverHelper.deleteContact(ce);
+
+        //Update the local copy list of entries
         mContactEntries = mResolverHelper.getAllContacts();
     }
 
@@ -91,29 +112,20 @@ public class ContactStore {
      * @return The specified ContactEntry
      */
     public ContactEntry getContactEntry(UUID id) {
+        //Check the normal list for the contact
         for(int i = 0; i < mContactEntries.size(); i++) {
             if(mContactEntries.get(i).getId().equals(id)) {
                 return (ContactEntry) mContactEntries.get(i).clone();
             }
         }
+
+        //If it's not found in the normal list check the temporary contact for a match
         if(mTempContactEntry.getId().equals(id)) {
             return mTempContactEntry;
         }
-        return null;
-    }
 
-    /**
-     * Gets the position of the ContactEntry with the specified Id
-     * @param id Id of the ContactEntry to get the position of
-     * @return The position of the specified ContactEntry in the list
-     */
-    public int getContactEntryPosition(UUID id) {
-        for(int i = 0; i < mContactEntries.size(); i++) {
-            if(mContactEntries.get(i).getId().equals(id)) {
-                return i;
-            }
-        }
-        return -1;
+        //Return null if it's not found at all
+        return null;
     }
 
     /**
@@ -161,13 +173,6 @@ public class ContactStore {
         if(filename == null) {
             return null;
         }
-        /*File externalFilesDir = mContext
-                .getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        if(externalFilesDir == null) {
-            return null;
-        }
-
-        return new File(externalFilesDir, filename);*/
         return new File(filename);
     }
 
@@ -176,7 +181,10 @@ public class ContactStore {
      * @param ce The ContactEntry to be modified
      */
     public void updateContactEntry(ContactEntry ce) {
+        //Update an existing contact in the database
         mResolverHelper.updateContact(ce);
+
+        //Update the local copy list of entries
         mContactEntries = mResolverHelper.getAllContacts();
     }
 
@@ -186,6 +194,7 @@ public class ContactStore {
      * @return the ContactEntry at the specified position
      */
     public ContactEntry getContactEntryAtPosition(int position) {
+        //Return clones of the ContactEntry so accidental modifications aren't made
         return (ContactEntry) mContactEntries.get(position).clone();
     }
 }
