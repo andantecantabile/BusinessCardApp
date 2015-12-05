@@ -80,63 +80,9 @@ public class ContactContentResolverHelper {
         updateCompanyData(rawContactId, contactEntry);
         updateWebsiteData(rawContactId, contactEntry);
         updateNoteData(rawContactId, contactEntry);
-        //writeDisplayPhoto(rawContactId, contactEntry);
         updatePhotoData(rawContactId, contactEntry);
         updateBusinessCardData(rawContactId, contactEntry);
     }
-
-    //adapted from stackoverflow answer by Anton Klimov
-    /*public void writeDisplayPhoto(long rawContactId, ContactEntry contactEntry) {
-        if(contactEntry.getPhotoFilePath() != null) {
-            Bitmap b = BitmapFactory.decodeFile(contactEntry.getPhotoFilePath());
-            int bytes = b.getByteCount();
-            ByteBuffer photo = ByteBuffer.allocate(bytes);
-            b.copyPixelsToBuffer(photo);
-            Uri rawContactPhotoUri = Uri.withAppendedPath(
-                    ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId),
-                    RawContacts.DisplayPhoto.CONTENT_DIRECTORY
-            );
-
-            try {
-                AssetFileDescriptor fd = mContext.getApplicationContext()
-                        .getContentResolver().openAssetFileDescriptor(
-                        rawContactPhotoUri,
-                        "rw"
-                );
-
-                BufferedOutputStream os = null;
-                if (fd != null) {
-                    os = new BufferedOutputStream(fd.createOutputStream());
-                    os.write(photo.array());
-                    os.close();
-                    fd.close();
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Problem writing display photo:", e);
-            }
-        }
-    }*/
-
-    /*public Bitmap getDisplayPhoto(long rawContactId) {
-        Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, rawContactId);
-        Uri displayPhotoUri = Uri.withAppendedPath(contactUri, Contacts.Photo.DISPLAY_PHOTO);
-        InputStream is = Contacts.openContactPhotoInputStream(mContext.getContentResolver(), displayPhotoUri, true);
-
-        //Adapted from stackoverflow answer by Adamski
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        int nRead;
-        byte[] data = new byte[16384];
-
-        try {
-            while((nRead = is.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, nRead);
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "Problem reading display photo:", e);
-        }
-
-        return BitmapFactory.decodeByteArray(buffer.toByteArray(), 0, buffer.size());
-    }*/
 
     /**
      * Returns a list of ContactEntry objects from the Android
@@ -773,16 +719,6 @@ public class ContactContentResolverHelper {
         if(contactEntry.getPhotoFilePath() != null) {
             Log.d(TAG, contactEntry.getPhotoFilePath());
             values.put(Photo.PHOTO_FILE_ID, contactEntry.getPhotoFilePath());
-            /*values.put(Data.IS_PRIMARY, 1);
-            values.put(Data.IS_SUPER_PRIMARY, 1);
-            Bitmap b = PictureUtils.getScaledBitmap(
-                    contactEntry.getPhotoFilePath(), 256, 256);
-            if(b != null) {
-                int bytes = b.getByteCount();
-                ByteBuffer buffer = ByteBuffer.allocate(bytes);
-                b.copyPixelsToBuffer(buffer);
-                values.put(Photo.PHOTO, buffer.array());
-            }*/
         }
     }
 
@@ -795,14 +731,6 @@ public class ContactContentResolverHelper {
         if(contactEntry.getBCFilePath() != null) {
             Log.d(TAG, contactEntry.getBCFilePath());
             values.put(BusinessCardPhoto.PHOTO_FILE_ID, contactEntry.getBCFilePath());
-            /*Bitmap b = PictureUtils.getScaledBitmap(
-                    contactEntry.getPhotoFilePath(), 256, 256);
-            if(b != null) {
-                int bytes = b.getByteCount();
-                ByteBuffer buffer = ByteBuffer.allocate(bytes);
-                b.copyPixelsToBuffer(buffer);
-                values.put(BusinessCardPhoto.PHOTO, buffer.array());
-            }*/
         }
     }
 
@@ -841,7 +769,6 @@ public class ContactContentResolverHelper {
         try {
             //Extract the values into the ContactEntry
             cursor.extractValuesToContactEntry(contactEntry);
-            //getDisplayPhoto(rawContactId);
         } finally {
             //Close the cursor to not leak resources
             cursor.close();
@@ -1003,6 +930,7 @@ public class ContactContentResolverHelper {
         }
     }
 
+    //Custom row aliases to support entry of custom data into the Contact Storage
     private class BusinessCardPhoto {
         private static final String CONTENT_ITEM_TYPE =
                 "edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact.businesscard";;
