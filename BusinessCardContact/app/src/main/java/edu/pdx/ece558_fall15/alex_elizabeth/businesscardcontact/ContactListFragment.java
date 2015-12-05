@@ -18,6 +18,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
+/**
+ * ContactListFragment uses a recycler view to display the contact list entries
+ **/
 public class ContactListFragment extends Fragment
         implements DialogAsyncTask.Callbacks, DialogLoadCEListTask.ListCallbacks {
     private static final String TAG = "ContactListFragment";
@@ -26,25 +29,35 @@ public class ContactListFragment extends Fragment
 
     private RecyclerView mContactEntryRecyclerView;
     private ContactEntryAdapter mAdapter;
+
     private Callbacks mCallbacks;
 
-    private DialogLoadCEListTask mDlcelt;
-    private boolean mNoRefresh = false;
+    private DialogLoadCEListTask mDlcelt;   // async task to handle loading of the contact list
+    private boolean mNoRefresh = false;     // flag to bypass refresh of the contact list view on resume
 
+    /**
+     * Callbacks to the ContactListActivity.
+     **/
     public interface Callbacks {
-        void onContactSelected(ContactEntry ce);
-        void onAddBlankContact();
-        void onAddNewContactCard();
-        ///*    // TODO_SETTINGS
-        void onDisplaySettings();   // display settings selection
-        //*/
-        void onDisplayAbout();      // display about information
+        void onContactSelected(ContactEntry ce);    // occurs when a contact is selected in the contact list
+        void onAddBlankContact();   // menu action item: add blank contact
+        void onAddNewContactCard(); // menu action item: add contact from a business card image
+        void onDisplaySettings();   // menu action item: display settings selection
+        void onDisplayAbout();      // menu action item: display about information
     }
 
+    /**
+     * Set flag to skip refresh on resume.
+     * @param noRefresh true if refresh should be skipped, false otherwise
+     */
     public void setNoRefresh(boolean noRefresh) {
         mNoRefresh = noRefresh;
     }
 
+    /**
+     * Attach the fragment
+     * @param activity  calling activity
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -52,63 +65,93 @@ public class ContactListFragment extends Fragment
         mCallbacks = (Callbacks) activity;
     }
 
+    /**
+     * Create the activity
+     * @param savedInstanceState    Note that the values in this bundle are not used; because the contact list display will be the same.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(true);    // options menu should be displayed
     }
 
+    /**
+     * Create the view (uses standard parameters for onCreateView)
+     * @param inflater  the LayoutInflater
+     * @param container the ViewGroup
+     * @param savedInstanceState    The values in this bundle are not used, because the display of the contact list will be the same.
+     * @return  The inflated view.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.contact_list, container, false);
 
+        // Find the recycler view, and assign the layout manager
         mContactEntryRecyclerView = (RecyclerView) view.findViewById(R.id.myList);
         mContactEntryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        //updateUI();
 
         return view;
     }
 
+    /**
+     * The contact list should be reloaded on resume.  Note that if the noRefresh flag is set,
+     * the reloading of the contact list will be skipped.
+     */
     @Override
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        if(mNoRefresh) {
-            mNoRefresh = false;
+        if(mNoRefresh) {    // if the noRefresh flag is set, then do not load the contact list
+            mNoRefresh = false; // and clear the flag.
         } else {
             // start async task to load the contact list
             mDlcelt = new DialogLoadCEListTask(getActivity(), this, this);
             mDlcelt.execute();
-            //updateUI();
         }
     }
 
+    /**
+     * Save the current state
+     * @param outState  default bundle
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.d(TAG, "onSaveInstanceState");
     }
 
+    /**
+     * Detach the fragment
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         Log.d(TAG, "onDetach");
-        mCallbacks = null;
+        mCallbacks = null;  // clear callbacks
     }
 
+    /**
+     * Destroy the view
+     */
     @Override
     public void onDestroyView() {
         Log.d(TAG, "onDestroyView");
+        // if the async task to load the contact list exists and the status of the async task is not finished,
+        // then need to cancel the task first
         if(mDlcelt != null && mDlcelt.getStatus() != AsyncTask.Status.FINISHED) {
             mDlcelt.cancel(true);
         }
         super.onDestroyView();
     }
 
+    /**
+     * Create the options menu
+     * @param menu      the current menu
+     * @param inflater  the inflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -117,18 +160,12 @@ public class ContactListFragment extends Fragment
 
         // SETTINGS/ABOUT MENU OPTIONS
         inflater.inflate(R.menu.menu_settings, menu);   // add the settings/about button options.
-
-        /*
-        // SETTINGS/ABOUT MENU OPTIONS
-        // check if the detail fragment is active.
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.detail_fragment_container);
-        if(fragment == null) {  // if the detail fragment is not active, then display the menu settings.
-            inflater.inflate(R.menu.menu_settings, menu);   // add the settings/about button options.
-        }
-        */
     }
 
+    /**
+     * Method to handle selection of a menu action item.
+     * @param item  selected menu item
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected");
@@ -143,14 +180,13 @@ public class ContactListFragment extends Fragment
                 mCallbacks.onAddNewContactCard();
                 return true;
 
-            ///*
-            // SETTINGS/ABOUT MENU OPTIONS - TODO_SETTINGS
             case R.id.menu_item_settings:
+                // Display the color theme settings dialog
                 mCallbacks.onDisplaySettings();
                 return true;
-            //*/
 
             case R.id.menu_item_about:
+                // Display the about info dialog
                 mCallbacks.onDisplayAbout();
                 return true;
 
@@ -196,27 +232,41 @@ public class ContactListFragment extends Fragment
         mAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * ContactEntryHolder is the viewholder for the recycler view.
+     */
     private class ContactEntryHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private ContactEntry mContactEntry;
-        private TextView mContactNameView;
-        private TextView mContactCompanyView;
+        private ContactEntry mContactEntry;     // contact entry for which summary should be displayed in the view holder
+        private TextView mContactNameView;      // TextView to display the contact name.
+        private TextView mContactCompanyView;   // TextView to display the company name.
 
+        /**
+         * Constructor for the viewholder.
+         * @param itemView  View for the contact list entry.
+         */
         public ContactEntryHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
+            // Find the contact name and company text view objects.
             mContactNameView = (TextView) itemView.findViewById(R.id.contact_list_item_contact_name);
             mContactCompanyView = (TextView) itemView.findViewById(R.id.contact_list_item_company_name);
         }
 
+        /**
+         * Bind the list item (set the item view with the values for the given contact entry).
+         * @param ce    contact entry with the data to be displayed in the item view
+         */
         public void bindContactEntry(ContactEntry ce) {
             mContactEntry = ce;
 
+            // Set the contact name text
             if (mContactNameView != null) {
                 String contactName = ce.getName();
                 if (contactName != null)
                     mContactNameView.setText(contactName);
             }
 
+            // Set the contact company name text
             if (mContactCompanyView != null) {
                 String contactCompany = ce.getCompany();
                 if (contactCompany != null)
@@ -224,17 +274,34 @@ public class ContactListFragment extends Fragment
             }
         }
 
+        /**
+         * Set the onClick method for the itemView.
+         * @param v current view
+         */
         @Override
         public void onClick(View v) {
-            mCallbacks.onContactSelected(mContactEntry);
+            mCallbacks.onContactSelected(mContactEntry);    // perform callback to the list activity, pass the attached contact entry
         }
     }
 
+    /**
+     * The adapter for the recycler view.
+     */
     private class ContactEntryAdapter extends RecyclerView.Adapter<ContactEntryHolder> {
-        private List<ContactEntry> mContactEntries;
+        private List<ContactEntry> mContactEntries; // the list of contact entries
 
+        /**
+         * Constructor for the adapter.
+         * @param contactEntries    the list of contact entries
+         */
         public ContactEntryAdapter(List<ContactEntry> contactEntries) { mContactEntries = contactEntries; }
 
+        /**
+         * Create the view holder for the list item
+         * @param parent    the parent ViewGroup
+         * @param position  the number of the list item
+         * @return  The created view holder.
+         */
         @Override
         public ContactEntryHolder onCreateViewHolder(ViewGroup parent, int position) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
@@ -244,43 +311,57 @@ public class ContactListFragment extends Fragment
             return new ContactEntryHolder(view);
         }
 
+        /**
+         * When the viewHolder is bound, need to obtain the contact entry data at the given position in the contact entry list.
+         * @param holder    The viewHolder object
+         * @param position  The index of the item in the contact entry list.
+         */
         @Override
         public void onBindViewHolder(ContactEntryHolder holder, int position) {
             ContactEntry ce = mContactEntries.get(position);
             holder.bindContactEntry(ce);
         }
 
+        /**
+         * Returns the number of items in the contact entry list.
+         * @return  number of list items
+         */
         @Override
         public int getItemCount() {
             return mContactEntries.size();
         }
 
+        /**
+         * Sets the contact list data for the view holder.
+         * @param contactEntries    the list of ContactEntry objects
+         */
         public void setContactEntries(List<ContactEntry> contactEntries) {
             mContactEntries = contactEntries;
         }
     }
 
+    /**
+     * Method called when an AsyncTask is finished that returns only a single contact entry.
+     * @param contactEntry  the singular ContactEntry object obtained in the async task
+     * @param success       flag indicating success of async task
+     * @param taskId        the id of the async task that completed
+     */
     @Override
     public void onAsyncTaskFinished(ContactEntry contactEntry, boolean success, int taskId) {
         Log.d(TAG, "onAsyncTaskFinished");
-        // When the async task to save a contact has been completed, need to verify success.
-        // First, determine the identity of the async task which has completed.
-
-        /*
-        if (taskId == DialogLoadCEListTask.TASK_ID) {
-            // if the Load Contact List Task calls this, do nothing here; just wait for the dialog to be dismissed; it will call the onAsyncListTaskDone method next
-            if (success) {
-                updateUI();
-            }
-        }
-        */
     }
 
+    /**
+     * Method called when an async task finishes that returns a list of ContactEntry objects (i.e. AsyncListTask).
+     * @param contactEntries    the list of ContactEntry objects obtained in the async task
+     * @param success           flag indicating success of async task
+     * @param taskId            the id of the async task that completed
+     */
     @Override
     public void onAsyncListTaskDone(List<ContactEntry> contactEntries, boolean success, int taskId) {
         Log.d(TAG, "onAsyncListTaskDone");
         // When the async task to save a contact has been completed, need to verify success.
-        // First, determine the identity of the async task which has completed.
+        // First, need to determine the identity of the async task which has completed.
 
         if (taskId == DialogLoadCEListTask.TASK_ID) {
             // if the Load Contact List Task is successful, need to update the UI.
@@ -288,7 +369,4 @@ public class ContactListFragment extends Fragment
                 updateUI(contactEntries);
             }
         }
-    }
-
-
-}
+    }}
