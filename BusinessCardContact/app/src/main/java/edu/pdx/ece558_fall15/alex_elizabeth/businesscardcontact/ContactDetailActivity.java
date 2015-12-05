@@ -54,7 +54,7 @@ public class ContactDetailActivity extends AppCompatActivity
     }
 
     /**
-     * On creation of the activity, the activity should be set, and the id of the contact entry to be displayed
+     * On creation of the activity, the theme for the activity should be set, and the id of the contact entry to be displayed
      * needs to be extracted from either the intent extra or from the key id from the saved instance state.
      * @param savedInstanceState the saved instance state
      */
