@@ -11,6 +11,16 @@ package com.abbyy.ocrsdk;
  */
 public class BusCardSettings {
 
+    //Fields to hold the chosen parameter values.
+    private String language = "English";
+    private OutputFormat outputFormat = OutputFormat.xml;
+    private ImageSource imageSource = ImageSource.photo;
+    private String writeFieldComponents = "true";
+
+    /**
+     * Generates the URL parameters that need to be appended to the base URL
+     * @return a string with the (relevant) URL parameters formatted correctly
+     */
 	public String asUrlParams() {
 		// For all possible parameters, see documentation at
 		// http://ocrsdk.com/documentation/apireference/processBusinessCard/
@@ -18,14 +28,25 @@ public class BusCardSettings {
                 , language, outputFormat, imageSource, writeFieldComponents);
 	}
 
+    /**
+     * Defines the possible output return formats
+     */
 	public enum OutputFormat {
 		vCard, xml, csv
 	}
 
+    /**
+     * Sets the output format
+     * @param format the specified output format
+     */
 	public void setOutputFormat(OutputFormat format) {
 		outputFormat = format;
 	}
 
+    /**
+     * Gets the output format
+     * @return the output format
+     */
 	public OutputFormat getOutputFormat() {
 		return outputFormat;
 	}
@@ -42,17 +63,18 @@ public class BusCardSettings {
 		language = newLanguage;
 	}
 
+    /**
+     * Gets the language that is set
+     * @return the language
+     */
 	public String getLanguage() {
 		return language;
 	}
 
+    /**
+     * List of possible image sources
+     */
     public enum ImageSource {
-        auto, photo, scanner;
+        auto, photo, scanner
     }
-
-	private String language = "English";
-	private OutputFormat outputFormat = OutputFormat.xml;
-	private ImageSource imageSource = ImageSource.photo;
-    private String writeExtendedCharacterInfo = "true";
-    private String writeFieldComponents = "true";
 }
