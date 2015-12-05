@@ -293,11 +293,15 @@ public class ContactEntry implements Cloneable{
     public Object clone() {
         ContactEntry contactEntry = null;
         try {
+            //Call the super class method to clone all of the instance variables
             contactEntry = (ContactEntry)super.clone();
         } catch (CloneNotSupportedException e){
             Log.e("ContactEntry", "Cloning didn't work");
         }
+        //Call the UUID fromString method to "deep" clone the instance object references
         contactEntry.mId = UUID.fromString(mId.toString());
+
+        //Return the newly created ContactEntry that is a "cloned copy" of the original
         return contactEntry;
     }
 }
