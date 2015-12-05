@@ -22,25 +22,25 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * ContactDetailFragment handles the view of all fields for a single contact entry.
+ */
 public class ContactDetailFragment extends Fragment
         implements DialogAsyncTask.Callbacks {
-    private static final String TAG = "ContactDetailFragment";
-
-    private static final String PACKAGE_NAME =
-            "edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact";
+    private static final String TAG = "ContactDetailFragment";  // tag for logcat
 
     private static final String ARG_CONTACT_ENTRY_ID = "contact_entry_id";
 
-    private ContactEntry mContactEntry;
-    private Callbacks mCallbacks;
+    private ContactEntry mContactEntry; // the contact entry to be displayed
+    private Callbacks mCallbacks;       // the callbacks for the menu action items
 
-    private UUID mContactEntryId;
+    private UUID mContactEntryId;   // the id of the displayed contact entry
 
-    private BitmapLoaderAsyncTask mBlat;
-    private LoadContactTask mLct;
-    private DeleteContactTask mDct;
+    private BitmapLoaderAsyncTask mBlat;    // async task for loading the bitmaps
+    private LoadContactTask mLct;           // async task for loading the contact entry to be displayed
+    private DeleteContactTask mDct;         // async task for deleting the contact entry
 
-    // images
+    // files for the contact photo and business card images
     private File mContactPhotoFile;
     private File mContactBCFile;
 
@@ -59,10 +59,15 @@ public class ContactDetailFragment extends Fragment
     private ImageView mContactBCView;
 
     public interface Callbacks {
-        void onContactEntryEdit(ContactEntry ce);
-        void onContactEntryDelete(ContactEntry ce);
+        void onContactEntryEdit(ContactEntry ce);   // "Edit" menu action item callback
+        void onContactEntryDelete(ContactEntry ce); // "Delete" menu action item callback
     }
 
+    /**
+     * Creates a new contact detail fragment with the given contact entry id attached as an argument.
+     * @param contactEntryId    the id of the contact entry to be displayed
+     * @return  the new contact detail fragment
+     */
     public static ContactDetailFragment newInstance(UUID contactEntryId) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_CONTACT_ENTRY_ID, contactEntryId);
@@ -72,48 +77,69 @@ public class ContactDetailFragment extends Fragment
         return fragment;
     }
 
+    /**
+     * When the contact detail fragment is attached, assign the activity callbacks.
+     * @param activity  the calling activity
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         Log.d(TAG, "onAttach");
-        mCallbacks = (Callbacks) activity;
+        mCallbacks = (Callbacks) activity;  // assign the activity callbacks
     }
 
+    /**
+     * On create, obtain the contact entry id argument, and get the data for the specified contact entry.
+     * @param savedInstanceState    the saved instance variables
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(true);    // flag that the options menu should be used
         mContactEntryId = (UUID) getArguments().getSerializable(ARG_CONTACT_ENTRY_ID);
 
-        //Todo: Add an async task here to get the current contact entry
+        // Get the current contact entry
         mContactEntry = ContactStore.get(getActivity()).getContactEntry(mContactEntryId);
     }
 
+    /**
+     * On Pause, no special actions.
+     */
     @Override
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause");
     }
 
+    /**
+     * On resume, need to reload the current contact.
+     */
     @Override
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        //Add an async task here to retrieve the data for the given contact id:
+        // Use an async task here to retrieve the data for the current contact id:
         if (mContactEntryId != null) {
             mLct = new LoadContactTask(getActivity(), this, mContactEntryId);
             mLct.execute();
         }
-        //mContactEntry = ContactStore.get(getActivity()).getContactEntry(mContactEntryId);
+        // update the layout view
         updateUI();
     }
 
+    /**
+     * Save the instance state
+     * @param outState  instance state variables
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * When the fragment is detached, remove the callbacks.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
@@ -121,21 +147,36 @@ public class ContactDetailFragment extends Fragment
         mCallbacks = null;
     }
 
+    /**
+     * When the view is destroyed, need to check status of async tasks...
+     * if an async task is still running (hasn't finished), need to cancel
+     * the task before destroying the fragment.
+     */
     @Override
     public void onDestroyView() {
         Log.d(TAG, "onDestroyView");
+        // check if the bitmap loader async task is still running
         if(mBlat != null && mBlat.getStatus() != AsyncTask.Status.FINISHED) {
-            mBlat.cancel(true);
+            mBlat.cancel(true); // if so, cancel the operation of the async task
         }
+        // check if the load contact entry async task is still running
         if(mLct != null && mLct.getStatus() != AsyncTask.Status.FINISHED) {
-            mLct.cancel(true);
+            mLct.cancel(true); // if so, cancel the operation of the async task
         }
+        // check if the delete contact entry async task is still running
         if(mDct != null && mDct.getStatus() != AsyncTask.Status.FINISHED) {
-            mDct.cancel(true);
+            mDct.cancel(true); // if so, cancel the operation of the async task
         }
         super.onDestroyView();
     }
 
+    /**
+     * Create the view for the fragment.
+     * @param inflater  the LayoutInflater
+     * @param container the ViewGroup
+     * @param savedInstanceState    the saved state variables
+     * @return  the inflated view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -166,13 +207,23 @@ public class ContactDetailFragment extends Fragment
         return v;
     }
 
+    /**
+     * Create the options menu
+     * @param menu      the menu object
+     * @param inflater  the inflater object
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        Log.d(TAG,"onCreateOptionsMenu");
-        inflater.inflate(R.menu.menu_contact_detail, menu);
+        Log.d(TAG, "onCreateOptionsMenu");
+        inflater.inflate(R.menu.menu_contact_detail, menu); // add the contact detail menu options ("Edit" and "Delete")
     }
 
+    /**
+     * Method called when a menu item has been selected.
+     * @param item  the selected menu action item
+     * @return  Need to return true to display the menu.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected");
@@ -184,7 +235,7 @@ public class ContactDetailFragment extends Fragment
 
             case R.id.menu_item_delete_contact:
                 // User chose the "Delete Contact" action
-                deleteContactCheck();
+                deleteContactCheck();   // need to check for confirmation that the contact should be deleted; dialog will be displayed
                 return true;
 
             default:
@@ -194,18 +245,25 @@ public class ContactDetailFragment extends Fragment
         }
     }
 
-    // Displays the provided image file in the referenced image view.
+    /**
+     * Displays the provided image file in the referenced image view.
+     * This method will convert the given image file to a bitmap and then use it to update
+     * the given ImageView.
+     * Note that BOTH the ImageView and the image file are passed to this method
+     * to allow the method to be used for both the contact image and the contact
+     * business card image.
+     * @param imgView   The ImageView object that needs to be updated (view where the given image file should be displayed).
+     * @param imgFile   The image file.
+     */
     private void updatePhotoView(ImageView imgView, File imgFile) {
+        // Make sure the given ImageView exists in the layout
         if (imgView != null) {
+            // Check to see if the specified image file exists...
             if (imgFile == null || !imgFile.exists()) {
-                //imgView.setImageDrawable(null);   // would display no image.
-                // instead, if no image file exists, display the default image.
+                // If no image file exists, display the default image.
                 imgView.setImageResource(R.drawable.ic_photo_camera_light);
-                // would potentially like to change the default photo image with themes;
-                // so use a string here to reference the photo image.
-                //imgView.setImageResource(getResources().getIdentifier(getResources().getString(R.string.default_photo_img), "drawable", PACKAGE_NAME ));
             } else {
-                // Uncomment this section when PictureUtils is set up.
+                // Obtain a bitmap from the image file, and apply it to the view.
                 Bitmap bitmap = PictureUtils.getScaledBitmap(
                     imgFile.getPath(), getActivity());
                 imgView.setImageBitmap(bitmap);
@@ -213,42 +271,48 @@ public class ContactDetailFragment extends Fragment
         }
     }
 
+    /**
+     * Update the image views in the layout (contact photo and business card images)
+     * and the text views for all the fields in the contact entry.
+     */
     public void updateUI() {
         Log.d(TAG, "updateUI");
-        populateImageViews();
-        populateFieldViews();
+        populateImageViews();   // update photo and business card views
+        populateFieldViews();   // update all text fields
     }
 
-    // Populates all imageviews
+    /**
+     * This method checks for existence of the ImageViews and calls an async task to update all ImageViews.
+     */
     private void populateImageViews() {
-        /*
-        // update the image view
+        // get the photo file stored for the currently selected contact entry.
         mContactPhotoFile = ContactStore.get(getActivity()).getPhotoFile(mContactEntry);
-        updatePhotoView(mContactPhotoView, mContactPhotoFile);
-
-        // update business card image
-        mContactBCFile = ContactStore.get(getActivity()).getBCPhotoFile(mContactEntry);
-        updatePhotoView(mContactBCView, mContactBCFile);*/
-
-        mContactPhotoFile = ContactStore.get(getActivity()).getPhotoFile(mContactEntry);
+        // get the business card file stored for the currently selected contact entry.
         mContactBCFile = ContactStore.get(getActivity()).getBCPhotoFile(mContactEntry);
 
         ArrayList<ImageView> imageViews = new ArrayList<>();
         ArrayList<String> paths = new ArrayList<>();
+        // add the contact photo image view
         if(mContactPhotoView != null && mContactPhotoFile != null && mContactPhotoFile.exists()) {
             imageViews.add(mContactPhotoView);
             paths.add(mContactPhotoFile.getPath());
         }
+        // add the business card image view
         if(mContactBCView != null && mContactBCFile != null && mContactBCFile.exists()) {
             imageViews.add(mContactBCView);
             paths.add(mContactBCFile.getPath());
         }
+        // create a new async task to load the bitmaps
         mBlat = new BitmapLoaderAsyncTask(getActivity(), this,
                 imageViews.toArray(new ImageView[imageViews.size()]));
-        mBlat.execute( paths.toArray(new String[paths.size()]));
+        mBlat.execute(paths.toArray(new String[paths.size()]));    // start the async task
     }
 
-    // Populates the existing textviews
+    /**
+     * Populates the existing textviews with values from the current contact entry.
+     * For each text view, make sure that it exists, get the value from the contact entry,
+     * and if the value is not null, update the text view.
+     */
     private void populateFieldViews() {
         // populate all textviews
         if (mContactNameView != null) {
@@ -345,8 +409,6 @@ public class ContactDetailFragment extends Fragment
      * Wrapper method to first confirm that the user wants to delete the active contact, before allowing it to be deleted.
      */
     private void deleteContactCheck() {
-        // TODO: before checking for confirmation from user that the entry should be deleted... may need to check first that the given contact entry is not null... (but this case shouldn't actually happen...)
-
         // get confirmation from user in a dialog that they want to go back without saving changes
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -356,10 +418,8 @@ public class ContactDetailFragment extends Fragment
             public void onClick(DialogInterface dialog, int which) {
                 // Yes, the user wants to delete the contact...
                 deleteContact();
-                //ContactStore.get(getActivity().getApplicationContext()).deleteContactEntry(mContactEntry);
-
                 // Note: after deletion, need to return to the list view...
-                // which should be the previous activity in the backstack, so need to close this activity
+                // but this will be handled by the activity callback.
             }
         });
 
@@ -372,18 +432,22 @@ public class ContactDetailFragment extends Fragment
         });
 
         AlertDialog alert = builder.create();
-        alert.show();
-
+        alert.show();   // show the delete confirmation dialog
     }
 
+    /**
+     * Method called when an AsyncTask is finished that returns only a single contact entry.
+     * @param contactEntry  the singular ContactEntry object obtained in the async task
+     * @param success       flag indicating success of async task
+     * @param taskId        the id of the async task that completed
+     */
     @Override
     public void onAsyncTaskFinished(ContactEntry contactEntry, boolean success, int taskId) {
         //Log.d(TAG, "onAsyncTaskFinished; ceId: "+mContactEntryId);
         Log.d(TAG, "onAsyncTaskFinished");
-        // When the async task to save a contact has been completed, need to verify success.
         // First, determine the identity of the async task which has completed.
-
         if (taskId == LoadContactTask.TASK_ID) {
+            // When the async task to load a contact entry from the database has been completed, need to verify success.
             if (success) {
                 // if the Load Contact Task is successful, need to update the UI.
                 mContactEntry = contactEntry;   // save the loaded contact entry
@@ -391,15 +455,14 @@ public class ContactDetailFragment extends Fragment
             }
         }
         else if (taskId == DeleteContactTask.TASK_ID) {
+            // When the async task to delete a contact from the database has been completed, need to verify success.
             if (success) {
                 // once the contact is successfully deleted, just need to perform the callback to the activity so that the activity will be closed.
                 mCallbacks.onContactEntryDelete(mContactEntry);
             }
             // if it was not successful, would probably be good to display some message... but this case is very unlikely to happen
         }
-        else if (taskId == BitmapLoaderAsyncTask.TASK_ID) {
-            //nothing to do
-        }
+        // NOTE: nothing to do for (taskId == BitmapLoaderAsyncTask.TASK_ID)
     }
 
     /**
@@ -413,15 +476,26 @@ public class ContactDetailFragment extends Fragment
         // Define the status message for the spinning dialog
         private static final String INIT_STATUS_MSG = "Loading contact information...";
 
+        /**
+         * Constructor for the load contact async task
+         * @param context   parent context
+         * @param callbacks the callbacks for this async task (note: it will return one contact entry)
+         * @param ceId      the id of the contact entry to be obtained from the database.
+         */
         public LoadContactTask(Context context, Callbacks callbacks, UUID ceId) {
             super(INIT_STATUS_MSG,context,callbacks, TASK_ID);
             mContactEntryId = ceId;
         }
 
+        /**
+         * Task that needs to be performed in the background to load the contact entry data.
+         * @param params    default parameters
+         * @return          Returns true to indicate the task was successful.
+         */
         @Override
         protected Boolean doInBackground(String... params) {
             Log.d(TAG, "doInBackground");
-            // retrieve the contact entry data for the given id
+            // retrieve the contact entry data for the id of the entry to be displayed
             setContactEntry(ContactStore.get(getActivity()).getContactEntry(mContactEntryId));
             return true;
         }
@@ -436,11 +510,22 @@ public class ContactDetailFragment extends Fragment
         // Define the status message for the spinning dialog
         private static final String INIT_STATUS_MSG = "Deleting contact information...";
 
+        /**
+         * Constructor
+         * @param context   parent context
+         * @param callbacks callbacks for the delete async task (uses the callback that returns a single contact entry, but this parameter is unused for delete operation)
+         * @param ce        the active (displayed) contact entry which should be deleted.
+         */
         public DeleteContactTask(Context context, Callbacks callbacks, ContactEntry ce) {
             super(INIT_STATUS_MSG,context,callbacks, TASK_ID);
             setContactEntry(ce);
         }
 
+        /**
+         * Background task to delete the contact entry.
+         * @param params    default parameters
+         * @return          Returns true if operation was successful. (In this case, always true.)
+         */
         @Override
         protected Boolean doInBackground(String... params) {
             Log.d(TAG, "doInBackground");

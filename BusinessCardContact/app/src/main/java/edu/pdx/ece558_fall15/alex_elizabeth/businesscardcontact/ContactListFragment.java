@@ -165,6 +165,7 @@ public class ContactListFragment extends Fragment
     /**
      * Method to handle selection of a menu action item.
      * @param item  selected menu item
+     * @return  Need to return true to display the menu.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
