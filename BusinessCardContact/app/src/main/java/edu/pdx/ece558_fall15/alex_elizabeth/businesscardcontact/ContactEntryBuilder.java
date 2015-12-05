@@ -117,6 +117,11 @@ public class ContactEntryBuilder {
         return this;
     }
 
+    /**
+     * Set the path to the photo File
+     * @param photoFile a File referencing the photo file
+     * @return the ContactEntryBuilder
+     */
     public ContactEntryBuilder photo(File photoFile) {
         if(photoFile != null) {
             mContactEntry.setPhotoFilePath(photoFile.getPath());
@@ -124,6 +129,11 @@ public class ContactEntryBuilder {
         return this;
     }
 
+    /**
+     * Set the path to the business card file
+     * @param businessCardFile a File referencing the business card file
+     * @return the ContactEntryBuilder
+     */
     public ContactEntryBuilder businessCard(File businessCardFile) {
         if(businessCardFile != null) {
             mContactEntry.setBCFilePath(businessCardFile.getPath());
