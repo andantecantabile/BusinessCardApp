@@ -28,16 +28,22 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+/**
+ * ContactListActivity is the initial startup activity, and must implement both the ContactListFragment
+ * callbacks and ContactDetailFragment callbacks because it may operate in both portrait and
+ * landscape mode.  In portrait mode, only the ContactListFragment will be displayed, while
+ * in landscape mode, both ContactListFragment and ContactDetailFragment will be displayed.
+ */
 public class ContactListActivity extends AppCompatActivity
         implements ContactListFragment.Callbacks,
         ContactDetailFragment.Callbacks,
         OCRAsyncTask.Callbacks {
 
-    private static final String TAG = "ContactListActivity";
+    private static final String TAG = "ContactListActivity";    // identifier for the activity in logcat
 
-    private static final int REQUEST_CODE_VIEW = 0;
-    private static final int REQUEST_CODE_GET_IMAGE = 1;
-    private static final int REQUEST_CODE_EDIT = 2;
+    private static final int REQUEST_CODE_VIEW = 0;         // code sent to DetailActivity
+    private static final int REQUEST_CODE_GET_IMAGE = 1;    // code sent to the image chooser
+    private static final int REQUEST_CODE_EDIT = 2;         // code sent to EditDetailActivity
 
     private static final String KEY_ENTRY_ID = "entry_id";  // used to save the id of the currently displayed contact entry detail
 
@@ -45,10 +51,18 @@ public class ContactListActivity extends AppCompatActivity
     private int mTmpSelectedTheme;  // stores the index of the selected theme in the settings dialog
     private Activity mActivity; // used to reference the current activity to correctly update the theme
 
-    private ContactEntry mCurrContactEntry;
-    private boolean mNeedUpdate = false;
-    private boolean mNoRefresh = false;
+    private ContactEntry mCurrContactEntry; // contact entry that is currently selected
+    private boolean mNeedUpdate = false;    // a flag used on return from EditDetailActivity to indicate that an update is required for the detail display
+    private boolean mNoRefresh = false;     // a flag used to skip refresh of the list and detail views on the event
+                                            // that a business card image has been returned from the image chooser, and
+                                            // will be immediately used in a call to the OCRAsyncTask. (Since after the async
+                                            // task is complete, it will immediately launch the EditDetailActivity, there is
+                                            // no need to refresh the views at this time.
 
+    /**
+     * Obtains the corresponding layout id based on the current orientation of the device.
+     * @return  id of the active layout
+     */
     @LayoutRes
         private int getLayoutResId() {
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -58,6 +72,10 @@ public class ContactListActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Create the activity
+     * @param savedInstanceState    the saved instance state (may include the id of the contact entry that should be currently selected).
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +95,7 @@ public class ContactListActivity extends AppCompatActivity
         //Check if the id for placing the ContactListFragment in exists
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
         if(fragment == null) {
-            fragment = new ContactListFragment();
+            fragment = new ContactListFragment();   // add the contact list fragment
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();
@@ -93,14 +111,14 @@ public class ContactListActivity extends AppCompatActivity
             editor.commit();
             onContactSelected(ContactStore.get(this).getContactEntry(currId));
         }
-        /*
+
         if(savedInstanceState != null) {
             UUID currId = (UUID) savedInstanceState.getSerializable(KEY_ENTRY_ID);
             if(currId != null) {    // if there is a contact entry id, load the detail of that entry
                 onContactSelected(ContactStore.get(this).getContactEntry(currId));
             }
         }
-        */
+
     }
 
     @Override
@@ -120,11 +138,10 @@ public class ContactListActivity extends AppCompatActivity
         Log.d(TAG, "onSaveInstanceState");
         removeDetailFragmentUI();   // remove the detail fragment
         super.onSaveInstanceState(outState);
-        /*  // the following does NOT work when the activity is dismissed
+        // the following does NOT work when the activity is dismissed
         if (mCurrContactEntry != null) {    // if the current contact entry exists,
             outState.putSerializable(KEY_ENTRY_ID, mCurrContactEntry.getId());  // save the id of the currently displayed detail
         }
-        */
     }
 
     @Override
@@ -144,14 +161,24 @@ public class ContactListActivity extends AppCompatActivity
 
     }
 
+    /**
+     * This method handles the situation when a contact entry has been
+     * selected in the contact list fragment.
+     * @param ce   the contact entry which has been selected
+     */
     @Override
     public void onContactSelected(ContactEntry ce) {
         Log.d(TAG, "onContactSelected");
         //Check if the id for placing the ContactDetailFragment in exists
         if(findViewById(R.id.detail_fragment_container) == null) {
+            // if the container for the detail fragment does not exist,
+            // launch the contact detail activity
             Intent intent = ContactDetailActivity.newIntent(this, ce.getId());
             startActivityForResult(intent, REQUEST_CODE_VIEW);
         } else {
+            // otherwise, if the container for the detail fragment exists in the current layout,
+            // set the detail fragment with the currently selected contact entry if there is
+            // one active.
             if(mCurrContactEntry == null || !mCurrContactEntry.getId().equals(ce.getId())) {
                 mCurrContactEntry = ce;
                 setDetailFragment(ce);
@@ -159,37 +186,44 @@ public class ContactListActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * This method handles result values sent back to this activity from other activities.
+     * @param requestCode   The code which indicates the activity returning the value.
+     * @param resultCode    The result code (expect this to be RESULT_OK).
+     * @param data          The returned data (i.e. id of contact entry last viewed or edited, or the image returned by the image chooser/camera).
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode != RESULT_OK) {
-            removeDetailFragmentUI();
+            removeDetailFragmentUI();   // if for some reason the result code is not ok, just remove the detail fragment; only the list fragment will be displayed
             return;
         }
-        if(requestCode == REQUEST_CODE_VIEW) {
-            UUID currID = ContactDetailActivity.lastViewedID(data);
-            if(currID != null) {
-                ContactEntry ce = ContactStore.get(this).getContactEntry(currID);
-                if (findViewById(R.id.detail_fragment_container) != null) {
-                    mCurrContactEntry = ce;
-                    setDetailFragment(ce);
+        if(requestCode == REQUEST_CODE_VIEW) {  // indicates return from ContactDetailActivity  (handles rotation from portrait to landscape mode)
+            UUID currID = ContactDetailActivity.lastViewedID(data); // get the id of the contact entry last viewed
+            if(currID != null) {    // if the id exists,
+                ContactEntry ce = ContactStore.get(this).getContactEntry(currID);   // obtain the contact entry
+                if (findViewById(R.id.detail_fragment_container) != null) { // check that the detail_fragment_container exists; i.e. is in landscape mode
+                    mCurrContactEntry = ce; // assign the currently viewed contact entry
+                    setDetailFragment(ce);  // display the contact entry in the detail fragment view
                 }
             }
-        } else if(requestCode == REQUEST_CODE_EDIT) {
-            UUID currID = ContactEditDetailActivity.lastEditedId(data);
-            if(currID != null) {
-                mCurrContactEntry = ContactStore.get(this).getContactEntry(currID);
-                mNeedUpdate = true;
+        } else if(requestCode == REQUEST_CODE_EDIT) {   // indicates return from ContactEditDetailActivity
+            UUID currID = ContactEditDetailActivity.lastEditedId(data); // obtain id of the edited contact entry
+            if(currID != null) {    // if it exists,
+                mCurrContactEntry = ContactStore.get(this).getContactEntry(currID); // assign the currently viewed contact entry
+                mNeedUpdate = true; // and indicate that the detail fragment view should be updated on resume
             }
-        } else if(requestCode == REQUEST_CODE_GET_IMAGE) {
+        } else if(requestCode == REQUEST_CODE_GET_IMAGE) {  // indicates return from the image chooser
             File BCFile = null;
 
-            //Returned from the camera
+            // Returned from the camera
             if(data == null) {
                 File filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                // save the business card image to a file with the filename associated with the current entry
                 BCFile = new File( filesDir, ContactStore.get(this)
                             .getSuggestedBCFile(mCurrContactEntry).getName() + ".jpg");
             }
-            //Returned from the gallery
+            // Returned from the gallery
             if(data != null && data.getData() != null) {
                 Uri uri = data.getData();
 
@@ -199,10 +233,10 @@ public class ContactListActivity extends AppCompatActivity
                     // Log.d(TAG, String.valueOf(bitmap));
                     File filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
-                    // update business card image
+                    // save the business card image to file
                     File tmpFile = PictureUtils.persistImage(filesDir, bitmap,
                             mCurrContactEntry.getSuggestedBCFilename());
-                    if (tmpFile != null) {
+                    if (tmpFile != null) {  // make sure that the file save was successful
                         BCFile = tmpFile;
                     }
                 } catch (IOException e) {
@@ -210,37 +244,52 @@ public class ContactListActivity extends AppCompatActivity
                 }
             }
 
+            // if a business card image (from either camera or gallery) was successfully saved to a file,
             if(BCFile != null) {
-                mNoRefresh = true;
+                mNoRefresh = true;  // set the noRefresh flag so that the activity list and detail views will not be updated on resume
+                                    // (will be calling the OCRAsyncTask here, and on return, the edit activity will be launched)
                 ContactListFragment clFragment = (ContactListFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.fragment_container);
-                clFragment.setNoRefresh(true);
+                clFragment.setNoRefresh(true);  // list fragment should not be refreshed
 
                 String tempFile = mCurrContactEntry.getId() + ".xml";
-                OCRAsyncTask parseBC = new OCRAsyncTask("Beginning Upload..", this, this);
-                parseBC.execute(BCFile.getPath(), tempFile);
+                OCRAsyncTask parseBC = new OCRAsyncTask("Beginning Upload..", this, this);  // start the async task to connect to the OCR API
+                parseBC.execute(BCFile.getPath(), tempFile);    // provide the path to the image file, and the xml file that results should be written to.
             }
         }
     }
 
+    /**
+     * Create a new detail fragment with the given contact entry and
+     * attach it to the detail_fragment_container.
+     * @param ce    the contact entry to be displayed
+     */
     private void setDetailFragment(ContactEntry ce) {
-        Fragment newDetail = ContactDetailFragment.newInstance(ce.getId());
+        Fragment newDetail = ContactDetailFragment.newInstance(ce.getId()); // create the detail fragment
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.detail_fragment_container, newDetail)
+                .replace(R.id.detail_fragment_container, newDetail) // put it in the layout
                 .commit();
     }
 
+    /**
+     * Handles the "Edit" menu action item functionality.
+     * @param ce    contact entry (currently selected) to be edited
+     */
     @Override
     public void onContactEntryEdit(ContactEntry ce) {
         Log.d(TAG, "onContactEntryEdit");
 
         // start the edit detail activity
         mCurrContactEntry = ce;
-        Intent intent = ContactEditDetailActivity.newIntent(this, ce.getId(), false);
+        Intent intent = ContactEditDetailActivity.newIntent(this, ce.getId(), false);   // send the id of the contact entry
         startActivityForResult(intent, REQUEST_CODE_EDIT);
     }
 
+    /**
+     * Handles the "Delete" menu action item functionality.
+     * @param ce    contact entry (currently selected) to be deleted
+     */
     @Override
     public void onContactEntryDelete(ContactEntry ce) {
         Log.d(TAG, "onContactEntryDelete");
@@ -250,14 +299,21 @@ public class ContactListActivity extends AppCompatActivity
         removeDetailFragmentUI();   // clear detail view
     }
 
+    /**
+     * Handles the "Add Blank Contact" menu action item functionality.
+     */
     @Override
     public void onAddBlankContact() {
         Log.d(TAG, "onContactAddBlank");
         // Start the EditDetailActivity
         Intent intent = ContactEditDetailActivity.newIntent(this, null, true);
+        // Note: Second argument sent in the intent (the contact entry id) is null because a new id will need to be created.
         startActivityForResult(intent, REQUEST_CODE_EDIT);
     }
 
+    /**
+     * Handles the "Add New Contact Card" menu action item functionality.
+     */
     @Override
     public void onAddNewContactCard() {
         Log.d(TAG, "onContactAddNewContactCard");
@@ -283,14 +339,17 @@ public class ContactListActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Handles the "Settings" menu action item functionality.
+     */
     @Override
     public void onDisplaySettings() {
         mActivity = this;   // save reference to the current activity
-        AlertDialog alert = createSettingsDialog();
+        AlertDialog alert = createSettingsDialog(); // create the settings dialog
 
-        alert.show();
+        alert.show();   // display the dialog
 
-        // try setting the radio button here; find the radio group object
+        // set the radio button here based on the currently active theme; find the radio group object
         RadioGroup colorSelectRadioGrp = (RadioGroup) alert.findViewById(R.id.RadioGrpSelectTheme);
         if (colorSelectRadioGrp != null) {
             //Log.d(TAG, "onDisplaySettings; mSelectedTheme: "+mSelectedTheme);
@@ -299,7 +358,7 @@ public class ContactListActivity extends AppCompatActivity
                     colorSelectRadioGrp.check(R.id.radio_color_theme_1);  // set the corresponding radio button for the currently selected theme.
                     break;
                 case 1:
-                    colorSelectRadioGrp.check(R.id.radio_color_theme_2);  // set the corresponding radio button for the currently selected theme.
+                    colorSelectRadioGrp.check(R.id.radio_color_theme_2);
                     break;
                 case 2:
                     colorSelectRadioGrp.check(R.id.radio_color_theme_3);
@@ -326,6 +385,7 @@ public class ContactListActivity extends AppCompatActivity
 
     /**
      * This method creates the dialog to select the Color Theme setting for the application (the selected theme will be applied to all activities).
+     * @return  the settings dialog for color theme selection
      */
     public AlertDialog createSettingsDialog() {
         // Save the currently selected entry, if one is present
@@ -345,19 +405,8 @@ public class ContactListActivity extends AppCompatActivity
 
         // Set the dialog title
         builder.setTitle(R.string.settings_title)
-               .setView(inflater.inflate(R.layout.settings_dialog, null))
-               /* // Original:
-                // Specify the list array, the items to be selected by default (null for none),
-                       // and the listener through which to receive callbacks when items are selected
-                .setSingleChoiceItems(themeList, mSelectedTheme,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int activeItem) {
-                                        mTmpSelectedTheme = activeItem;
-                            }
-                        })
-                */
-                        // Set the action buttons
+                .setView(inflater.inflate(R.layout.settings_dialog, null))
+                // Set the action buttons
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
@@ -380,22 +429,12 @@ public class ContactListActivity extends AppCompatActivity
                 });
 
         return builder.create();
-
-        /*
-        AlertDialog alert = builder.create();
-
-        //2. now setup to change color of the button
-        alert.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface arg0) {
-                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(android:textColorLink);
-            }
-        };
-
-        return alert;
-        */
     }
 
+    /**
+     * Method called onClick of radio buttons in the Color Settings radio group.
+     * @param view  the current view
+     */
     public void onColorThemeRadioBtnClicked(View view) {
         // handle radio button selection here
         // Is the button now checked?
@@ -438,43 +477,40 @@ public class ContactListActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Handles the "About" menu action item functionality.
+     */
     @Override
     public void onDisplayAbout() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Get the layout inflater
         LayoutInflater inflater = getLayoutInflater();
 
-        //builder.setTitle(R.string.about_title);
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        builder.setView(inflater.inflate(R.layout.app_about, null))
-                // Add action buttons
-        //        .setPositiveButton(R.string.about_ok_btn, new DialogInterface.OnClickListener() {
-        //            @Override
-        //            public void onClick(DialogInterface dialog, int id) {
-        //                // sign in the user ...
-        //            }
-        //        })
-                ;
+        builder.setView(inflater.inflate(R.layout.app_about, null));
         AlertDialog alert = builder.create();
         alert.show();
     }
 
+    /**
+     * Refresh of the fragment views is handled on resume.
+     */
     @Override
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
 
-        if(mNeedUpdate) {
+        if(mNeedUpdate) {   // if an update is flagged on resume, set the detail fragment with the currently saved contact entry
             if (findViewById(R.id.detail_fragment_container) != null) {
                 setDetailFragment(mCurrContactEntry);
             }
-            mNeedUpdate = false;
+            mNeedUpdate = false;    // and then clear the flag
         }
 
-        if(mNoRefresh) {
-            mNoRefresh = false;
-        } else {
+        if(mNoRefresh) {    // if the flag is set to skip refresh on resume,
+            mNoRefresh = false; // clear the flag
+        } else {    // otherwise, need to refresh:
             // Need to update the views of the fragments.
             updateListFragmentUI();
             updateDetailFragmentUI();
@@ -542,12 +578,9 @@ public class ContactListActivity extends AppCompatActivity
             // Start the EditDetailActivity
             Intent intent = ContactEditDetailActivity.newIntent(this,
                     mCurrContactEntry == null ? null : mCurrContactEntry.getId(), true);
+            // If there is a selected contact entry, send the id of the contact entry in the intent,
+            // otherwise, send null in the intent.
             startActivityForResult(intent, REQUEST_CODE_EDIT);
         }
-        /*
-        else {
-            //TODO: Alert the user that parsing the business card failed for some reason
-        }
-        */
     }
 }

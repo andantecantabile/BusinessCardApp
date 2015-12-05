@@ -84,9 +84,14 @@ public class PictureUtils {
         return chooserIntent;
     }
 
-
-    // helper method modified from stackoverflow
-    // http://stackoverflow.com/questions/22784656/convert-android-graphics-bitmap-to-java-io-file/22785013#22785013
+    /**
+     * Helper method to save a bitmap to file, modified from stackoverflow
+     * http://stackoverflow.com/questions/22784656/convert-android-graphics-bitmap-to-java-io-file/22785013#22785013
+     * @param filesDir  directory where the file should be stored
+     * @param bitmap    bitmap to be saved to file
+     * @param name      the name that should be given to the image file (will be saved with a .jpg extension)
+     * @return          the saved image file
+     */
     public static File persistImage(File filesDir, Bitmap bitmap, String name) {
         File imageFile = new File(filesDir, name + ".jpg");
         Log.d(TAG, "Image File Path: " + imageFile.getAbsolutePath());
