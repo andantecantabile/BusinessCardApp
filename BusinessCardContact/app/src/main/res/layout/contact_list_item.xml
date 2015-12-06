@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Layout for a single list item in the recycler view -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,10 +11,12 @@
         android:orientation="vertical"
         android:paddingTop="1dp"
         android:paddingBottom="1dp">
+        <!-- layout for the company name section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <!-- The Company Name -->
             <TextView
                 android:id="@+id/contact_list_item_company_name"
                 android:layout_width="match_parent"
@@ -26,9 +29,8 @@
                 android:paddingBottom="2dp"
                 android:textAllCaps="true"
                 />
-            <!-- Alternatively:
-                style="?android:listSeparatorTextViewStyle" -->
         </LinearLayout>
+        <!-- The Contact Name -->
         <TextView
             android:id="@+id/contact_list_item_contact_name"
             android:layout_width="match_parent"
@@ -38,6 +40,7 @@
             android:paddingTop="3dp"
             android:paddingLeft="32dp"/>
 
+        <!-- Add a divider line at the bottom of the list item -->
         <LinearLayout
             android:layout_marginTop="5dp"
             android:background="?divider_line"

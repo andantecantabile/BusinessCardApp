@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/list_horizontal_margin"
     android:paddingTop="@dimen/list_vertical_margin"
     tools:context=".MyActivity">
-
+    <!-- Placeholder for the recycler view for the contact list -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/myList"
         android:layout_width="match_parent"

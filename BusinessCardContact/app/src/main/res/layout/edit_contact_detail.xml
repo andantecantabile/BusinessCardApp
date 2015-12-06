@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- ScrollView used here to allow the edit detail layout to be scrolled in the window. -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="?linearlayout_bg_main">
+    <!-- Linear Layout that contains all the edit contact detail fields -->
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true">
+    <!-- Note: last two attributes are set so that the layout does not load
+               with the focus on an EditText widget by default -->
 
+        <!-- include the sub-layout here for the contact photo,
+             contact name, title, and company -->
         <include layout="@layout/edit_photo_and_name" />
+
+        <!-- LinearLayout for department widgets -->
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/detail_field_table_margin_right"
             android:layout_marginLeft="@dimen/detail_field_table_margin_left">
+            <!-- Label for department -->
             <TextView
                 android:id="@+id/ContactDepartmentLabel"
                 android:layout_width="wrap_content"
@@ -23,6 +32,7 @@
                 android:layout_weight="0"
                 android:text="@string/ContactDepartmentLbl"
                 style="?android:listSeparatorTextViewStyle"/>
+            <!-- Department -->
             <EditText
                 android:id="@+id/ContactDepartmentVal"
                 android:layout_width="wrap_content"
@@ -33,12 +43,14 @@
                 android:inputType="text"/>
         </LinearLayout>
 
+        <!-- LinearLayout for the Phone Number widgets -->
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/detail_field_table_margin_right"
             android:layout_marginLeft="@dimen/detail_field_table_margin_left">
+            <!-- Label for the phone number -->
             <TextView
                 android:id="@+id/ContactPhoneNumLabel"
                 android:layout_width="wrap_content"
@@ -46,6 +58,7 @@
                 android:text="@string/ContactPhoneNumLbl"
                 android:layout_weight="0"
                 style="?android:listSeparatorTextViewStyle"/>
+            <!-- Phone number -->
             <EditText
                 android:id="@+id/ContactPhoneNumVal"
                 android:layout_width="wrap_content"
@@ -53,6 +66,7 @@
                 android:layout_weight="1"
                 android:layout_marginLeft="@dimen/edit_field_margin_left"
                 android:inputType="phone"/>
+            <!-- Label for the phone extension -->
             <TextView
                 android:id="@+id/ContactPhoneExtLabel"
                 android:layout_width="wrap_content"
@@ -60,6 +74,7 @@
                 android:layout_weight="0"
                 android:text="@string/ContactPhoneExtLbl"
                 style="?android:listSeparatorTextViewStyle"/>
+            <!-- phone extension -->
             <EditText
                 android:id="@+id/ContactPhoneExtVal"
                 android:layout_width="@dimen/extension_field_width"
@@ -68,12 +83,14 @@
                 android:layout_marginLeft="@dimen/edit_field_margin_left"
                 android:inputType="phone"/>
         </LinearLayout>
+        <!-- LinearLayout for the Fax number widgets -->
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/detail_field_table_margin_right"
             android:layout_marginLeft="@dimen/detail_field_table_margin_left">
+            <!-- Label for the fax number -->
             <TextView
                 android:id="@+id/ContactFaxNumLabel"
                 android:layout_width="wrap_content"
@@ -81,6 +98,7 @@
                 android:layout_weight="0"
                 android:text="@string/ContactFaxNumLbl"
                 style="?android:listSeparatorTextViewStyle"/>
+            <!-- Fax number -->
             <EditText
                 android:id="@+id/ContactFaxNumVal"
                 android:layout_width="wrap_content"
@@ -89,12 +107,14 @@
                 android:layout_marginLeft="@dimen/contact_field_margin_left"
                 android:inputType="phone"/>
         </LinearLayout>
+        <!-- LinearLayout for the E-mail widgets -->
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/detail_field_table_margin_right"
             android:layout_marginLeft="@dimen/detail_field_table_margin_left">
+            <!-- Label for the email -->
             <TextView
                 android:id="@+id/ContactEmailLabel"
                 android:layout_width="wrap_content"
@@ -102,6 +122,7 @@
                 android:layout_weight="0"
                 android:text="@string/ContactEmailLbl"
                 style="?android:listSeparatorTextViewStyle"/>
+            <!-- Contact email -->
             <EditText
                 android:id="@+id/ContactEmailVal"
                 android:layout_width="wrap_content"
@@ -110,12 +131,14 @@
                 android:layout_marginLeft="@dimen/contact_field_margin_left"
                 android:inputType="textEmailAddress"/>
         </LinearLayout>
+        <!-- LinearLayout for the company website widgets -->
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/detail_field_table_margin_right"
             android:layout_marginLeft="@dimen/detail_field_table_margin_left">
+            <!-- Label for the company website -->
             <TextView
                 android:id="@+id/ContactCompanyWebsiteLabel"
                 android:layout_width="wrap_content"
@@ -123,6 +146,7 @@
                 android:layout_weight="0"
                 android:text="@string/ContactCompanyWebsiteLbl"
                 style="?android:listSeparatorTextViewStyle"/>
+            <!-- Company website -->
             <EditText
                 android:id="@+id/ContactCompanyWebsiteVal"
                 android:layout_width="wrap_content"
@@ -131,18 +155,21 @@
                 android:layout_marginLeft="@dimen/contact_field_margin_left"
                 android:inputType="text"/>
         </LinearLayout>
+        <!-- LinearLayout for the Additional Information widgets -->
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/detail_field_table_margin_right"
             android:layout_marginLeft="@dimen/detail_field_table_margin_left">
+            <!-- Label for notes -->
             <TextView
                 android:id="@+id/ContactNotesLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ContactNotesLbl"
                 style="?android:listSeparatorTextViewStyle"/>
+            <!-- Notes -->
             <EditText
                 android:id="@+id/ContactNotesVal"
                 android:layout_width="match_parent"
@@ -152,18 +179,21 @@
                 android:layout_marginLeft="@dimen/contact_field_margin_left"
                 android:inputType="textMultiLine"/>
         </LinearLayout>
+        <!-- LinearLayout for the Business Card widgets -->
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/detail_field_table_margin_right"
             android:layout_marginLeft="@dimen/detail_field_table_margin_left">
+            <!-- Label for the business card -->
             <TextView
                 android:id="@+id/ContactBusinessCardLbl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ContactBusinessCardLbl"
                 style="?android:listSeparatorTextViewStyle"/>
+            <!-- The business card image -->
             <ImageView
                 android:id="@+id/ContactBusinessCardImg"
                 android:layout_width="wrap_content"

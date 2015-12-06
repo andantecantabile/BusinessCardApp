@@ -13,7 +13,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <!-- Provide a radio button for each available color theme,
+             along with the drawable preview for the theme -->
         <RadioButton android:id="@+id/radio_color_theme_1"
+            android:drawableStart="@drawable/color_theme_preview1"
             android:drawableLeft="@drawable/color_theme_preview1"
             android:drawablePadding="15dp"
             android:layout_width="wrap_content"
@@ -22,6 +25,7 @@
             android:text="@string/settings_color_theme_1"
             android:onClick="onColorThemeRadioBtnClicked"/>
         <RadioButton android:id="@+id/radio_color_theme_2"
+            android:drawableStart="@drawable/color_theme_preview2"
             android:drawableLeft="@drawable/color_theme_preview2"
             android:drawablePadding="15dp"
             android:layout_width="wrap_content"
@@ -30,6 +34,7 @@
             android:text="@string/settings_color_theme_2"
             android:onClick="onColorThemeRadioBtnClicked"/>
         <RadioButton android:id="@+id/radio_color_theme_3"
+            android:drawableStart="@drawable/color_theme_preview3"
             android:drawableLeft="@drawable/color_theme_preview3"
             android:drawablePadding="15dp"
             android:layout_width="wrap_content"
@@ -38,6 +43,7 @@
             android:text="@string/settings_color_theme_3"
             android:onClick="onColorThemeRadioBtnClicked"/>
         <RadioButton android:id="@+id/radio_color_theme_4"
+            android:drawableStart="@drawable/color_theme_preview4"
             android:drawableLeft="@drawable/color_theme_preview4"
             android:drawablePadding="15dp"
             android:layout_width="wrap_content"
@@ -46,6 +52,7 @@
             android:text="@string/settings_color_theme_4"
             android:onClick="onColorThemeRadioBtnClicked"/>
         <RadioButton android:id="@+id/radio_color_theme_5"
+            android:drawableStart="@drawable/color_theme_preview5"
             android:drawableLeft="@drawable/color_theme_preview5"
             android:drawablePadding="15dp"
             android:layout_width="wrap_content"
@@ -54,6 +61,7 @@
             android:text="@string/settings_color_theme_5"
             android:onClick="onColorThemeRadioBtnClicked"/>
         <RadioButton android:id="@+id/radio_color_theme_6"
+            android:drawableStart="@drawable/color_theme_preview7"
             android:drawableLeft="@drawable/color_theme_preview7"
             android:drawablePadding="15dp"
             android:layout_width="wrap_content"
@@ -62,6 +70,7 @@
             android:text="@string/settings_color_theme_6"
             android:onClick="onColorThemeRadioBtnClicked"/>
         <RadioButton android:id="@+id/radio_color_theme_7"
+            android:drawableStart="@drawable/color_theme_preview6"
             android:drawableLeft="@drawable/color_theme_preview6"
             android:drawablePadding="15dp"
             android:layout_width="wrap_content"
@@ -70,6 +79,7 @@
             android:text="@string/settings_color_theme_7"
             android:onClick="onColorThemeRadioBtnClicked"/>
         <RadioButton android:id="@+id/radio_color_theme_8"
+            android:drawableStart="@drawable/color_theme_preview_standard"
             android:drawableLeft="@drawable/color_theme_preview_standard"
             android:drawablePadding="15dp"
             android:layout_width="wrap_content"

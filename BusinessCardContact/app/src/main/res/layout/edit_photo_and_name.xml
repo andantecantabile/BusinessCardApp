@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- sub-layout for the contact photo, the name, title, and company -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
     android:layout_marginTop="16dp"
     >
+    <!-- horizontal table for the image and textview sections -->
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <!-- contact photo -->
         <ImageView
             android:id="@+id/ContactPicture"
             android:layout_width="@dimen/picture_layout_width"
@@ -35,6 +38,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+                <!-- Label for the contact name -->
                 <TextView
                     android:id="@+id/ContactNameLabel"
                     android:layout_width="wrap_content"
@@ -42,6 +46,7 @@
                     android:layout_weight="0"
                     android:text="@string/ContactNameLbl"
                     style="?android:listSeparatorTextViewStyle"/>
+                <!-- Contact name -->
                 <EditText
                     android:id="@+id/ContactNameVal"
                     android:layout_width="match_parent"
@@ -54,6 +59,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+                <!-- Label for the contact title -->
                 <TextView
                     android:id="@+id/ContactTitleLabel"
                     android:layout_width="wrap_content"
@@ -61,6 +67,7 @@
                     android:layout_weight="0"
                     android:text="@string/ContactTitleLbl"
                     style="?android:listSeparatorTextViewStyle"/>
+                <!-- Contact title -->
                 <EditText
                     android:id="@+id/ContactTitleVal"
                     android:layout_width="match_parent"
@@ -74,6 +81,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+                <!-- Label for the company name -->
                 <TextView
                     android:id="@+id/ContactCompanyLabel"
                     android:layout_width="wrap_content"
@@ -81,6 +89,7 @@
                     android:layout_weight="0"
                     android:text="@string/ContactCompanyLbl"
                     style="?android:listSeparatorTextViewStyle"/>
+                <!-- Company name -->
                 <EditText
                     android:id="@+id/ContactCompanyVal"
                     android:layout_width="match_parent"
