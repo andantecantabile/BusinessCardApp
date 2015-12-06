@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- bg_main is used as the background for the detail and edit detail layouts -->
     <attr name="linearlayout_bg_main" format="reference" />
+
+    <!-- bg_2 is used as the background for the recycler view list layout -->
     <attr name="linearlayout_bg_2" format="reference" />
+
+    <!-- color for the divider line at the end of a recycler view list item -->
     <attr name="divider_line" format="reference" />
+
+    <!-- about_bg_light is used as the background for the header of the About layout -->
     <attr name="about_bg_light" format="reference" />
+
+    <!-- about_bg_dark is used as the background for the main part of the About layout -->
     <attr name="about_bg_dark" format="reference" />
+
+    <!-- about_bg_text_dark is used as the text color in the header of the About layout -->
     <attr name="about_bg_text_dark" format="reference" />
+
+    <!-- photo_img_bg is used as the background for the photo image -->
     <attr name="photo_img_bg" format="reference" />
+
+    <!-- companyTextColor is used as the color of the company name in the recycler view list item-->
     <attr name="companyTextColor" format="reference" />
 
+    <!-- the background for the dialog layout (does not seem to work correctly for the color setting dialogs) -->
     <attr name="dialog_bg" format="reference" />
 </resources>

@@ -14,26 +14,13 @@
         <item name="colorPrimaryDark">@color/defaultColorPrimaryDark</item>
         <item name="colorAccent">@color/defaultColorAccent</item>
         <item name="android:windowBackground">@color/defaultColor50</item>
-        <!--
-        <item name="android:statusBarColor">@color/defaultColor700</item>
-        <item name="android:textColor">@color/defaultColorPrimaryDark</item>
-        <item name="android:textColorPrimary">@color/defaultColorPrimaryDark</item>
-        <item name="android:textColorLink">@color/defaultColorAccent</item>
-        -->
-        <!--
-        <item name="android:textColorPrimaryInverse"></item>
-        <item name="listItemCompanyColor">@color/defaultColorPrimaryDark</item>
-        <item name="listItemNameColor">@color/defaultColor700</item>
-        <item name="detailFieldTextLblColor">@color/defaultColorPrimaryDark</item>
-        <item name="detailFieldTextValColor">@color/defaultColorPrimaryDark</item>
-        <item name="detailFieldEditTextValColor">@color/defaultColorPrimaryDark</item>
-        -->
     </style>
 
     <!-- Theme 1: Teal -->
     <style name="AppThemeTeal" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- define Primary and Accent Colors here -->
         <item name="colorPrimary">@color/theme1ColorPrimary</item>
+        <!-- Note: colorPrimary is used as the action bar color -->
         <item name="colorPrimaryDark">@color/theme1ColorPrimaryDark</item>
         <item name="colorAccent">@color/theme1ColorAccent</item>
         <item name="linearlayout_bg_main">@android:color/white</item>
@@ -54,17 +41,6 @@
         <item name="photo_img_bg">@color/theme1Color100</item>
         <item name="dialog_bg">@color/theme1Color50</item>
     </style>
-
-    <!-- set the action bar style for appcompatv7 -->
-    <!--<style name="theme1ActionBarStyle" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <item name="background">@color/theme1ColorPrimary</item>
-        <item name="backgroundStacked">@color/theme1ColorPrimary</item>
-        <item name="backgroundSplit">@color/theme1ColorPrimary</item>
-        <item name="android:background">@color/theme1ColorPrimary</item>
-        <item name="android:backgroundStacked">@color/theme1ColorPrimary</item>
-        <item name="android:backgroundSplit">@color/theme1ColorPrimary</item>
-    </style>
-    -->
 
     <!-- Theme 2: Sage -->
     <style name="AppThemeSage" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -213,13 +189,6 @@
         <item name="dialog_bg">@color/theme6Color50</item>
     </style>
 
-    <!-- alert dialog requires API 21
-    <style name="AlertDialogCustom" parent="android:Theme.Material.Light.Dialog.Alert">
-        <item name="android:colorPrimary">#00397F</item>
-        <item name="android:colorAccent">#0AAEEF</item>
-    </style>
-    -->
-
     <style name="AppThemeStandard" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- define Primary and Accent Colors here -->
         <item name="colorPrimary">@color/defaultColorPrimary</item>
@@ -241,15 +210,4 @@
         <item name="dialog_bg">@color/defaultColor50</item>
     </style>
 
-    <!-- TextView Styles here -->
-    <!--
-    <style name="TextViewTitleLabel" parent="@android:style/Widget.TextView.ListSeparator">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">2dip</item>
-        <item name="android:paddingBottom">2dip</item>
-        <item name="android:paddingLeft">5dip</item>
-        <item name="android:textSize">18dp</item>
-    </style>
-    -->
 </resources>
