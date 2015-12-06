@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- menu for the EditContactDetailFragment:
+        Save and Cancel options -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <!-- When the contact detail fragment is visible,
-         the edit contact and delete contact options
+    <!-- When the contact edit detail fragment is visible,
+         the save contact and cancel options
          should be displayed in the menu. -->
     <item
         android:id="@+id/menu_item_save_changes"

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Color Theme Preview: Ocean -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/color_theme_preview">
     <!-- Drawable code modified from sample code by Alexey Starykh -->

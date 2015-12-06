@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- menu for the "Settings" and "About" options -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <!-- When the contact list fragment is visible,
-         the add contact and add empty contact options
-         should be displayed in the menu. -->
+    <!-- Note that these options are displayed when the
+         contact list fragment is visible. -->
     <item
         android:id="@+id/menu_item_settings"
         android:icon="@drawable/ic_settings_white"
         android:title="@string/menu_settings"
         android:orderInCategory="5"
         app:showAsAction="ifRoom"/>
-    <!-- Original:
-        android:icon="@android:drawable/ic_menu_preferences" -->
     <item
         android:id="@+id/menu_item_about"
         android:icon="@drawable/ic_info_outline_white"
         android:title="@string/menu_about"
         android:orderInCategory="6"
         app:showAsAction="ifRoom"/>
-    <!-- Original:
-        android:icon="@android:drawable/ic_menu_info_details" -->
 </menu>
