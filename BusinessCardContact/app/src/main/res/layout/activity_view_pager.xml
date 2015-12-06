@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- view pager placeholder for the contact detail view,
+     for paging through the list of available contact entries -->
 <android.support.v4.view.ViewPager
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_view_pager"

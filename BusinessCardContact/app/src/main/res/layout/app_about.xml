@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Custom layout for the "About this application" information dialog -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
+    <!-- Application name text view -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,11 +18,14 @@
         android:text="@string/app_name"
         android:textColor="?about_bg_text_dark"
         android:textSize="26sp"/>
+    <!-- Linear layout for the detail information
+         uses different background color than the app title header -->
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?about_bg_dark">
+        <!-- TextView for the application version -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,6 +35,7 @@
             android:paddingRight="24dp"
             android:textColor="@color/theme1Color50"
             android:text="@string/app_version"/>
+        <!-- Label for the updated date -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,6 +45,7 @@
             android:paddingRight="24dp"
             android:textColor="@color/theme1Color50"
             android:text="@string/app_date"/>
+        <!-- Label for the author info -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,6 +55,7 @@
             android:paddingRight="24dp"
             android:textColor="@color/theme1Color50"
             android:text="@string/about_authors"/>
+        <!-- Label for the launcher icon source -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,6 +66,7 @@
             android:textSize="12sp"
             android:textColor="@color/theme1Color50"
             android:text="Launcher Icon provided by https://icons8.com/"/>
+        <!-- Label for the menu icons source -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
