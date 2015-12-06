@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * http://www.androidengineer.com/2010/06/using-themes-in-android-applications.html
  */
 public class SettingsUtils {
-    private static int sTheme;
+    private static int sTheme;  // the integer of the index of the currently selected theme
 
     // assign the default theme
     public final static int DEFAULT_COLOR_THEME = 0;
@@ -26,6 +26,7 @@ public class SettingsUtils {
     public final static int THEME_MONOCHROME = 6;
     public final static int THEME_STANDARD = 7;
 
+    // list of names of the available themes
     private static String[] mThemeListStr = {"Teal", "Sage", "Ocean", "Eggplant", "Bubblegum", "Cranberry", "Monochrome", "Standard"};
 
     /**
@@ -63,9 +64,12 @@ public class SettingsUtils {
         activity.startActivity(new Intent(activity, activity.getClass()));
     }
 
-    /** Set the theme of the activity, according to the configuration. */
+    /**
+     * Set the theme of the activity, according to the configuration.
+     */
     public static void onActivityCreateSetTheme(Activity activity)
     {
+        // set the activities theme, depending on the currently selected theme
         switch (sTheme)
         {
             case THEME_TEAL:

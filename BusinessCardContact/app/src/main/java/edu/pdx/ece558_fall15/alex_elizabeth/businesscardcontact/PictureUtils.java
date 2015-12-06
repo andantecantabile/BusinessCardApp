@@ -20,18 +20,34 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-// utility methods from BNRG
+/**
+ * Class for utility methods for picture handling, modified from BNRG
+ */
 public class PictureUtils {
-    private static final String TAG = "PictureUtils";
+    private static final String TAG = "PictureUtils";   // logcat tag
 
+    /**
+     * Get the scaled bitmap from the given file path
+     * @param path      file path
+     * @param activity  calling activity
+     * @return  image bitmap
+     */
     public static Bitmap getScaledBitmap(String path, Activity activity) {
         Point size = new Point();
+        // get the size of the activity window
         activity.getWindowManager().getDefaultDisplay()
                 .getSize(size);
 
         return getScaledBitmap(path, size.x, size.y);
     }
 
+    /**
+     * Returns a bitmap of the image file located at the specified path.
+     * @param path          image file path
+     * @param destWidth     scaled image width
+     * @param destHeight    scaled image height
+     * @return              scaled image bitmap
+     */
     public static Bitmap getScaledBitmap(String path, int destWidth, int destHeight) {
         // read in the dimensions of the image on disk
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -41,6 +57,7 @@ public class PictureUtils {
         float srcWidth = options.outWidth;
         float srcHeight = options.outHeight;
 
+        // calculate the target width and height of the bitmap
         int inSampleSize = 1;
         if (srcHeight > destHeight || srcWidth > destWidth) {
             if (srcWidth > srcHeight) {
@@ -51,30 +68,37 @@ public class PictureUtils {
         }
 
         options = new BitmapFactory.Options();
-        options.inSampleSize = inSampleSize;
+        options.inSampleSize = inSampleSize;    // set the target bitmap image size
 
+        // convert the file to a image file to a bitmap
         return BitmapFactory.decodeFile(path, options);
     }
 
+    /**
+     * Create the image chooser intent.
+     * @param outputFileUri the destination uri for the returned image
+     * @param chooserText   string to be displayed in the image chooser activity
+     * @param context       calling context
+     * @return      the intent for the image chooser
+     */
     public static Intent getImageChooserIntent(Uri outputFileUri, String chooserText, Context context) {
-        final List<Intent> cameraIntents = new ArrayList<>();
+        final List<Intent> cameraIntents = new ArrayList<>();   // array for camera intents
         final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         final PackageManager packageManager = context.getPackageManager();
         final List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
         for(ResolveInfo res : listCam) {
             final String packageName = res.activityInfo.packageName;
+            // create the intent for the camera
             final Intent intent = new Intent(captureIntent);
             intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
             intent.setPackage(packageName);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
             Log.d(TAG, outputFileUri.getPath());
-            cameraIntents.add(intent);
+            cameraIntents.add(intent);  // add the camera intent
         }
 
         //Build a list of FileSystem sources that could provided the correct data
         final Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        //galleryIntent.setType("image/*");
-        //galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
 
         //Create chooser of FileSystem options
         final Intent chooserIntent = Intent.createChooser(galleryIntent, chooserText);
