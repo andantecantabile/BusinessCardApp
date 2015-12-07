@@ -329,7 +329,7 @@ public class ContactListActivity extends AppCompatActivity
         NetworkInfo networkInfo = connMan.getActiveNetworkInfo();
         if(networkInfo != null && networkInfo.isConnected()) {
             mCurrContactEntry = new ContactEntry();
-            ContactStore.get(this).setTemporaryContact(mCurrContactEntry);
+            ContactStore.get(this).setTemporaryContact(mCurrContactEntry);  // set temporary contact here
             File filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
             Uri outputFileUri = Uri.fromFile(new File(filesDir, ContactStore.get(this)
                     .getSuggestedBCFile(mCurrContactEntry).getName() + ".jpg"));
