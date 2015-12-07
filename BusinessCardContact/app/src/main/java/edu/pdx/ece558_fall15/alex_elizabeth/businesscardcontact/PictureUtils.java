@@ -23,8 +23,8 @@ import java.util.List;
 /**
  * Class for utility methods for picture handling, modified from BNRG
  *
- * Authors: Alex Pearson and Elizabeth Reed
- * Date:    December 6th, 2015
+ * @author Alex Pearson & Elizabeth Reed
+ * Date:   December 6th, 2015
  */
 public class PictureUtils {
     private static final String TAG = "PictureUtils";   // logcat tag

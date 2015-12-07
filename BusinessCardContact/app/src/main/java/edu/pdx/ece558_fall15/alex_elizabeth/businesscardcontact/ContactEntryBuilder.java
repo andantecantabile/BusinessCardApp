@@ -8,8 +8,8 @@ import java.io.File;
  * can be used to create new ContactEntry objects or modify ContactEntry
  * objects from existing Contact Entry objects.
  *
- * Authors: Alex Pearson and Elizabeth Reed
- * Date:    December 6th, 2015
+ * @author Alex Pearson & Elizabeth Reed
+ * Date:   December 6th, 2015
  */
 public class ContactEntryBuilder {
     //ContactEntry associated with this ContactEntryBuilder

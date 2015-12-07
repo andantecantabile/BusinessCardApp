@@ -7,8 +7,8 @@ import android.widget.ImageView;
 /**
  * AsyncTask that loads bitmaps into memory and then sets them to the provided imageViews
  *
- * Authors: Alex Pearson and Elizabeth Reed
- * Date:    December 6th, 2015
+ * @author Alex Pearson & Elizabeth Reed
+ * Date:   December 6th, 2015
  */
 public class BitmapLoaderAsyncTask extends DialogAsyncTask<String, String, Boolean> {
     private static final String INIT_STATUS_MSG = "Loading Images..";

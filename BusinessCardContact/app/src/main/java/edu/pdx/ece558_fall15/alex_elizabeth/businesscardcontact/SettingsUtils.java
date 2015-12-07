@@ -3,15 +3,13 @@ package edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact;
 import android.app.Activity;
 import android.content.Intent;
 
-import java.util.ArrayList;
-
 /**
  * This class is used to handle the dynamic setting of the activity themes.
  * Modified from sample code by Matt Quigley
  * http://www.androidengineer.com/2010/06/using-themes-in-android-applications.html
  *
- * Authors: Alex Pearson and Elizabeth Reed
- * Date:    December 6th, 2015
+ * @author Alex Pearson & Elizabeth Reed
+ * Date:   December 6th, 2015
  */
 public class SettingsUtils {
     private static int sTheme;  // the integer of the index of the currently selected theme

@@ -27,8 +27,8 @@ import static android.provider.ContactsContract.RawContacts;
  * Class to facilitate storage of ContactEntry objects into the SQLite backed
  * Android Contact Storage.
  *
- * Authors: Alex Pearson and Elizabeth Reed
- * Date:    December 6th, 2015
+ * @author Alex Pearson & Elizabeth Reed
+ * Date:   December 6th, 2015
  */
 public class ContactContentResolverHelper {
     private static final String TAG = "ContactCntResolvHelper";

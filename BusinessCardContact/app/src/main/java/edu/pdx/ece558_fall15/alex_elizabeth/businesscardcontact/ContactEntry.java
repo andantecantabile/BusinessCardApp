@@ -9,8 +9,8 @@ import java.util.UUID;
  * to set and get the various pieces of information in the in-memory contact storage
  * representation (as opposed to the file backed Android Contact Storage)
  *
- * Authors: Alex Pearson and Elizabeth Reed
- * Date:    December 6th, 2015
+ * @author Alex Pearson & Elizabeth Reed
+ * Date:   December 6th, 2015
  */
 public class ContactEntry implements Cloneable{
 

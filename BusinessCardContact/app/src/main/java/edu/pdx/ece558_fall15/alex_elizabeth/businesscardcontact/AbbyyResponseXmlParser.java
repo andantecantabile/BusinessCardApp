@@ -13,6 +13,9 @@ import java.util.List;
 /**
  * This class is a helper class that uses an XMLPullParser to extract data from the XML file
  * returned as a result of querying the Abbyy Cloud OCR SDK server.
+ *
+ * @author Alex Pearson & Elizabeth Reed
+ * Date:   December 6th, 2015
  */
 public class AbbyyResponseXmlParser {
     //Don't worry about namespaces

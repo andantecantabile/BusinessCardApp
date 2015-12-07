@@ -23,8 +23,8 @@ import java.io.IOException;
  * the result, and create a new ContactEntry object from the returned data.
  * Parts of this class are adapted from ABBYY Cloud OCR Github Sample Project
  *
- * Authors: Alex Pearson and Elizabeth Reed
- * Date:    December 6th, 2015
+ * @author Alex Pearson & Elizabeth Reed
+ * Date:   December 6th, 2015
  */
 public class OCRAsyncTask extends DialogAsyncTask<String, String, Boolean> {
     //Unique identifiers for this class

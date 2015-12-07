@@ -32,8 +32,8 @@ import java.util.UUID;
 /**
  * ContactEditDetailFragment handles the view of all fields and actions for editing a single contact entry.
  *
- * Authors: Alex Pearson and Elizabeth Reed
- * Date:    December 6th, 2015
+ * @author Alex Pearson & Elizabeth Reed
+ * Date:   December 6th, 2015
  */
 public class ContactEditDetailFragment extends Fragment
         implements DialogAsyncTask.Callbacks {

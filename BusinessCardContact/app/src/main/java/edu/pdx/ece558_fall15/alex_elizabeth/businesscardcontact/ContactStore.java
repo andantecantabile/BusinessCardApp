@@ -12,8 +12,8 @@ import java.util.UUID;
  * portion of the application and the data model.  All interactions with the list of
  * ContactEntries such as add, modify, delete, and list all go through this class.
  *
- * Authors: Alex Pearson and Elizabeth Reed
- * Date:    December 6th, 2015
+ * @author Alex Pearson & Elizabeth Reed
+ * Date:   December 6th, 2015
 **/
 public class ContactStore {
 

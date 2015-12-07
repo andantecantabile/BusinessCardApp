@@ -17,8 +17,8 @@ import java.util.UUID;
 /**
  * Activity to display the ContactDetailFragment (used in portrait mode).
  *
- * Authors: Alex Pearson and Elizabeth Reed
- * Date:    December 6th, 2015
+ * @author Alex Pearson & Elizabeth Reed
+ * Date:   December 6th, 2015
  */
 public class ContactDetailActivity extends AppCompatActivity
     implements ContactDetailFragment.Callbacks {
