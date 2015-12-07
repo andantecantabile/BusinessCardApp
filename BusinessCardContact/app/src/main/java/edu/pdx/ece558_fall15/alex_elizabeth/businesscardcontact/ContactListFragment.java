@@ -20,6 +20,9 @@ import java.util.List;
 
 /**
  * ContactListFragment uses a recycler view to display the contact list entries
+ *
+ * Authors: Alex Pearson and Elizabeth Reed
+ * Date:    December 6th, 2015
  **/
 public class ContactListFragment extends Fragment
         implements DialogAsyncTask.Callbacks, DialogLoadCEListTask.ListCallbacks {

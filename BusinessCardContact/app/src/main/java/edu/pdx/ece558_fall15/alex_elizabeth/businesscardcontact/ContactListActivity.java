@@ -33,6 +33,9 @@ import java.util.UUID;
  * callbacks and ContactDetailFragment callbacks because it may operate in both portrait and
  * landscape mode.  In portrait mode, only the ContactListFragment will be displayed, while
  * in landscape mode, both ContactListFragment and ContactDetailFragment will be displayed.
+ *
+ * Authors: Alex Pearson and Elizabeth Reed
+ * Date:    December 6th, 2015
  */
 public class ContactListActivity extends AppCompatActivity
         implements ContactListFragment.Callbacks,

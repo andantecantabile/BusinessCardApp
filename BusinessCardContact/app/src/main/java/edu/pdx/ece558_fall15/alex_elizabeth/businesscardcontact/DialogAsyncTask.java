@@ -13,6 +13,9 @@ import android.util.Log;
  * @param <S1> A parameter that was required for this to compile
  * @param <S2> A second parameter that was required for this to compile
  * @param <B> A third parameter that was required for this to compile
+ *
+ * Authors: Alex Pearson and Elizabeth Reed
+ * Date:    December 6th, 2015
  */
 public abstract class DialogAsyncTask<S1, S2, B> extends AsyncTask<String, String, Boolean> {
     private static final String TAG = "DialogAsyncTask";

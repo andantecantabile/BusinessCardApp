@@ -14,6 +14,9 @@ import java.util.UUID;
 
 /**
  * Activity to display the ContactEditDetailFragment (used in both portrait and landscape mode).
+ *
+ * Authors: Alex Pearson and Elizabeth Reed
+ * Date:    December 6th, 2015
  */
 public class ContactEditDetailActivity extends AppCompatActivity
         implements ContactEditDetailFragment.Callbacks {

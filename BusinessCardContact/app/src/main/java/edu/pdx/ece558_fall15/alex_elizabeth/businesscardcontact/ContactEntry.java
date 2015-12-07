@@ -8,6 +8,9 @@ import java.util.UUID;
  * Class that describes an entry in the Android Contact Storage and provides methods
  * to set and get the various pieces of information in the in-memory contact storage
  * representation (as opposed to the file backed Android Contact Storage)
+ *
+ * Authors: Alex Pearson and Elizabeth Reed
+ * Date:    December 6th, 2015
  */
 public class ContactEntry implements Cloneable{
 

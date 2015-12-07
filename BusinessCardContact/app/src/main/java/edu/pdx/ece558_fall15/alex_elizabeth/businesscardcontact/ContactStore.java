@@ -11,6 +11,9 @@ import java.util.UUID;
  * The ContactStore class provides a single point of interaction between the view/controller
  * portion of the application and the data model.  All interactions with the list of
  * ContactEntries such as add, modify, delete, and list all go through this class.
+ *
+ * Authors: Alex Pearson and Elizabeth Reed
+ * Date:    December 6th, 2015
 **/
 public class ContactStore {
 

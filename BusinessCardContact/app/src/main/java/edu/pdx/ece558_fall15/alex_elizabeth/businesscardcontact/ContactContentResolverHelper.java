@@ -26,6 +26,9 @@ import static android.provider.ContactsContract.RawContacts;
 /**
  * Class to facilitate storage of ContactEntry objects into the SQLite backed
  * Android Contact Storage.
+ *
+ * Authors: Alex Pearson and Elizabeth Reed
+ * Date:    December 6th, 2015
  */
 public class ContactContentResolverHelper {
     private static final String TAG = "ContactCntResolvHelper";
@@ -933,7 +936,7 @@ public class ContactContentResolverHelper {
     //Custom row aliases to support entry of custom data into the Contact Storage
     private class BusinessCardPhoto {
         private static final String CONTENT_ITEM_TYPE =
-                "edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact.businesscard";;
+                "edu.pdx.ece558_fall15.alex_elizabeth.businesscardcontact.businesscard";
         private static final String PHOTO_FILE_ID = "data14";
         private static final String PHOTO = "data15";
     }

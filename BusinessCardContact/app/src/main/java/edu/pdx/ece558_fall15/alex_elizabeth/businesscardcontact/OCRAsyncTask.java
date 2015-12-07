@@ -22,6 +22,9 @@ import java.io.IOException;
  * AsyncTask that implements the logic necessary to upload the image to the web-based OCR, download
  * the result, and create a new ContactEntry object from the returned data.
  * Parts of this class are adapted from ABBYY Cloud OCR Github Sample Project
+ *
+ * Authors: Alex Pearson and Elizabeth Reed
+ * Date:    December 6th, 2015
  */
 public class OCRAsyncTask extends DialogAsyncTask<String, String, Boolean> {
     //Unique identifiers for this class

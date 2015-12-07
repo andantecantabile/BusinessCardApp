@@ -7,6 +7,9 @@ import java.util.List;
 
 /**
  * Async task used to load the contact list.
+ *
+ * Authors: Alex Pearson and Elizabeth Reed
+ * Date:    December 6th, 2015
  */
 public class DialogLoadCEListTask extends DialogAsyncTask<String, String, Boolean> {
     private static final String TAG = "DialogLoadCEListTask";

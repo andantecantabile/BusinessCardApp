@@ -24,6 +24,9 @@ import java.util.UUID;
 
 /**
  * ContactDetailFragment handles the view of all fields for a single contact entry.
+ *
+ * Authors: Alex Pearson and Elizabeth Reed
+ * Date:    December 6th, 2015
  */
 public class ContactDetailFragment extends Fragment
         implements DialogAsyncTask.Callbacks {

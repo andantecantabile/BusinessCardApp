@@ -7,6 +7,9 @@ import java.io.File;
  * through the use of a fluent interface.  The ContactEntryBuilder
  * can be used to create new ContactEntry objects or modify ContactEntry
  * objects from existing Contact Entry objects.
+ *
+ * Authors: Alex Pearson and Elizabeth Reed
+ * Date:    December 6th, 2015
  */
 public class ContactEntryBuilder {
     //ContactEntry associated with this ContactEntryBuilder
