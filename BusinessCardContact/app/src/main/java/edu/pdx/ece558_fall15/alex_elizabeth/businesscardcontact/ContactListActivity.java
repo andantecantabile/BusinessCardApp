@@ -148,6 +148,10 @@ public class ContactListActivity extends AppCompatActivity
         if (mCurrContactEntry != null) {    // if the current contact entry exists,
             outState.putSerializable(KEY_ENTRY_ID, mCurrContactEntry.getId());  // save the id of the currently displayed detail
         }
+        else {
+            // otherwise clear the saved instance state
+            outState.putSerializable(KEY_ENTRY_ID,null);
+        }
     }
 
     @Override
@@ -200,7 +204,9 @@ public class ContactListActivity extends AppCompatActivity
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult");
         if(resultCode != RESULT_OK) {
+            mCurrContactEntry = null;
             removeDetailFragmentUI();   // if for some reason the result code is not ok, just remove the detail fragment; only the list fragment will be displayed
             return;
         }
@@ -252,6 +258,7 @@ public class ContactListActivity extends AppCompatActivity
 
             // if a business card image (from either camera or gallery) was successfully saved to a file,
             if(BCFile != null) {
+                Log.d(TAG, "onActivityResult: BCFile successfully saved");
                 mNoRefresh = true;  // set the noRefresh flag so that the activity list and detail views will not be updated on resume
                                     // (will be calling the OCRAsyncTask here, and on return, the edit activity will be launched)
                 ContactListFragment clFragment = (ContactListFragment) getSupportFragmentManager()
@@ -262,6 +269,12 @@ public class ContactListActivity extends AppCompatActivity
                 OCRAsyncTask parseBC = new OCRAsyncTask("Beginning Upload..", this, this);  // start the async task to connect to the OCR API
                 parseBC.execute(BCFile.getPath(), tempFile);    // provide the path to the image file, and the xml file that results should be written to.
             }
+            /*
+            else {
+                Log.d(TAG, "onActivityResult: BCFile not successfully saved");
+                mCurrContactEntry = null;   // need to clear the current temporary contact entry if the file was not saved.
+            }
+            */
         }
     }
 
