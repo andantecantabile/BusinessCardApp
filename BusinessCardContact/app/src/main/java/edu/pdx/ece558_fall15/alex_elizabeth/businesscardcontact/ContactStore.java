@@ -123,8 +123,10 @@ public class ContactStore {
         }
 
         //If it's not found in the normal list check the temporary contact for a match
-        if(mTempContactEntry.getId().equals(id)) {
-            return mTempContactEntry;
+        if(mTempContactEntry != null) {
+            if (mTempContactEntry.getId().equals(id)) {
+                return mTempContactEntry;
+            }
         }
 
         //Return null if it's not found at all

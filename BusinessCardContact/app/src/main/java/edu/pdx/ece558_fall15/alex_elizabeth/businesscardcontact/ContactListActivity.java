@@ -119,7 +119,9 @@ public class ContactListActivity extends AppCompatActivity
             UUID currId = (UUID) savedInstanceState.getSerializable(KEY_ENTRY_ID);
             if(currId != null) {    // if there is a contact entry id, load the detail of that entry
                 mCurrContactEntry = ContactStore.get(this).getContactEntry(currId);
-                onContactSelected(mCurrContactEntry);
+                if(mCurrContactEntry != null) {
+                    onContactSelected(mCurrContactEntry);
+                }
             }
         }
 
@@ -327,6 +329,7 @@ public class ContactListActivity extends AppCompatActivity
         NetworkInfo networkInfo = connMan.getActiveNetworkInfo();
         if(networkInfo != null && networkInfo.isConnected()) {
             mCurrContactEntry = new ContactEntry();
+            ContactStore.get(this).setTemporaryContact(mCurrContactEntry);
             File filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
             Uri outputFileUri = Uri.fromFile(new File(filesDir, ContactStore.get(this)
                     .getSuggestedBCFile(mCurrContactEntry).getName() + ".jpg"));

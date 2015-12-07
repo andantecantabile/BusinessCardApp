@@ -204,6 +204,8 @@ public class ContactDetailActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(KEY_ENTRY_ID, mCurrContactEntry.getId());
+        if(mCurrContactEntry != null) {
+            outState.putSerializable(KEY_ENTRY_ID, mCurrContactEntry.getId());
+        }
     }
 }
