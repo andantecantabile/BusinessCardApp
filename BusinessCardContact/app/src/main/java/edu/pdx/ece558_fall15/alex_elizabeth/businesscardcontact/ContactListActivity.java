@@ -118,7 +118,8 @@ public class ContactListActivity extends AppCompatActivity
         if(savedInstanceState != null) {
             UUID currId = (UUID) savedInstanceState.getSerializable(KEY_ENTRY_ID);
             if(currId != null) {    // if there is a contact entry id, load the detail of that entry
-                onContactSelected(ContactStore.get(this).getContactEntry(currId));
+                mCurrContactEntry = ContactStore.get(this).getContactEntry(currId);
+                onContactSelected(mCurrContactEntry);
             }
         }
 
